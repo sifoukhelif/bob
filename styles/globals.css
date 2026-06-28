@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold:   #C9A84C;
+  --gold2:  #E8C36A;
+  --bg:     #08080E;
+  --bg2:    #111118;
+  --bg3:    #18181F;
+  --text:   #F0EDE6;
+  --muted:  #7A7872;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-cairo), 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-serif { font-family: var(--font-display), Georgia, serif; }
+
+::selection { background: rgba(201,168,76,0.25); color: #F0EDE6; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(240,237,230,0.1); border-radius: 4px; }
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%);  }
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.06), transparent);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.animate-fade-up { animation: fadeUp 0.5s ease both; }
