@@ -3,7 +3,11 @@
 -- يُشغَّل بعد 001_schema.sql, 002_rls.sql, 003_storage.sql
 -- ============================================================
 
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS username text UNIQUE;
+-- تفعيل امتداد citext لمقارنة النصوص بدون حساسية للحالة (Case-insensitive)
+CREATE EXTENSION IF NOT EXISTS citext;
+
+-- إضافة العمود بنوع citext لضمان أن "Sif Khelif" و "sif khelif" يُعتبران نفس الاسم
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS username citext UNIQUE;
 
 -- توليد اسم مستخدم تلقائي من الجزء الأول من البريد + رقم عشوائي لمنع التكرار
 CREATE OR REPLACE FUNCTION generate_username(p_email text) RETURNS text LANGUAGE plpgsql AS $$
@@ -32,6 +36,3 @@ END; $$;
 
 -- تعبئة username للحسابات الموجودة مسبقاً (التي أُنشئت قبل هذا التحديث)
 UPDATE public.users SET username = generate_username(email) WHERE username IS NULL;
-
--- السماح للمستخدم بتحديث اسمه الخاص فقط (إضافة لسياسة users_update_own الموجودة مسبقاً، لا تكرار لها)
--- ملاحظة: السياسة users_update_own من 002_rls.sql تسمح أصلاً بتحديث أي عمود في صفه، فلا حاجة لسياسة جديدة هنا.
