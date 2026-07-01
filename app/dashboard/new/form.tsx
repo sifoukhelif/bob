@@ -67,11 +67,12 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
 
       // رفع الملف (للمنتجات الرقمية فقط)
       if (type === 'product' && file) {
-        const path = `${user.id}/${listing.id}/${file.name}`
-        const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file, { upsert: true })
-        if (uploadError) {
-          throw new Error('تم إنشاء المنتج، لكن تعذّر رفع الملف. أضفه من صفحة المنتج.')
-        }
+       // بعد
+      const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file)
+      if (uploadError) {
+      console.error('Storage upload error:', uploadError)
+      throw new Error(`تعذّر رفع الملف: ${uploadError.message}`)
+      }
         await sb.from('listing_files').insert({
           listing_id: listing.id,
           storage_path: path,
