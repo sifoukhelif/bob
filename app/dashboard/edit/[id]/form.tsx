@@ -16,20 +16,28 @@ export function EditListingForm({
   listingId: string
   storeId: string
   categories: Category[]
-  initial: { type: 'product' | 'service'; title: string; description: string; categoryId: string; price: string }
+  initial: { type: 'product' | 'service'; title: string; description: string; categoryId: string; price: string; thumbnailUrl: string | null }
   existingFileName: string | null
 }) {
   const router = useRouter()
-  const [type] = useState<'product' | 'service'>(initial.type) // النوع لا يتغيّر بعد الإنشاء
+  const [type] = useState<'product' | 'service'>(initial.type)
   const [title, setTitle] = useState(initial.title)
   const [description, setDescription] = useState(initial.description)
   const [categoryId, setCategoryId] = useState(initial.categoryId)
   const [price, setPrice] = useState(initial.price)
   const [file, setFile] = useState<File | null>(null)
+  const [image, setImage] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(initial.thumbnailUrl)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const filteredCategories = categories.filter(c => c.type === type)
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0] ?? null
+    setImage(f)
+    if (f) setImagePreview(URL.createObjectURL(f))
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -54,16 +62,31 @@ export function EditListingForm({
         return
       }
 
-      // تحديث بيانات المنتج، وإرجاعه لحالة "قيد المراجعة" لأنه تغيّر
+      // لو المستخدم اختار صورة جديدة، نرفعها ونحدّث الرابط
+      let thumbnailUrl: string | undefined = undefined
+      if (image) {
+        const imgPath = `${user.id}/${crypto.randomUUID()}-${image.name}`
+        const { error: imgError } = await sb.storage.from('listing-images').upload(imgPath, image)
+        if (imgError) {
+          console.error('Image upload error:', imgError)
+          throw new Error(`تعذّر رفع الصورة: ${imgError.message}`)
+        }
+        const { data: publicUrlData } = sb.storage.from('listing-images').getPublicUrl(imgPath)
+        thumbnailUrl = publicUrlData.publicUrl
+      }
+
+      const updatePayload: Record<string, any> = {
+        title: title.trim(),
+        description: description.trim() || null,
+        category_id: categoryId || null,
+        base_price: priceNum,
+        status: 'pending_review',
+      }
+      if (thumbnailUrl) updatePayload.thumbnail_url = thumbnailUrl
+
       const { error: updateError } = await sb
         .from('listings')
-        .update({
-          title: title.trim(),
-          description: description.trim() || null,
-          category_id: categoryId || null,
-          base_price: priceNum,
-          status: 'pending_review',
-        })
+        .update(updatePayload)
         .eq('id', listingId)
         .eq('store_id', storeId)
 
@@ -71,7 +94,6 @@ export function EditListingForm({
         throw new Error('تعذّر تحديث المنتج، حاول مرة أخرى')
       }
 
-      // لو المستخدم اختار ملف جديد، نرفعه ونحدّث السجل
       if (type === 'product' && file) {
         const path = `${user.id}/${listingId}/${file.name}`
         const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file)
@@ -80,7 +102,6 @@ export function EditListingForm({
           throw new Error(`تم تحديث بيانات المنتج، لكن تعذّر رفع الملف الجديد: ${uploadError.message}`)
         }
 
-        // نتأكد هل فيه سجل ملف سابق لنفس المنتج
         const { data: existing } = await sb
           .from('listing_files')
           .select('id')
@@ -115,6 +136,23 @@ export function EditListingForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      {/* صورة الغلاف */}
+      <div>
+        <label className="block text-xs text-gray-500 mb-1.5">صورة الغلاف</label>
+        <div className="flex items-center gap-4">
+          {imagePreview ? (
+            <img src={imagePreview} alt="معاينة" className="w-20 h-20 rounded-xl object-cover border border-white/10" />
+          ) : (
+            <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-600 text-xs">
+              بدون صورة
+            </div>
+          )}
+          <input type="file" accept="image/*" onChange={handleImageChange}
+            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
+        </div>
+        <p className="text-[10px] text-gray-600 mt-1.5">اترك هذا الحقل فارغاً إذا لا تريد تغيير الصورة الحالية.</p>
+      </div>
+
       <div>
         <label className="block text-xs text-gray-500 mb-1.5">العنوان</label>
         <input value={title} onChange={e => setTitle(e.target.value)} required minLength={3} maxLength={100}
