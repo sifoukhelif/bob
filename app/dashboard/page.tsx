@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
+import { DeleteListingButton } from './delete-listing-button'
 
 export const metadata = { title: 'لوحة تحكم البائع' }
 
@@ -13,6 +14,20 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   rejected:        { label: 'مرفوض',        color: 'bg-red-500/10 text-red-400' },
   paused:          { label: 'متوقف',        color: 'bg-white/10 text-gray-400' },
   draft:           { label: 'مسودة',        color: 'bg-white/10 text-gray-400' },
+}
+
+async function deleteListing(formData: FormData) {
+  'use server'
+  const { createServerClient } = await import('@/lib/supabase/server')
+  const { revalidatePath } = await import('next/cache')
+  const id = formData.get('id') as string
+  const storeId = formData.get('storeId') as string
+  const supabase = await createServerClient()
+
+  await supabase.from('listing_files').delete().eq('listing_id', id)
+  await supabase.from('listings').delete().eq('id', id).eq('store_id', storeId)
+
+  revalidatePath('/dashboard')
 }
 
 export default async function DashboardPage({
@@ -135,9 +150,17 @@ export default async function DashboardPage({
                       <td className="px-6 py-3 text-gray-400">{l.sales_count ?? 0}</td>
                       <td className="px-6 py-3 text-gray-400">{l.view_count ?? 0}</td>
                       <td className="px-6 py-3">
-                        <Link href={`/dashboard/edit/${l.id}`} className="text-xs text-[#C9A84C] hover:underline whitespace-nowrap">
-                          تعديل ✏️
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link href={`/dashboard/edit/${l.id}`} className="text-xs text-[#C9A84C] hover:underline whitespace-nowrap">
+                            تعديل ✏️
+                          </Link>
+                          <DeleteListingButton
+                            listingId={l.id}
+                            storeId={store.id}
+                            listingTitle={l.title}
+                            deleteListing={deleteListing}
+                          />
+                        </div>
                       </td>
                     </tr>
                   )
