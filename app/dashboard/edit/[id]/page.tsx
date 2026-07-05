@@ -20,7 +20,7 @@ export default async function EditListingPage({
   // نجيب المنتج، ونتأكد إنه ملك لنفس المتجر (حماية إضافية فوق RLS)
   const { data: listing } = await supabase
     .from('listings')
-    .select('id,store_id,type,title,description,category_id,base_price,status')
+    .select('id,store_id,type,title,description,category_id,base_price,status,thumbnail_url')
     .eq('id', id)
     .eq('store_id', store.id)
     .maybeSingle()
@@ -62,6 +62,7 @@ export default async function EditListingPage({
             description: listing.description ?? '',
             categoryId: listing.category_id ?? '',
             price: String(listing.base_price ?? ''),
+            thumbnailUrl: listing.thumbnail_url ?? null,
           }}
           existingFileName={existingFile?.original_name ?? null}
         />
