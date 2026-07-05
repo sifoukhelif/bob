@@ -14,10 +14,18 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
   const [categoryId, setCategoryId] = useState('')
   const [price, setPrice] = useState('')
   const [file, setFile] = useState<File | null>(null)
+  const [image, setImage] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const filteredCategories = categories.filter(c => c.type === type)
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0] ?? null
+    setImage(f)
+    setImagePreview(f ? URL.createObjectURL(f) : null)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -46,6 +54,19 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         return
       }
 
+      // رفع صورة الغلاف أولاً (إن وُجدت) لنحصل على رابطها العام
+      let thumbnailUrl: string | null = null
+      if (image) {
+        const imgPath = `${user.id}/${crypto.randomUUID()}-${image.name}`
+        const { error: imgError } = await sb.storage.from('listing-images').upload(imgPath, image)
+        if (imgError) {
+          console.error('Image upload error:', imgError)
+          throw new Error(`تعذّر رفع الصورة: ${imgError.message}`)
+        }
+        const { data: publicUrlData } = sb.storage.from('listing-images').getPublicUrl(imgPath)
+        thumbnailUrl = publicUrlData.publicUrl
+      }
+
       // إنشاء المنتج بحالة "بانتظار المراجعة"
       const { data: listing, error: insertError } = await sb
         .from('listings')
@@ -56,6 +77,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
           description: description.trim() || null,
           category_id: categoryId || null,
           base_price: priceNum,
+          thumbnail_url: thumbnailUrl,
           status: 'pending_review',
         })
         .select('id')
@@ -100,6 +122,23 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
             {t === 'product' ? 'منتج رقمي' : 'خدمة'}
           </button>
         ))}
+      </div>
+
+      {/* صورة الغلاف */}
+      <div>
+        <label className="block text-xs text-gray-500 mb-1.5">صورة الغلاف</label>
+        <div className="flex items-center gap-4">
+          {imagePreview ? (
+            <img src={imagePreview} alt="معاينة" className="w-20 h-20 rounded-xl object-cover border border-white/10" />
+          ) : (
+            <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-600 text-xs">
+              بدون صورة
+            </div>
+          )}
+          <input type="file" accept="image/*" onChange={handleImageChange}
+            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
+        </div>
+        <p className="text-[10px] text-gray-600 mt-1.5">هذي الصورة تظهر للمشترين في المتجر والصفحة الرئيسية.</p>
       </div>
 
       <div>
