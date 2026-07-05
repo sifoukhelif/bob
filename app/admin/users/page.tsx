@@ -1,6 +1,8 @@
 // app/admin/users/page.tsx
 import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
+import { RoleSelect } from './role-select'
+
 export const metadata = { title: 'إدارة المستخدمين | Admin' }
 
 async function changeRole(formData: FormData) {
@@ -50,7 +52,6 @@ export default async function AdminUsersPage() {
     <div>
       <h1 className="text-3xl font-serif font-bold mb-1">إدارة المستخدمين</h1>
       <p className="text-gray-500 text-sm mb-8">{users?.length ?? 0} مستخدم مسجّل</p>
-
       <div className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -75,16 +76,7 @@ export default async function AdminUsersPage() {
 
                 {/* Role selector */}
                 <td className="px-5 py-3">
-                  <form action={changeRole}>
-                    <input type="hidden" name="id" value={user.id} />
-                    <select name="role" defaultValue={user.role ?? 'buyer'}
-                      className="bg-white/5 border border-white/10 text-xs px-2 py-1.5 rounded-lg text-white outline-none cursor-pointer"
-                      onChange={e => (e.target.form as HTMLFormElement).requestSubmit()}>
-                      <option value="buyer">مشترٍ</option>
-                      <option value="seller">بائع</option>
-                      <option value="admin">أدمن</option>
-                    </select>
-                  </form>
+                  <RoleSelect userId={user.id} currentRole={user.role ?? 'buyer'} changeRole={changeRole} />
                 </td>
 
                 {/* Status badge */}
@@ -127,7 +119,6 @@ export default async function AdminUsersPage() {
             ))}
           </tbody>
         </table>
-
         {(!users || users.length === 0) && (
           <div className="text-center py-12 text-gray-600 text-sm">لا يوجد مستخدمون بعد</div>
         )}
