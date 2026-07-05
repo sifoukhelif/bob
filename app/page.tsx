@@ -5,6 +5,12 @@ import { createServerClient } from '@/lib/supabase/server'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 
+function formatCount(n: number): string {
+  if (n >= 1000) return `+${Math.floor(n / 1000)}K`
+  if (n > 0) return String(n)
+  return '0'
+}
+
 export default async function Home() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -22,6 +28,36 @@ export default async function Home() {
       .eq('status', 'active').order('sales_count', { ascending: false }).limit(4)
     featuredProducts = data ?? []
   } catch { featuredProducts = [] }
+
+  // إحصائيات حقيقية من القاعدة بدل الأرقام الثابتة
+  let productsLabel = '0'
+  let sellersLabel = '0'
+  let ratingLabel = 'جديد 🌱'
+
+  try {
+    const { count: productsCount } = await supabase
+      .from('listings').select('*', { count: 'exact', head: true }).eq('status', 'active')
+    productsLabel = formatCount(productsCount ?? 0)
+
+    const { count: sellersCount } = await supabase
+      .from('stores').select('*', { count: 'exact', head: true })
+    sellersLabel = formatCount(sellersCount ?? 0)
+
+    const { data: ratedStores } = await supabase
+      .from('stores').select('rating_avg,rating_count').gt('rating_count', 0)
+
+    if (ratedStores && ratedStores.length > 0) {
+      const totalWeight = ratedStores.reduce((s, r) => s + (r.rating_count ?? 0), 0)
+      const weightedSum = ratedStores.reduce((s, r) => s + (r.rating_avg ?? 0) * (r.rating_count ?? 0), 0)
+      if (totalWeight > 0) ratingLabel = `${(weightedSum / totalWeight).toFixed(1)}★`
+    }
+  } catch { /* نُبقي القيم الافتراضية عند أي خطأ بدل كسر الصفحة */ }
+
+  const stats = [
+    { num: productsLabel, label: 'منتج رقمي' },
+    { num: sellersLabel,  label: 'بائع موثق' },
+    { num: ratingLabel,   label: 'تقييم المنصة' },
+  ]
 
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6] overflow-x-hidden">
@@ -92,11 +128,7 @@ export default async function Home() {
       {/* STATS */}
       <section className="max-w-4xl mx-auto px-6 mb-24">
         <div className="grid grid-cols-3 gap-4 bg-[#111118] border border-white/5 rounded-3xl px-8 py-6">
-          {[
-            { num: '+12K', label: 'منتج رقمي' },
-            { num: '+3K',  label: 'بائع موثق'  },
-            { num: '4.9★', label: 'تقييم المنصة' },
-          ].map(s => (
+          {stats.map(s => (
             <div key={s.label} className="text-center">
               <div className="font-serif text-2xl md:text-3xl font-bold text-[#C9A84C]">{s.num}</div>
               <div className="text-xs text-gray-500 mt-1">{s.label}</div>
@@ -137,9 +169,12 @@ export default async function Home() {
                 </div>
               </div>
             </Link>
-          )) : [1,2,3,4].map(i => (
-            <div key={i} className="aspect-[4/5] rounded-3xl bg-white/3 border border-white/5 animate-pulse" />
-          ))}
+          )) : (
+            <div className="col-span-full text-center py-20 text-gray-600 text-sm">
+              لا توجد منتجات منشورة بعد.{' '}
+              <Link href="/sell" className="text-[#C9A84C] hover:underline">كن أول بائع ←</Link>
+            </div>
+          )}
         </div>
       </section>
 
