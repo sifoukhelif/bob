@@ -6,6 +6,18 @@ import { getBrowserClient } from '@/lib/supabase/browser'
 
 type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service' }
 
+function sanitizeFileName(name: string): string {
+  const lastDot = name.lastIndexOf('.')
+  const ext = lastDot !== -1 ? name.slice(lastDot) : ''
+  const base = lastDot !== -1 ? name.slice(0, lastDot) : name
+  const cleanBase = base
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase()
+  return `${cleanBase || 'file'}${ext.toLowerCase()}`
+}
+
 export function EditListingForm({
   listingId,
   storeId,
@@ -62,10 +74,9 @@ export function EditListingForm({
         return
       }
 
-      // لو المستخدم اختار صورة جديدة، نرفعها ونحدّث الرابط
       let thumbnailUrl: string | undefined = undefined
       if (image) {
-        const imgPath = `${user.id}/${crypto.randomUUID()}-${image.name}`
+        const imgPath = `${user.id}/${crypto.randomUUID()}-${sanitizeFileName(image.name)}`
         const { error: imgError } = await sb.storage.from('listing-images').upload(imgPath, image)
         if (imgError) {
           console.error('Image upload error:', imgError)
@@ -95,7 +106,7 @@ export function EditListingForm({
       }
 
       if (type === 'product' && file) {
-        const path = `${user.id}/${listingId}/${file.name}`
+        const path = `${user.id}/${listingId}/${sanitizeFileName(file.name)}`
         const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file)
         if (uploadError) {
           console.error('Storage upload error:', uploadError)
@@ -136,7 +147,6 @@ export function EditListingForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      {/* صورة الغلاف */}
       <div>
         <label className="block text-xs text-gray-500 mb-1.5">صورة الغلاف</label>
         <div className="flex items-center gap-4">
