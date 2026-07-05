@@ -173,4 +173,27 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         </div>
         <div>
           <label className="block text-xs text-gray-500 mb-1.5">السعر (USD)</label>
-          <input value={price} onChange={e =>
+          <input value={price} onChange={e => setPrice(e.target.value)} type="number" min="0" step="0.01" required dir="ltr"
+            placeholder="29.00"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
+        </div>
+      </div>
+
+      {type === 'product' && (
+        <div>
+          <label className="block text-xs text-gray-500 mb-1.5">ملف المنتج</label>
+          <input type="file" onChange={e => setFile(e.target.files?.[0] ?? null)}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
+          <p className="text-[10px] text-gray-600 mt-1.5">هذا هو الملف الذي سيستلمه المشتري بعد الدفع.</p>
+        </div>
+      )}
+
+      {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400">{error}</div>}
+
+      <button type="submit" disabled={loading}
+        className="w-full bg-[#C9A84C] text-[#08080E] py-3.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 mt-2">
+        {loading ? 'جارٍ الإرسال…' : 'إرسال للمراجعة'}
+      </button>
+    </form>
+  )
+}
