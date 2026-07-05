@@ -6,6 +6,18 @@ import { getBrowserClient } from '@/lib/supabase/browser'
 
 type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service' }
 
+function sanitizeFileName(name: string): string {
+  const lastDot = name.lastIndexOf('.')
+  const ext = lastDot !== -1 ? name.slice(lastDot) : ''
+  const base = lastDot !== -1 ? name.slice(0, lastDot) : name
+  const cleanBase = base
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase()
+  return `${cleanBase || 'file'}${ext.toLowerCase()}`
+}
+
 export function NewListingForm({ storeId, categories }: { storeId: string; categories: Category[] }) {
   const router = useRouter()
   const [type, setType] = useState<'product' | 'service'>('product')
@@ -54,10 +66,9 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         return
       }
 
-      // رفع صورة الغلاف أولاً (إن وُجدت) لنحصل على رابطها العام
       let thumbnailUrl: string | null = null
       if (image) {
-        const imgPath = `${user.id}/${crypto.randomUUID()}-${image.name}`
+        const imgPath = `${user.id}/${crypto.randomUUID()}-${sanitizeFileName(image.name)}`
         const { error: imgError } = await sb.storage.from('listing-images').upload(imgPath, image)
         if (imgError) {
           console.error('Image upload error:', imgError)
@@ -67,7 +78,6 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         thumbnailUrl = publicUrlData.publicUrl
       }
 
-      // إنشاء المنتج بحالة "بانتظار المراجعة"
       const { data: listing, error: insertError } = await sb
         .from('listings')
         .insert({
@@ -87,9 +97,8 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         throw new Error('تعذّر إنشاء المنتج، حاول مرة أخرى')
       }
 
-      // رفع الملف (للمنتجات الرقمية فقط)
       if (type === 'product' && file) {
-        const path = `${user.id}/${listing.id}/${file.name}`
+        const path = `${user.id}/${listing.id}/${sanitizeFileName(file.name)}`
         const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file)
         if (uploadError) {
           console.error('Storage upload error:', uploadError)
@@ -114,7 +123,6 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      {/* TYPE */}
       <div className="flex rounded-xl bg-black/30 p-1">
         {(['product', 'service'] as const).map(t => (
           <button key={t} type="button" onClick={() => { setType(t); setCategoryId('') }}
@@ -124,7 +132,6 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         ))}
       </div>
 
-      {/* صورة الغلاف */}
       <div>
         <label className="block text-xs text-gray-500 mb-1.5">صورة الغلاف</label>
         <div className="flex items-center gap-4">
@@ -166,27 +173,4 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         </div>
         <div>
           <label className="block text-xs text-gray-500 mb-1.5">السعر (USD)</label>
-          <input value={price} onChange={e => setPrice(e.target.value)} type="number" min="0" step="0.01" required dir="ltr"
-            placeholder="29.00"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
-        </div>
-      </div>
-
-      {type === 'product' && (
-        <div>
-          <label className="block text-xs text-gray-500 mb-1.5">ملف المنتج</label>
-          <input type="file" onChange={e => setFile(e.target.files?.[0] ?? null)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
-          <p className="text-[10px] text-gray-600 mt-1.5">هذا هو الملف الذي سيستلمه المشتري بعد الدفع.</p>
-        </div>
-      )}
-
-      {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400">{error}</div>}
-
-      <button type="submit" disabled={loading}
-        className="w-full bg-[#C9A84C] text-[#08080E] py-3.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 mt-2">
-        {loading ? 'جارٍ الإرسال…' : 'إرسال للمراجعة'}
-      </button>
-    </form>
-  )
-}
+          <input value={price} onChange={e =>
