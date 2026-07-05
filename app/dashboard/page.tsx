@@ -29,9 +29,6 @@ export default async function DashboardPage({
   const username = profile?.username ?? null
 
   if (!store) {
-    // الأدمن قد لا يملك متجراً أبداً ولا يُفترض إجباره على إنشاء واحد —
-    // نعرض له حالة واضحة بدل تحويله لـ /become-seller (الذي يحوّله بدوره
-    // مباشرة إلى /dashboard لأنه أدمن، فتنتج حلقة تحويل لا نهائية)
     if (role === 'admin') {
       return (
         <div className="min-h-screen bg-[#08080E] text-[#F0EDE6] flex items-center justify-center px-4">
@@ -123,6 +120,7 @@ export default async function DashboardPage({
                 <th className="text-right px-6 py-3 font-medium">الحالة</th>
                 <th className="text-right px-6 py-3 font-medium">المبيعات</th>
                 <th className="text-right px-6 py-3 font-medium">المشاهدات</th>
+                <th className="text-right px-6 py-3 font-medium">الإجراءات</th>
               </tr></thead>
               <tbody>
                 {listings.map(l => {
@@ -136,6 +134,11 @@ export default async function DashboardPage({
                       </td>
                       <td className="px-6 py-3 text-gray-400">{l.sales_count ?? 0}</td>
                       <td className="px-6 py-3 text-gray-400">{l.view_count ?? 0}</td>
+                      <td className="px-6 py-3">
+                        <Link href={`/dashboard/edit/${l.id}`} className="text-xs text-[#C9A84C] hover:underline whitespace-nowrap">
+                          تعديل ✏️
+                        </Link>
+                      </td>
                     </tr>
                   )
                 })}
