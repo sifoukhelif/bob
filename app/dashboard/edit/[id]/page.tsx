@@ -17,7 +17,6 @@ export default async function EditListingPage({
   const { data: store } = await supabase.from('stores').select('id').eq('owner_id', user.id).maybeSingle()
   if (!store) redirect('/become-seller')
 
-  // نجيب المنتج، ونتأكد إنه ملك لنفس المتجر (حماية إضافية فوق RLS)
   const { data: listing } = await supabase
     .from('listings')
     .select('id,store_id,type,title,description,category_id,base_price,status,thumbnail_url')
@@ -29,7 +28,7 @@ export default async function EditListingPage({
 
   const { data: categories } = await supabase
     .from('categories')
-    .select('id,slug,name_ar,type')
+    .select('id,slug,name_ar,type,parent_id')
     .eq('is_active', true)
     .order('position')
 
