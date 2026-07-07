@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getBrowserClient } from '@/lib/supabase/browser'
 
-type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service' }
+type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service'; parent_id: string | null }
 
 function sanitizeFileName(name: string): string {
   const lastDot = name.lastIndexOf('.')
@@ -16,6 +16,15 @@ function sanitizeFileName(name: string): string {
     .replace(/-+/g, '-')
     .toLowerCase()
   return `${cleanBase || 'file'}${ext.toLowerCase()}`
+}
+
+function buildCategoryGroups(categories: Category[], type: 'product' | 'service') {
+  const ofType = categories.filter(c => c.type === type)
+  const mains = ofType.filter(c => !c.parent_id)
+  return mains.map(main => ({
+    main,
+    subs: ofType.filter(c => c.parent_id === main.id),
+  })).filter(group => group.subs.length > 0)
 }
 
 export function NewListingForm({ storeId, categories }: { storeId: string; categories: Category[] }) {
@@ -31,7 +40,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const filteredCategories = categories.filter(c => c.type === type)
+  const categoryGroups = buildCategoryGroups(categories, type)
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0] ?? null
@@ -168,7 +177,13 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
           <select value={categoryId} onChange={e => setCategoryId(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors cursor-pointer">
             <option value="">اختر تصنيفاً</option>
-            {filteredCategories.map(c => <option key={c.id} value={c.id}>{c.name_ar ?? c.slug}</option>)}
+            {categoryGroups.map(group => (
+              <optgroup key={group.main.id} label={group.main.name_ar ?? group.main.slug}>
+                {group.subs.map(sub => (
+                  <option key={sub.id} value={sub.id}>{sub.name_ar ?? sub.slug}</option>
+                ))}
+              </optgroup>
+            ))}
           </select>
         </div>
         <div>
