@@ -64,15 +64,14 @@ export function PayoutSettingsForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <div>
+     <div>
         <label className="block text-xs text-gray-500 mb-1.5">وسيلة الاستلام</label>
         <select value={method} onChange={e => setMethod(e.target.value)}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors cursor-pointer">
-          <option value="">اختر وسيلة</option>
-          {METHODS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+          <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>اختر وسيلة</option>
+          {METHODS.map(m => <option key={m.value} value={m.value} style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{m.label}</option>)}
         </select>
       </div>
-
       <div>
         <label className="block text-xs text-gray-500 mb-1.5">بيانات الاستلام</label>
         <textarea value={details} onChange={e => setDetails(e.target.value)} rows={4}
