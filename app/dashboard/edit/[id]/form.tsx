@@ -185,15 +185,15 @@ export function EditListingForm({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+       <div>
           <label className="block text-xs text-gray-500 mb-1.5">التصنيف</label>
           <select value={categoryId} onChange={e => setCategoryId(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors cursor-pointer">
-            <option value="">اختر تصنيفاً</option>
+            <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>اختر تصنيفاً</option>
             {categoryGroups.map(group => (
-              <optgroup key={group.main.id} label={group.main.name_ar ?? group.main.slug}>
+              <optgroup key={group.main.id} label={group.main.name_ar ?? group.main.slug} style={{ backgroundColor: '#111118', color: '#C9A84C' }}>
                 {group.subs.map(sub => (
-                  <option key={sub.id} value={sub.id}>{sub.name_ar ?? sub.slug}</option>
+                  <option key={sub.id} value={sub.id} style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{sub.name_ar ?? sub.slug}</option>
                 ))}
               </optgroup>
             ))}
