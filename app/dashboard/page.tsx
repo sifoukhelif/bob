@@ -87,6 +87,7 @@ export default async function DashboardPage({
             <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
           </Link>
           <div className="flex items-center gap-4">
+            <Link href="/dashboard/payout-settings" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">إعدادات الأرباح 💰</Link>
             <Link href={`/store/${store.slug}`} className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">عرض متجري العام ←</Link>
             <UserMenu email={user.email ?? ''} username={username} role={role} />
           </div>
