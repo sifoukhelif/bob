@@ -40,24 +40,39 @@ export default async function ShopPage({
   } catch {}
 
   const totalPages = Math.ceil(count / perPage)
-  const CATS = [
-    { label: 'الكل', value: '' }, { label: 'واجهات UI', value: 'ui-ux-kits' },
-    { label: 'كتب', value: 'ebooks' }, { label: 'أكواد', value: 'code-scripts' },
-    { label: 'خدمات', value: '', typeVal: 'service' },
-  ]
 
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             <Logo size="sm" />
-            <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
+            <span className="font-bold tracking-widest uppercase text-sm hidden lg:block">DEGITALE</span>
           </Link>
+
+          <form action="/shop" method="get" className="hidden sm:flex flex-1 max-w-sm">
+            <div className="relative w-full">
+              <input
+                name="q"
+                type="text"
+                defaultValue={q}
+                placeholder="ابحث عن منتج…"
+                className="w-full bg-white/5 border border-white/10 rounded-full pr-4 pl-9 py-2 text-xs text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors"
+              />
+              <button type="submit" aria-label="بحث"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#C9A84C] transition-colors">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              </button>
+            </div>
+          </form>
+
           {user ? (
             <UserMenu email={user.email ?? ''} username={username} role={role} />
           ) : (
-            <Link href="/login" className="text-xs text-gray-400 hover:text-white transition-colors">دخول</Link>
+            <Link href="/login" className="text-xs text-gray-400 hover:text-white transition-colors shrink-0">دخول</Link>
           )}
         </div>
       </nav>
@@ -66,14 +81,13 @@ export default async function ShopPage({
         <div className="mb-10">
           <h1 className="text-4xl font-serif font-bold mb-2">المتجر</h1>
           <p className="text-gray-500 text-sm mb-6">{count.toLocaleString('ar-SA')} منتج وخدمة</p>
-          <form className="flex gap-3 max-w-lg">
-            <input name="q" type="text" defaultValue={q}
-              placeholder="ابحث عن قوالب، خدمات، كتب…"
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
-            <button type="submit" className="bg-[#C9A84C] text-[#08080E] px-6 rounded-xl text-sm font-black hover:opacity-90 transition-opacity whitespace-nowrap">
-              بحث
-            </button>
-          </form>
+          {q && (
+            <p className="text-xs text-gray-500 mb-4">
+              نتائج البحث عن: <span className="text-[#C9A84C] font-bold">"{q}"</span>
+              {' — '}
+              <Link href="/shop" className="hover:underline">إلغاء البحث</Link>
+            </p>
+          )}
         </div>
 
         <div className="flex gap-2 mb-8 flex-wrap">
