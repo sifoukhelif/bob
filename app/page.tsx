@@ -29,7 +29,6 @@ export default async function Home() {
     featuredProducts = data ?? []
   } catch { featuredProducts = [] }
 
-  // إحصائيات حقيقية من القاعدة بدل الأرقام الثابتة
   let productsLabel = '0'
   let sellersLabel = '0'
   let ratingLabel = 'جديد 🌱'
@@ -64,17 +63,38 @@ export default async function Home() {
 
       {/* NAV */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Logo size="md" />
-            <span className="text-xl font-bold tracking-widest uppercase hidden sm:block">DEGITALE</span>
+            <span className="text-xl font-bold tracking-widest uppercase hidden lg:block">DEGITALE</span>
           </Link>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400 shrink-0">
             <Link href="/shop"       className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">المتجر</Link>
             <Link href="/shop?type=service" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">الخدمات</Link>
             <Link href="/sell"       className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">ابدأ البيع</Link>
             {user && <Link href="/orders" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">طلباتي</Link>}
           </div>
+
+          {/* شريط البحث */}
+          <form action="/shop" method="get" className="hidden sm:flex flex-1 max-w-xs">
+            <div className="relative w-full">
+              <input
+                name="q"
+                type="text"
+                placeholder="ابحث عن منتج…"
+                className="w-full bg-white/5 border border-white/10 rounded-full pr-4 pl-9 py-2 text-xs text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors"
+              />
+              <button type="submit" aria-label="بحث"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#C9A84C] transition-colors">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              </button>
+            </div>
+          </form>
+
           {user ? (
             <UserMenu email={user.email ?? ''} username={username} role={role} />
           ) : (
