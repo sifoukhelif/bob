@@ -3,20 +3,18 @@ import { createServerClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { SignOutButton } from '@/components/sign-out-button'
-
 const NAV = [
   { href: '/admin',          emoji: '◼', label: 'لوحة التحكم' },
   { href: '/admin/users',    emoji: '👥', label: 'المستخدمون' },
   { href: '/admin/products', emoji: '📦', label: 'المنتجات'   },
+  { href: '/admin/payouts',  emoji: '💰', label: 'المدفوعات'  },
   { href: '/admin/settings', emoji: '⚙️', label: 'الإعدادات'  },
 ]
-
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirectTo=/admin')
   if (user.app_metadata?.role !== 'admin') redirect('/')
-
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6] flex">
       <aside className="w-60 bg-[#0D0D14] border-l border-white/5 flex flex-col fixed h-full z-40">
