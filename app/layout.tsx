@@ -2,6 +2,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, DM_Sans, Cairo } from 'next/font/google'
 import '@/styles/globals.css'
+import { getServerLocale, isRTL } from '@/lib/i18n'
 
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-display', display: 'swap' })
 const dmSans   = DM_Sans({ subsets: ['latin'], variable: '--font-sans', weight: ['300','400','500','600'], display: 'swap' })
@@ -18,12 +19,16 @@ export const viewport: Viewport = {
   width: 'device-width', initialScale: 1, themeColor: '#08080E',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getServerLocale()
+  const dir = isRTL(locale) ? 'rtl' : 'ltr'
+  const bodyFontClass = locale === 'ar' ? 'font-cairo' : 'font-sans'
+
   return (
-    <html lang="ar" dir="rtl"
+    <html lang={locale} dir={dir}
       className={`${playfair.variable} ${dmSans.variable} ${cairo.variable} w-full overflow-x-hidden`}
       suppressHydrationWarning>
-      <body className="font-cairo antialiased w-full bg-[#08080E] text-[#F0EDE6]">
+      <body className={`${bodyFontClass} antialiased w-full bg-[#08080E] text-[#F0EDE6]`}>
         <div className="relative flex flex-col min-h-screen w-full">{children}</div>
       </body>
     </html>
