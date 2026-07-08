@@ -8,6 +8,19 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 })
 
+async function getPlatformFeePercent(admin: ReturnType<typeof createAdminClient>): Promise<number> {
+  let feePercent = parseInt(process.env.PLATFORM_FEE_PERCENT ?? '20')
+  try {
+    const { data: setting } = await admin.from('platform_settings')
+      .select('value').eq('key', 'platform_fee_percent').maybeSingle()
+    if (setting?.value != null) {
+      const parsed = parseInt(JSON.parse(setting.value as string))
+      if (!Number.isNaN(parsed)) feePercent = parsed
+    }
+  } catch { /* احتياط: يبقى على قيمة env */ }
+  return feePercent
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { listingId } = await req.json()
@@ -44,6 +57,11 @@ export async function POST(req: NextRequest) {
       if (error) return NextResponse.json({ error: 'تعذّر إتمام الطلب' }, { status: 500 })
       const { order_item_id } = result as { order_item_id: string }
 
+      // منتجات مجانية: لا مبلغ مستحق للبائع
+      await admin.from('order_items')
+        .update({ net_amount: 0, payout_status: 'paid' })
+        .eq('id', order_item_id)
+
       const { data: file } = await admin.from('listing_files')
         .select('storage_path').eq('listing_id', listing.id)
         .order('version', { ascending: false }).maybeSingle()
@@ -63,18 +81,8 @@ export async function POST(req: NextRequest) {
 
     if (unitAmount < 50) return NextResponse.json({ error: 'الحد الأدنى للسعر هو $0.50' }, { status: 422 })
 
-    // قراءة نسبة عمولة المنصة من إعدادات قاعدة البيانات (مع احتياط من env)
-    let feePercent = parseInt(process.env.PLATFORM_FEE_PERCENT ?? '20')
-    try {
-      const admin = createAdminClient()
-      const { data: setting } = await admin.from('platform_settings')
-        .select('value').eq('key', 'platform_fee_percent').maybeSingle()
-      if (setting?.value != null) {
-        const parsed = parseInt(JSON.parse(setting.value as string))
-        if (!Number.isNaN(parsed)) feePercent = parsed
-      }
-    } catch { /* احتياط: يبقى على قيمة env */ }
-
+    const admin = createAdminClient()
+    const feePercent = await getPlatformFeePercent(admin)
     const appFee = Math.round(unitAmount * feePercent / 100)
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
@@ -97,7 +105,7 @@ export async function POST(req: NextRequest) {
       cancel_url:  cancelUrl,
     }
 
-    // أضف Connect split فقط إذا عنده Stripe account
+    // أضف Connect split فقط إذا عنده Stripe account (غير مفعّل حالياً — يُفعّل لاحقاً)
     if (sellerStripeId) {
       sessionParams.payment_intent_data = {
         application_fee_amount: appFee,
@@ -112,4 +120,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err.message ?? 'Server error' }, { status: 500 })
   }
 }
-
