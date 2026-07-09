@@ -142,4 +142,87 @@ export default async function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-sm animate-fade-up" style={{animationDelay:'0.26s'}}>
             <Link href="/shop"
-              className="w-full sm:w-auto bg-[#C9A84C]
+              className="w-full sm:w-auto bg-[#C9A84C] text-[#08080E] px-12 py-4 rounded-full font-black text-base hover:scale-105 hover:shadow-[0_0_40px_rgba(201,168,76,0.35)] transition-all text-center whitespace-nowrap">
+              {t.hero.ctaShop}
+            </Link>
+            <Link href="/sell"
+              className="w-full sm:w-auto px-12 py-4 rounded-full border border-white/10 font-bold text-base hover:bg-white/5 transition-all text-white text-center whitespace-nowrap">
+              {t.hero.ctaSell}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section className="max-w-4xl mx-auto px-6 mb-24">
+        <div className="grid grid-cols-3 gap-4 bg-[#111118] border border-white/5 rounded-3xl px-8 py-6">
+          {stats.map(s => (
+            <div key={s.label} className="text-center">
+              <div className="font-serif text-2xl md:text-3xl font-bold text-[#C9A84C]">{s.num}</div>
+              <div className="text-xs text-gray-500 mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURED PRODUCTS */}
+      <section className="max-w-7xl mx-auto px-6 pb-28">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+          <div>
+            <h2 className="text-4xl font-serif font-bold mb-2">{t.featured.title}</h2>
+            <p className="text-gray-500 text-sm italic">{t.featured.subtitle}</p>
+          </div>
+          <Link href="/shop" className="text-[#C9A84C] font-bold text-sm hover:underline whitespace-nowrap shrink-0">
+            {t.featured.viewAll}
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featuredProducts.length > 0 ? featuredProducts.map(p => (
+            <Link key={p.id} href={`/product/${p.slug}`} className="group block">
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#12121A] border border-white/5 group-hover:border-[#C9A84C]/35 transition-all duration-500 shadow-xl">
+                {p.thumbnail_url
+                  ? <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover opacity-65 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700" />
+                  : <div className="w-full h-full flex items-center justify-center text-5xl opacity-20">📦</div>
+                }
+                <div className="absolute inset-0 bg-gradient-to-t from-[#08080E] via-[#08080E]/25 to-transparent" />
+                <div className="absolute bottom-6 left-5 right-5">
+                  <div className="text-[9px] text-[#C9A84C] font-black uppercase tracking-widest mb-1.5 opacity-80">
+                    {(p.stores as any)?.name ?? 'DEGITALE'}
+                  </div>
+                  <h3 className="text-sm font-bold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#C9A84C] transition-colors">
+                    {p.title}
+                  </h3>
+                  <div className="font-serif font-black text-lg text-white">${p.base_price?.toFixed(2)}</div>
+                </div>
+              </div>
+            </Link>
+          )) : (
+            <div className="col-span-full text-center py-20 text-gray-600 text-sm">
+              {t.featured.empty}{' '}
+              <Link href="/sell" className="text-[#C9A84C] hover:underline">{t.featured.emptyCta}</Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/5 py-16 bg-[#06060A]">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-[#C9A84C] rounded flex items-center justify-center text-[#08080E] font-bold text-xs">D</div>
+              <span className="font-bold tracking-widest uppercase text-sm">Degitale</span>
+            </div>
+            <span className="text-xs text-gray-600">{t.footer.rights}</span>
+          </div>
+          <div className="flex items-center gap-8 text-xs font-bold text-gray-500 uppercase tracking-widest">
+            <Link href="/terms" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.footer.terms}</Link>
+            <Link href="/privacy" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.footer.privacy}</Link>
+            <Link href="/contact" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.footer.support}</Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
