@@ -6,6 +6,8 @@ import type { Metadata } from 'next'
 import { BuyBox } from './buy-box'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { getServerLocale, getDictionary } from '@/lib/i18n'
 
 type Params = Promise<{ slug: string }>
 
@@ -27,15 +29,15 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     },
     twitter: { card: 'summary_large_image', title: data.title, description: price,
       images: data.thumbnail_url ? [data.thumbnail_url] : [] },
-    other: {
-      'og:price:amount': String(data.base_price ?? 0),
-      'og:price:currency': 'USD',
-    },
+    other: { 'og:price:amount': String(data.base_price ?? 0), 'og:price:currency': 'USD' },
   }
 }
 
 export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
+
   const supabase  = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   let username: string | null = null
@@ -63,22 +65,23 @@ export default async function ProductPage({ params }: { params: Params }) {
             <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
           </Link>
           <div className="flex items-center gap-2 text-xs text-gray-600 flex-1 min-w-0">
-            <Link href="/shop" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">المتجر</Link>
+            <Link href="/shop" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.nav.shop}</Link>
             <span>/</span>
             <span className="text-gray-400 truncate">{p.title}</span>
           </div>
-          {user ? (
-            <UserMenu email={user.email ?? ''} username={username} role={user.app_metadata?.role as string | undefined} />
-          ) : (
-            <Link href="/login" className="text-xs text-gray-400 hover:text-white transition-colors shrink-0">دخول</Link>
-          )}
+          <div className="flex items-center gap-3 shrink-0">
+            <LanguageSwitcher current={locale} />
+            {user ? (
+              <UserMenu email={user.email ?? ''} username={username} role={user.app_metadata?.role as string | undefined} />
+            ) : (
+              <Link href="/login" className="text-xs text-gray-400 hover:text-white transition-colors">{t.product.login}</Link>
+            )}
+          </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-
-          {/* THUMBNAIL */}
           <div className="lg:sticky lg:top-28">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-[#12121A] border border-white/5">
               {p.thumbnail_url
@@ -87,7 +90,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               }
               {savings && (
                 <div className="absolute top-4 right-4 bg-[#2ECC9A] text-[#08080E] text-xs font-black px-3 py-1.5 rounded-full">
-                  وفّر {savings}%
+                  {t.product.save} {savings}%
                 </div>
               )}
             </div>
@@ -100,7 +103,6 @@ export default async function ProductPage({ params }: { params: Params }) {
             )}
           </div>
 
-          {/* INFO */}
           <div className="flex flex-col gap-6">
             {store && (
               <Link href={`/store/${store.slug}`} className="flex items-center gap-3 w-fit group">
@@ -108,7 +110,7 @@ export default async function ProductPage({ params }: { params: Params }) {
                   {store.name?.charAt(0) ?? 'S'}
                 </div>
                 <span className="text-sm text-gray-400 group-hover:text-[#C9A84C] transition-colors">{store.name}</span>
-                <span className="text-xs text-gray-600">· {store.sales_count ?? 0} مبيعة</span>
+                <span className="text-xs text-gray-600">· {store.sales_count ?? 0} {t.product.sales}</span>
               </Link>
             )}
 
@@ -118,8 +120,8 @@ export default async function ProductPage({ params }: { params: Params }) {
               <div className="flex items-center gap-2">
                 <span className="text-[#C9A84C]">{'★'.repeat(Math.round(p.rating_avg))}</span>
                 <span className="font-bold text-sm">{p.rating_avg.toFixed(1)}</span>
-                <span className="text-xs text-gray-500">({p.rating_count} تقييم)</span>
-                <span className="text-xs text-gray-600">· {p.sales_count} مبيعة</span>
+                <span className="text-xs text-gray-500">({p.rating_count} {t.product.reviews})</span>
+                <span className="text-xs text-gray-600">· {p.sales_count} {t.product.sales}</span>
               </div>
             )}
 
@@ -130,12 +132,11 @@ export default async function ProductPage({ params }: { params: Params }) {
             {p.type === 'service' && p.delivery_days && (
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <span className="text-[#C9A84C]">⚡</span>
-                التسليم خلال {p.delivery_days} يوم
+                {t.product.deliveryPrefix} {p.delivery_days} {t.product.deliveryUnit}
               </div>
             )}
 
-            {/* BUY BOX */}
-            <BuyBox listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} />
+            <BuyBox listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} locale={locale} />
           </div>
         </div>
       </main>
