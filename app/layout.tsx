@@ -2,7 +2,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, DM_Sans, Cairo } from 'next/font/google'
 import '@/styles/globals.css'
-import { getServerLocale, isRTL } from '@/lib/i18n'
+import { getServerLocale } from '@/lib/i18n/server'
+import { isRTL } from '@/lib/i18n'
 
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-display', display: 'swap' })
 const dmSans   = DM_Sans({ subsets: ['latin'], variable: '--font-sans', weight: ['300','400','500','600'], display: 'swap' })
