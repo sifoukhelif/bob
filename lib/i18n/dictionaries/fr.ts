@@ -35,4 +35,20 @@ export const fr = {
     privacy: 'Confidentialité',
     support: 'Support',
   },
+  shop: {
+    title: 'Boutique',
+    itemsUnit: 'produits et services',
+    searchingFor: 'Résultats de recherche pour :',
+    clearSearch: 'Effacer la recherche',
+    filters: {
+      all: 'Tout',
+      services: 'Services',
+      ui: 'Kits UI',
+      ebooks: 'Livres numériques',
+      code: 'Code',
+    },
+    noResultsTitle: 'Aucun résultat',
+    noResultsSubtitle: 'Essayez un autre terme de recherche',
+    login: 'Connexion',
+  },
 }
