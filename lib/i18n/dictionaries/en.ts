@@ -35,4 +35,20 @@ export const en = {
     privacy: 'Privacy',
     support: 'Support',
   },
+  shop: {
+    title: 'Shop',
+    itemsUnit: 'products & services',
+    searchingFor: 'Search results for:',
+    clearSearch: 'Clear search',
+    filters: {
+      all: 'All',
+      services: 'Services',
+      ui: 'UI Kits',
+      ebooks: 'E-books',
+      code: 'Code',
+    },
+    noResultsTitle: 'No results found',
+    noResultsSubtitle: 'Try a different search term',
+    login: 'Log In',
+  },
 }
