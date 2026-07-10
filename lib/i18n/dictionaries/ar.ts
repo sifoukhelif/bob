@@ -35,4 +35,20 @@ export const ar = {
     privacy: 'الخصوصية',
     support: 'الدعم',
   },
+  shop: {
+    title: 'المتجر',
+    itemsUnit: 'منتج وخدمة',
+    searchingFor: 'نتائج البحث عن:',
+    clearSearch: 'إلغاء البحث',
+    filters: {
+      all: 'الكل',
+      services: 'خدمات',
+      ui: 'واجهات UI',
+      ebooks: 'كتب',
+      code: 'أكواد',
+    },
+    noResultsTitle: 'لا توجد نتائج',
+    noResultsSubtitle: 'جرب كلمة بحث أخرى',
+    login: 'دخول',
+  },
 }
