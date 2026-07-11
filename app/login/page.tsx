@@ -2,6 +2,8 @@
 import { Suspense } from 'react'
 import { LoginForm } from './login-form'
 import { Logo } from '@/components/logo'
+import { getServerLocale } from '@/lib/i18n/server'
+import { getDictionary } from '@/lib/i18n'
 
 export const metadata = { title: 'تسجيل الدخول' }
 
@@ -13,10 +15,13 @@ function LoginFallback() {
   )
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
+
   return (
     <Suspense fallback={<LoginFallback />}>
-      <LoginForm />
+      <LoginForm locale={locale} t={t} />
     </Suspense>
   )
 }
