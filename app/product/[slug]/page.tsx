@@ -7,7 +7,8 @@ import { BuyBox } from './buy-box'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
-import { getServerLocale, getDictionary } from '@/lib/i18n'
+import { getServerLocale } from '@/lib/i18n/server'
+import { getDictionary } from '@/lib/i18n'
 
 type Params = Promise<{ slug: string }>
 
