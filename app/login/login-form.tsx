@@ -5,8 +5,11 @@ import { getBrowserClient } from '@/lib/supabase/browser'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import type { Locale } from '@/lib/i18n'
+import { getDictionary } from '@/lib/i18n'
 
-export function LoginForm() {
+export function LoginForm({ locale, t }: { locale: Locale; t: ReturnType<typeof getDictionary> }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/'
@@ -33,7 +36,6 @@ export function LoginForm() {
           options: { data: { role: 'buyer' }, emailRedirectTo: callbackUrl },
         })
         if (error) throw error
-        // إذا "Confirm email" مُفعَّل في Supabase، session ستكون null والمستخدم يحتاج فتح بريده أولاً
         if (data.session) {
           router.push(redirectTo); router.refresh()
         } else {
@@ -43,8 +45,8 @@ export function LoginForm() {
     } catch (err: any) {
       setError(
         err.message === 'Email not confirmed'
-          ? 'لم تؤكد بريدك الإلكتروني بعد. تحقق من بريدك (وصندوق السبام) واضغط رابط التأكيد.'
-          : err.message ?? 'حدث خطأ'
+          ? t.login.emailNotConfirmedError
+          : err.message ?? t.login.genericError
       )
     } finally { setLoading(false) }
   }
@@ -54,12 +56,12 @@ export function LoginForm() {
       <div className="min-h-screen bg-[#08080E] flex items-center justify-center px-4">
         <div className="relative w-full max-w-sm text-center">
           <div className="text-5xl mb-6">📩</div>
-          <h1 className="text-xl font-serif font-bold mb-3">تحقق من بريدك</h1>
+          <h1 className="text-xl font-serif font-bold mb-3">{t.login.checkEmailTitle}</h1>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
-            أرسلنا رابط تأكيد إلى <span className="text-white" dir="ltr">{email}</span>. اضغط الرابط لتفعيل حسابك، ثم سجّل دخولك.
+            {t.login.checkEmailBodyPrefix} <span className="text-white" dir="ltr">{email}</span>. {t.login.checkEmailBodySuffix}
           </p>
           <button onClick={() => { setSignupDone(false); setMode('login') }}
-            className="text-[#C9A84C] text-sm hover:underline">رجوع لتسجيل الدخول</button>
+            className="text-[#C9A84C] text-sm hover:underline">{t.login.backToLogin}</button>
         </div>
       </div>
     )
@@ -71,37 +73,40 @@ export function LoginForm() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#C9A84C]/5 blur-[120px] rounded-full" />
       </div>
       <div className="relative w-full max-w-sm">
+        <div className="flex justify-center mb-2">
+          <LanguageSwitcher current={locale} />
+        </div>
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             <Logo size="md" />
             <span className="text-xl font-bold tracking-widest uppercase">DEGITALE</span>
           </Link>
-          <p className="text-gray-500 text-sm mt-2">{mode === 'login' ? 'أهلاً بعودتك' : 'أنشئ حسابك مجاناً'}</p>
+          <p className="text-gray-500 text-sm mt-2">{mode === 'login' ? t.login.welcomeBack : t.login.createAccount}</p>
         </div>
         <div className="bg-[#111118] border border-white/6 rounded-2xl p-6">
           <div className="flex rounded-xl bg-black/30 p-1 mb-6">
             {(['login','signup'] as const).map(m => (
               <button key={m} onClick={() => { setMode(m); setError('') }}
                 className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${mode === m ? 'bg-[#C9A84C] text-[#08080E]' : 'text-gray-500 hover:text-gray-300'}`}>
-                {m === 'login' ? 'تسجيل الدخول' : 'حساب جديد'}
+                {m === 'login' ? t.login.loginTab : t.login.signupTab}
               </button>
             ))}
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="block text-xs text-gray-500 mb-1.5">البريد الإلكتروني</label>
+              <label className="block text-xs text-gray-500 mb-1.5">{t.login.emailLabel}</label>
               <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required dir="ltr"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1.5">كلمة المرور</label>
+              <label className="block text-xs text-gray-500 mb-1.5">{t.login.passwordLabel}</label>
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} dir="ltr"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
             </div>
             {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400">{error}</div>}
             <button type="submit" disabled={loading}
               className="w-full bg-[#C9A84C] text-[#08080E] py-3 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 mt-2">
-              {loading ? 'جارٍ التحميل…' : mode === 'login' ? 'دخول' : 'إنشاء الحساب'}
+              {loading ? t.login.loadingText : mode === 'login' ? t.login.loginButton : t.login.signupButton}
             </button>
           </form>
         </div>
