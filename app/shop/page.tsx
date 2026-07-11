@@ -4,7 +4,8 @@ import { createServerClient } from '@/lib/supabase/server'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
-import { getServerLocale, getDictionary } from '@/lib/i18n'
+import { getServerLocale } from '@/lib/i18n/server'
+import { getDictionary } from '@/lib/i18n'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'المتجر', description: 'اكتشف آلاف المنتجات والخدمات الرقمية' }
