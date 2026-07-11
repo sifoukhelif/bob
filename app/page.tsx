@@ -67,7 +67,6 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6] overflow-x-hidden">
 
-      {/* NAV */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3 shrink-0">
@@ -82,7 +81,6 @@ export default async function Home() {
             {user && <Link href="/orders" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.nav.orders}</Link>}
           </div>
 
-          {/* شريط البحث */}
           <form action="/shop" method="get" className="hidden sm:flex flex-1 max-w-xs">
             <div className="relative w-full">
               <input
@@ -115,7 +113,6 @@ export default async function Home() {
         </div>
       </nav>
 
-      {/* HERO */}
       <section className="relative pt-52 pb-36 flex flex-col items-center overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#C9A84C]/8 blur-[140px] rounded-full" />
@@ -154,7 +151,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* STATS */}
       <section className="max-w-4xl mx-auto px-6 mb-24">
         <div className="grid grid-cols-3 gap-4 bg-[#111118] border border-white/5 rounded-3xl px-8 py-6">
           {stats.map(s => (
@@ -166,7 +162,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS */}
       <section className="max-w-7xl mx-auto px-6 pb-28">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
@@ -207,7 +202,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="border-t border-white/5 py-16 bg-[#06060A]">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-6">
