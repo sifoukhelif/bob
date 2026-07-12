@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getBrowserClient } from '@/lib/supabase/browser'
+import type { Locale } from '@/lib/i18n'
+import { getDictionary } from '@/lib/i18n'
 
 type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service'; parent_id: string | null }
 
@@ -33,14 +35,17 @@ export function EditListingForm({
   categories,
   initial,
   existingFileName,
+  locale,
 }: {
   listingId: string
   storeId: string
   categories: Category[]
   initial: { type: 'product' | 'service'; title: string; description: string; categoryId: string; price: string; thumbnailUrl: string | null }
   existingFileName: string | null
+  locale: Locale
 }) {
   const router = useRouter()
+  const t = getDictionary(locale)
   const [type] = useState<'product' | 'service'>(initial.type)
   const [title, setTitle] = useState(initial.title)
   const [description, setDescription] = useState(initial.description)
@@ -65,12 +70,12 @@ export function EditListingForm({
     setError('')
 
     if (!title.trim() || title.trim().length < 3) {
-      setError('عنوان المنتج يجب أن يكون 3 أحرف على الأقل')
+      setError(t.listingForm.errorTitleTooShort)
       return
     }
     const priceNum = parseFloat(price)
     if (Number.isNaN(priceNum) || priceNum < 0) {
-      setError('أدخل سعراً صحيحاً')
+      setError(t.listingForm.errorInvalidPrice)
       return
     }
 
@@ -89,7 +94,7 @@ export function EditListingForm({
         const { error: imgError } = await sb.storage.from('listing-images').upload(imgPath, image)
         if (imgError) {
           console.error('Image upload error:', imgError)
-          throw new Error(`تعذّر رفع الصورة: ${imgError.message}`)
+          throw new Error(`${t.listingForm.errorImageUploadPrefix} ${imgError.message}`)
         }
         const { data: publicUrlData } = sb.storage.from('listing-images').getPublicUrl(imgPath)
         thumbnailUrl = publicUrlData.publicUrl
@@ -111,7 +116,7 @@ export function EditListingForm({
         .eq('store_id', storeId)
 
       if (updateError) {
-        throw new Error('تعذّر تحديث المنتج، حاول مرة أخرى')
+        throw new Error(t.editListing.errorUpdateFailed)
       }
 
       if (type === 'product' && file) {
@@ -119,7 +124,7 @@ export function EditListingForm({
         const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file)
         if (uploadError) {
           console.error('Storage upload error:', uploadError)
-          throw new Error(`تم تحديث بيانات المنتج، لكن تعذّر رفع الملف الجديد: ${uploadError.message}`)
+          throw new Error(`${t.editListing.errorFileUploadPartialPrefix} ${uploadError.message}`)
         }
 
         const { data: existing } = await sb
@@ -148,7 +153,7 @@ export function EditListingForm({
 
       router.push('/dashboard?updated=1')
     } catch (err: any) {
-      setError(err.message ?? 'حدث خطأ غير متوقع')
+      setError(err.message ?? t.listingForm.genericError)
     } finally {
       setLoading(false)
     }
@@ -157,39 +162,39 @@ export function EditListingForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5">صورة الغلاف</label>
+        <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.coverImageLabel}</label>
         <div className="flex items-center gap-4">
           {imagePreview ? (
-            <img src={imagePreview} alt="معاينة" className="w-20 h-20 rounded-xl object-cover border border-white/10" />
+            <img src={imagePreview} alt="preview" className="w-20 h-20 rounded-xl object-cover border border-white/10" />
           ) : (
             <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-600 text-xs">
-              بدون صورة
+              {t.listingForm.noImage}
             </div>
           )}
           <input type="file" accept="image/*" onChange={handleImageChange}
             className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
         </div>
-        <p className="text-[10px] text-gray-600 mt-1.5">اترك هذا الحقل فارغاً إذا لا تريد تغيير الصورة الحالية.</p>
+        <p className="text-[10px] text-gray-600 mt-1.5">{t.editListing.keepImageHint}</p>
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5">العنوان</label>
+        <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.titleLabel}</label>
         <input value={title} onChange={e => setTitle(e.target.value)} required minLength={3} maxLength={100}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5">الوصف</label>
+        <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.descriptionLabel}</label>
         <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors resize-none" />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-       <div>
-          <label className="block text-xs text-gray-500 mb-1.5">التصنيف</label>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.categoryLabel}</label>
           <select value={categoryId} onChange={e => setCategoryId(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors cursor-pointer">
-            <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>اختر تصنيفاً</option>
+            <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{t.listingForm.categoryPlaceholder}</option>
             {categoryGroups.map(group => (
               <optgroup key={group.main.id} label={group.main.name_ar ?? group.main.slug} style={{ backgroundColor: '#111118', color: '#C9A84C' }}>
                 {group.subs.map(sub => (
@@ -200,7 +205,7 @@ export function EditListingForm({
           </select>
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5">السعر (USD)</label>
+          <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.priceLabel}</label>
           <input value={price} onChange={e => setPrice(e.target.value)} type="number" min="0" step="0.01" required dir="ltr"
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
         </div>
@@ -208,13 +213,13 @@ export function EditListingForm({
 
       {type === 'product' && (
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5">ملف المنتج</label>
+          <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.fileLabel}</label>
           {existingFileName && !file && (
-            <p className="text-xs text-gray-400 mb-2">📄 الملف الحالي: {existingFileName}</p>
+            <p className="text-xs text-gray-400 mb-2">{t.editListing.currentFilePrefix} {existingFileName}</p>
           )}
           <input type="file" onChange={e => setFile(e.target.files?.[0] ?? null)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
-          <p className="text-[10px] text-gray-600 mt-1.5">اترك هذا الحقل فارغاً إذا لا تريد تغيير الملف الحالي.</p>
+          <p className="text-[10px] text-gray-600 mt-1.5">{t.editListing.keepFileHint}</p>
         </div>
       )}
 
@@ -222,7 +227,7 @@ export function EditListingForm({
 
       <button type="submit" disabled={loading}
         className="w-full bg-[#C9A84C] text-[#08080E] py-3.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 mt-2">
-        {loading ? 'جارٍ الحفظ…' : 'حفظ التعديلات'}
+        {loading ? t.editListing.savingText : t.editListing.saveButton}
       </button>
     </form>
   )
