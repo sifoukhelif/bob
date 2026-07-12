@@ -4,17 +4,12 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { DeleteListingButton } from './delete-listing-button'
+import { getServerLocale } from '@/lib/i18n/server'
+import { getDictionary } from '@/lib/i18n'
 
 export const metadata = { title: 'لوحة تحكم البائع' }
-
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  active:          { label: 'منشور',       color: 'bg-[#2ECC9A]/10 text-[#2ECC9A]' },
-  pending_review:  { label: 'قيد المراجعة', color: 'bg-[#E8A030]/10 text-[#E8A030]' },
-  rejected:        { label: 'مرفوض',        color: 'bg-red-500/10 text-red-400' },
-  paused:          { label: 'متوقف',        color: 'bg-white/10 text-gray-400' },
-  draft:           { label: 'مسودة',        color: 'bg-white/10 text-gray-400' },
-}
 
 async function deleteListing(formData: FormData) {
   'use server'
@@ -34,6 +29,17 @@ export default async function DashboardPage({
   searchParams,
 }: { searchParams: Promise<{ welcome?: string }> }) {
   const { welcome } = await searchParams
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
+
+  const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+    active:          { label: t.dashboard.statusActive,  color: 'bg-[#2ECC9A]/10 text-[#2ECC9A]' },
+    pending_review:  { label: t.dashboard.statusPending, color: 'bg-[#E8A030]/10 text-[#E8A030]' },
+    rejected:        { label: t.dashboard.statusRejected, color: 'bg-red-500/10 text-red-400' },
+    paused:          { label: t.dashboard.statusPaused,  color: 'bg-white/10 text-gray-400' },
+    draft:           { label: t.dashboard.statusDraft,   color: 'bg-white/10 text-gray-400' },
+  }
+
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirectTo=/dashboard')
@@ -48,17 +54,20 @@ export default async function DashboardPage({
       return (
         <div className="min-h-screen bg-[#08080E] text-[#F0EDE6] flex items-center justify-center px-4">
           <div className="text-center max-w-sm">
+            <div className="flex justify-center mb-4">
+              <LanguageSwitcher current={locale} />
+            </div>
             <div className="text-5xl mb-6">🏪</div>
-            <h1 className="text-2xl font-serif font-bold mb-3">لا يوجد متجر مرتبط بحسابك</h1>
+            <h1 className="text-2xl font-serif font-bold mb-3">{t.dashboard.noStoreAdminTitle}</h1>
             <p className="text-gray-500 text-sm mb-8 leading-relaxed">
-              حسابك أدمن، ولا يملك متجراً تلقائياً. يمكنك إنشاء متجر لتبيع كأي بائع آخر، أو الذهاب لوحة الأدمن لإدارة المنصة.
+              {t.dashboard.noStoreAdminDesc}
             </p>
             <div className="flex flex-col gap-3">
               <Link href="/become-seller" className="bg-[#C9A84C] text-[#08080E] py-3 rounded-xl font-black text-sm hover:opacity-90 transition-opacity">
-                أنشئ متجراً الآن
+                {t.dashboard.createStoreNow}
               </Link>
               <Link href="/admin" className="bg-white/5 border border-white/10 py-3 rounded-xl font-bold text-sm hover:bg-white/10 transition-colors">
-                الذهاب إلى لوحة الأدمن
+                {t.dashboard.goToAdmin}
               </Link>
             </div>
           </div>
@@ -87,8 +96,9 @@ export default async function DashboardPage({
             <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/payout-settings" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">إعدادات الأرباح 💰</Link>
-            <Link href={`/store/${store.slug}`} className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">عرض متجري العام ←</Link>
+            <LanguageSwitcher current={locale} />
+            <Link href="/dashboard/payout-settings" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.dashboard.payoutSettingsLink}</Link>
+            <Link href={`/store/${store.slug}`} className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.dashboard.viewStoreLink}</Link>
             <UserMenu email={user.email ?? ''} username={username} role={role} />
           </div>
         </div>
@@ -97,7 +107,7 @@ export default async function DashboardPage({
       <main className="max-w-6xl mx-auto px-6 pt-28 pb-20">
         {welcome === '1' && (
           <div className="bg-[#2ECC9A]/10 border border-[#2ECC9A]/20 rounded-2xl px-5 py-4 mb-8 text-sm text-[#2ECC9A]">
-            🎉 تم تفعيل متجرك «{store.name}» بنجاح! أضف أول منتج لك للبدء بالبيع.
+            {t.dashboard.welcomePrefix}{store.name}{t.dashboard.welcomeSuffix}
           </div>
         )}
 
@@ -108,16 +118,16 @@ export default async function DashboardPage({
           </div>
           <Link href="/dashboard/new"
             className="bg-[#C9A84C] text-[#08080E] px-6 py-3 rounded-full font-black text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
-            + أضف منتجاً جديداً
+            {t.dashboard.addProductButton}
           </Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           {[
-            { label: 'منتجات منشورة', value: activeCount, color: 'text-[#2ECC9A]' },
-            { label: 'بانتظار المراجعة', value: pendingCount, color: 'text-[#E8A030]' },
-            { label: 'إجمالي المبيعات', value: totalSales, color: 'text-[#C9A84C]' },
-            { label: 'التقييم', value: store.rating_avg ? `${store.rating_avg.toFixed(1)}★` : '—', color: 'text-[#4F8EF7]' },
+            { label: t.dashboard.statActive, value: activeCount, color: 'text-[#2ECC9A]' },
+            { label: t.dashboard.statPending, value: pendingCount, color: 'text-[#E8A030]' },
+            { label: t.dashboard.statSales, value: totalSales, color: 'text-[#C9A84C]' },
+            { label: t.dashboard.statRating, value: store.rating_avg ? `${store.rating_avg.toFixed(1)}★` : '—', color: 'text-[#4F8EF7]' },
           ].map(k => (
             <div key={k.label} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
               <div className={`text-2xl font-serif font-bold mb-1 ${k.color}`}>{k.value}</div>
@@ -127,16 +137,16 @@ export default async function DashboardPage({
         </div>
 
         <div className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 text-sm font-semibold">منتجاتي</div>
+          <div className="px-6 py-4 border-b border-white/5 text-sm font-semibold">{t.dashboard.myProductsTitle}</div>
           {listings && listings.length > 0 ? (
             <table className="w-full text-sm">
               <thead><tr className="border-b border-white/5 text-xs text-gray-500">
-                <th className="text-right px-6 py-3 font-medium">المنتج</th>
-                <th className="text-right px-6 py-3 font-medium">السعر</th>
-                <th className="text-right px-6 py-3 font-medium">الحالة</th>
-                <th className="text-right px-6 py-3 font-medium">المبيعات</th>
-                <th className="text-right px-6 py-3 font-medium">المشاهدات</th>
-                <th className="text-right px-6 py-3 font-medium">الإجراءات</th>
+                <th className="text-right px-6 py-3 font-medium">{t.dashboard.colProduct}</th>
+                <th className="text-right px-6 py-3 font-medium">{t.dashboard.colPrice}</th>
+                <th className="text-right px-6 py-3 font-medium">{t.dashboard.colStatus}</th>
+                <th className="text-right px-6 py-3 font-medium">{t.dashboard.colSales}</th>
+                <th className="text-right px-6 py-3 font-medium">{t.dashboard.colViews}</th>
+                <th className="text-right px-6 py-3 font-medium">{t.dashboard.colActions}</th>
               </tr></thead>
               <tbody>
                 {listings.map(l => {
@@ -153,13 +163,14 @@ export default async function DashboardPage({
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <Link href={`/dashboard/edit/${l.id}`} className="text-xs text-[#C9A84C] hover:underline whitespace-nowrap">
-                            تعديل ✏️
+                            {t.dashboard.editLink}
                           </Link>
                           <DeleteListingButton
                             listingId={l.id}
                             storeId={store.id}
                             listingTitle={l.title}
                             deleteListing={deleteListing}
+                            locale={locale}
                           />
                         </div>
                       </td>
@@ -170,8 +181,8 @@ export default async function DashboardPage({
             </table>
           ) : (
             <div className="text-center py-16 text-gray-600 text-sm">
-              لم تضف أي منتج بعد.{' '}
-              <Link href="/dashboard/new" className="text-[#C9A84C] hover:underline">أضف أول منتج لك ←</Link>
+              {t.dashboard.emptyText}{' '}
+              <Link href="/dashboard/new" className="text-[#C9A84C] hover:underline">{t.dashboard.emptyCta}</Link>
             </div>
           )}
         </div>
