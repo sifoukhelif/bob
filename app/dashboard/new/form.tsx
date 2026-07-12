@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getBrowserClient } from '@/lib/supabase/browser'
+import type { Locale } from '@/lib/i18n'
+import { getDictionary } from '@/lib/i18n'
 
 type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service'; parent_id: string | null }
 
@@ -27,8 +29,9 @@ function buildCategoryGroups(categories: Category[], type: 'product' | 'service'
   })).filter(group => group.subs.length > 0)
 }
 
-export function NewListingForm({ storeId, categories }: { storeId: string; categories: Category[] }) {
+export function NewListingForm({ storeId, categories, locale }: { storeId: string; categories: Category[]; locale: Locale }) {
   const router = useRouter()
+  const t = getDictionary(locale)
   const [type, setType] = useState<'product' | 'service'>('product')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -53,16 +56,16 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
     setError('')
 
     if (!title.trim() || title.trim().length < 3) {
-      setError('عنوان المنتج يجب أن يكون 3 أحرف على الأقل')
+      setError(t.listingForm.errorTitleTooShort)
       return
     }
     const priceNum = parseFloat(price)
     if (Number.isNaN(priceNum) || priceNum < 0) {
-      setError('أدخل سعراً صحيحاً')
+      setError(t.listingForm.errorInvalidPrice)
       return
     }
     if (type === 'product' && !file) {
-      setError('يجب رفع ملف المنتج الرقمي')
+      setError(t.newListing.errorFileRequired)
       return
     }
 
@@ -81,7 +84,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         const { error: imgError } = await sb.storage.from('listing-images').upload(imgPath, image)
         if (imgError) {
           console.error('Image upload error:', imgError)
-          throw new Error(`تعذّر رفع الصورة: ${imgError.message}`)
+          throw new Error(`${t.listingForm.errorImageUploadPrefix} ${imgError.message}`)
         }
         const { data: publicUrlData } = sb.storage.from('listing-images').getPublicUrl(imgPath)
         thumbnailUrl = publicUrlData.publicUrl
@@ -103,7 +106,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         .single()
 
       if (insertError || !listing) {
-        throw new Error('تعذّر إنشاء المنتج، حاول مرة أخرى')
+        throw new Error(t.newListing.errorCreateFailed)
       }
 
       if (type === 'product' && file) {
@@ -111,7 +114,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
         const { error: uploadError } = await sb.storage.from('listing-files').upload(path, file)
         if (uploadError) {
           console.error('Storage upload error:', uploadError)
-          throw new Error(`تعذّر رفع الملف: ${uploadError.message}`)
+          throw new Error(`${t.newListing.errorFileUploadPrefix} ${uploadError.message}`)
         }
         await sb.from('listing_files').insert({
           listing_id: listing.id,
@@ -124,7 +127,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
 
       router.push('/dashboard?created=1')
     } catch (err: any) {
-      setError(err.message ?? 'حدث خطأ غير متوقع')
+      setError(err.message ?? t.listingForm.genericError)
     } finally {
       setLoading(false)
     }
@@ -133,50 +136,50 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="flex rounded-xl bg-black/30 p-1">
-        {(['product', 'service'] as const).map(t => (
-          <button key={t} type="button" onClick={() => { setType(t); setCategoryId('') }}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${type === t ? 'bg-[#C9A84C] text-[#08080E]' : 'text-gray-500 hover:text-gray-300'}`}>
-            {t === 'product' ? 'منتج رقمي' : 'خدمة'}
+        {(['product', 'service'] as const).map(ty => (
+          <button key={ty} type="button" onClick={() => { setType(ty); setCategoryId('') }}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${type === ty ? 'bg-[#C9A84C] text-[#08080E]' : 'text-gray-500 hover:text-gray-300'}`}>
+            {ty === 'product' ? t.newListing.typeProduct : t.newListing.typeService}
           </button>
         ))}
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5">صورة الغلاف</label>
+        <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.coverImageLabel}</label>
         <div className="flex items-center gap-4">
           {imagePreview ? (
-            <img src={imagePreview} alt="معاينة" className="w-20 h-20 rounded-xl object-cover border border-white/10" />
+            <img src={imagePreview} alt="preview" className="w-20 h-20 rounded-xl object-cover border border-white/10" />
           ) : (
             <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-600 text-xs">
-              بدون صورة
+              {t.listingForm.noImage}
             </div>
           )}
           <input type="file" accept="image/*" onChange={handleImageChange}
             className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
         </div>
-        <p className="text-[10px] text-gray-600 mt-1.5">هذي الصورة تظهر للمشترين في المتجر والصفحة الرئيسية.</p>
+        <p className="text-[10px] text-gray-600 mt-1.5">{t.newListing.coverImageHint}</p>
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5">العنوان</label>
+        <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.titleLabel}</label>
         <input value={title} onChange={e => setTitle(e.target.value)} required minLength={3} maxLength={100}
-          placeholder="مثال: قالب لوحة تحكم لمتجر إلكتروني"
+          placeholder={t.newListing.titlePlaceholder}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5">الوصف</label>
+        <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.descriptionLabel}</label>
         <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4}
-          placeholder="اشرح ما يحصل عليه المشتري بالتفصيل"
+          placeholder={t.newListing.descriptionPlaceholder}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors resize-none" />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5">التصنيف</label>
+          <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.categoryLabel}</label>
           <select value={categoryId} onChange={e => setCategoryId(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors cursor-pointer">
-            <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>اختر تصنيفاً</option>
+            <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{t.listingForm.categoryPlaceholder}</option>
             {categoryGroups.map(group => (
               <optgroup key={group.main.id} label={group.main.name_ar ?? group.main.slug} style={{ backgroundColor: '#111118', color: '#C9A84C' }}>
                 {group.subs.map(sub => (
@@ -187,19 +190,19 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
           </select>
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5">السعر (USD)</label>
+          <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.priceLabel}</label>
           <input value={price} onChange={e => setPrice(e.target.value)} type="number" min="0" step="0.01" required dir="ltr"
-            placeholder="29.00"
+            placeholder={t.newListing.pricePlaceholder}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
         </div>
       </div>
 
       {type === 'product' && (
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5">ملف المنتج</label>
+          <label className="block text-xs text-gray-500 mb-1.5">{t.listingForm.fileLabel}</label>
           <input type="file" onChange={e => setFile(e.target.files?.[0] ?? null)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
-          <p className="text-[10px] text-gray-600 mt-1.5">هذا هو الملف الذي سيستلمه المشتري بعد الدفع.</p>
+          <p className="text-[10px] text-gray-600 mt-1.5">{t.newListing.fileHint}</p>
         </div>
       )}
 
@@ -207,7 +210,7 @@ export function NewListingForm({ storeId, categories }: { storeId: string; categ
 
       <button type="submit" disabled={loading}
         className="w-full bg-[#C9A84C] text-[#08080E] py-3.5 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 mt-2">
-        {loading ? 'جارٍ الإرسال…' : 'إرسال للمراجعة'}
+        {loading ? t.newListing.submittingText : t.newListing.submitButton}
       </button>
     </form>
   )
