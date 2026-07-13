@@ -10,6 +10,8 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 
+export const dynamic = 'force-dynamic'
+
 type Params = Promise<{ slug: string }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
@@ -38,7 +40,6 @@ export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params
   const locale = await getServerLocale()
   const t = getDictionary(locale)
-
   const supabase  = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   let username: string | null = null
@@ -46,17 +47,13 @@ export default async function ProductPage({ params }: { params: Params }) {
     const { data: profile } = await supabase.from('users').select('username').eq('id', user.id).maybeSingle()
     username = profile?.username ?? null
   }
-
   const { data: p } = await supabase.from('listings')
     .select('id,title,slug,description,base_price,compare_price,currency,thumbnail_url,gallery_urls,sales_count,rating_avg,rating_count,type,tags,delivery_days,stores(id,name,slug,rating_avg,sales_count)')
     .eq('slug', slug).eq('status', 'active').single()
-
   if (!p) notFound()
-
   const store   = p.stores as any
   const price   = p.base_price ?? 0
   const savings = p.compare_price ? Math.round((1 - price / p.compare_price) * 100) : null
-
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -80,7 +77,6 @@ export default async function ProductPage({ params }: { params: Params }) {
           </div>
         </div>
       </nav>
-
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
           <div className="lg:sticky lg:top-28">
@@ -103,7 +99,6 @@ export default async function ProductPage({ params }: { params: Params }) {
               </div>
             )}
           </div>
-
           <div className="flex flex-col gap-6">
             {store && (
               <Link href={`/store/${store.slug}`} className="flex items-center gap-3 w-fit group">
@@ -114,9 +109,7 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <span className="text-xs text-gray-600">· {store.sales_count ?? 0} {t.product.sales}</span>
               </Link>
             )}
-
             <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight">{p.title}</h1>
-
             {p.rating_avg && (
               <div className="flex items-center gap-2">
                 <span className="text-[#C9A84C]">{'★'.repeat(Math.round(p.rating_avg))}</span>
@@ -125,18 +118,15 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <span className="text-xs text-gray-600">· {p.sales_count} {t.product.sales}</span>
               </div>
             )}
-
             {p.description && (
               <p className="text-gray-400 leading-relaxed text-sm">{p.description}</p>
             )}
-
             {p.type === 'service' && p.delivery_days && (
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <span className="text-[#C9A84C]">⚡</span>
                 {t.product.deliveryPrefix} {p.delivery_days} {t.product.deliveryUnit}
               </div>
             )}
-
             <BuyBox listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} locale={locale} />
           </div>
         </div>
