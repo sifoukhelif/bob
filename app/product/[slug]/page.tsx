@@ -47,10 +47,18 @@ export default async function ProductPage({ params }: { params: Params }) {
     const { data: profile } = await supabase.from('users').select('username').eq('id', user.id).maybeSingle()
     username = profile?.username ?? null
   }
-  const { data: p } = await supabase.from('listings')
+  const { data: p, error: productError } = await supabase.from('listings')
     .select('id,title,slug,description,base_price,compare_price,currency,thumbnail_url,gallery_urls,sales_count,rating_avg,rating_count,type,tags,delivery_days,stores(id,name,slug,rating_avg,sales_count)')
     .eq('slug', slug).eq('status', 'active').single()
-  if (!p) notFound()
+
+  if (productError) {
+    console.error('[product-page] query error for slug:', slug, JSON.stringify(productError))
+  }
+  if (!p) {
+    console.error('[product-page] no data returned for slug:', slug)
+    notFound()
+  }
+
   const store   = p.stores as any
   const price   = p.base_price ?? 0
   const savings = p.compare_price ? Math.round((1 - price / p.compare_price) * 100) : null
