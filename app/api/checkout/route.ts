@@ -41,7 +41,8 @@ export async function POST(req: NextRequest) {
     const sellerStripeId = store?.users?.stripe_account_id as string | undefined
     const unitAmount     = Math.round((listing.base_price ?? 0) * 100)
     const origin         = req.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL!
-    const cancelUrl      = `${origin}/product/${listing.slug}`
+    // ترميز الـ slug عشان الروابط اللي فيها أحرف عربية/غير لاتينية تكون صالحة لـ Stripe
+    const cancelUrl      = `${origin}/product/${encodeURIComponent(listing.slug)}`
 
     // منتجات مجانية: تُنشأ كطلب مباشرة بدون المرور بـ Stripe
     if (unitAmount === 0) {
