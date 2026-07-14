@@ -1,11 +1,9 @@
 // lib/translate.ts
-// ترجمة فورية لعنوان/وصف المنتج عبر Claude، مع تخزين مؤقت دائم بقاعدة البيانات
-// بحيث لا تُترجم نفس النسخة أكثر من مرة واحدة لكل لغة.
+// ترجمة فورية لعنوان/وصف المنتج عبر MyMemory (خدمة ترجمة مجانية بالكامل، بلا مفتاح API)
+// مع تخزين مؤقت دائم بقاعدة البيانات، بحيث لا تُترجم نفس النسخة أكثر من مرة واحدة لكل لغة.
 import { createAdminClient } from './supabase/admin'
 
 type Translatable = { title: string; description: string | null }
-
-const LANGUAGE_NAMES: Record<'en' | 'fr', string> = { en: 'English', fr: 'French' }
 
 export async function getTranslatedListing(
   listingId: string,
@@ -26,7 +24,7 @@ export async function getTranslatedListing(
 
   // 2) لا توجد ترجمة مخزّنة — تُرجم الآن فورياً
   try {
-    const translated = await translateWithClaude(original, locale)
+    const translated = await translateFree(original, locale)
 
     // 3) خزّن النتيجة بالكاش (upsert يمنع تكرار الترجمة لاحقاً)
     await admin.from('listing_translations').upsert(
@@ -41,68 +39,49 @@ export async function getTranslatedListing(
 
     return translated
   } catch (err) {
-    // لو فشلت الترجمة لأي سبب (مفتاح API مفقود، خطأ شبكة...)
+    // لو فشلت الترجمة لأي سبب (الخدمة معطّلة، تجاوز الحد اليومي المجاني...)
     // نعرض النص الأصلي بدل كسر الصفحة بالكامل
     console.error('[translate] failed for listing', listingId, locale, err)
     return original
   }
 }
 
-async function translateWithClaude(
+async function translateFree(
   original: Translatable,
   locale: 'en' | 'fr'
 ): Promise<Translatable> {
-  const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set')
-
-  const languageName = LANGUAGE_NAMES[locale]
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1024,
-      system:
-        `You are a professional e-commerce translator for a digital products marketplace. ` +
-        `Translate the given product title and description from Arabic to ${languageName}. ` +
-        `Keep the tone natural and commercial. Preserve any numbers, prices, or product names as-is. ` +
-        `Respond ONLY with valid minified JSON in exactly this shape, nothing else, no markdown fences: ` +
-        `{"title":"...","description":"..."}`,
-      messages: [
-        {
-          role: 'user',
-          content: JSON.stringify({
-            title: original.title,
-            description: original.description ?? '',
-          }),
-        },
-      ],
-    }),
-  })
-
-  if (!res.ok) {
-    const errText = await res.text().catch(() => '')
-    throw new Error(`Claude API error ${res.status}: ${errText}`)
-  }
-
-  const data = await res.json()
-  const text: string = data.content?.[0]?.text ?? ''
-  const clean = text.replace(/```json|```/g, '').trim()
-  const parsed = JSON.parse(clean)
-
-  return {
-    title: parsed.title || original.title,
-    description: parsed.description || original.description,
-  }
+  const [title, description] = await Promise.all([
+    translateText(original.title, locale),
+    original.description ? translateText(original.description, locale) : Promise.resolve(null),
+  ])
+  return { title, description }
 }
 
-// تحذف أي ترجمات مخزّنة لمنتج معيّن — تُستدعى عند تعديل البائع للعنوان/الوصف
-// حتى لا تبقى ترجمة قديمة غير متطابقة مع النص الجديد
+// MyMemory Translation API — مجانية بالكامل، بلا مفتاح API
+// الحد المجاني: 5000 حرف/يوم لكل IP تقريباً (كافٍ جداً بفضل نظام الكاش أعلاه)
+async function translateText(text: string, target: 'en' | 'fr'): Promise<string> {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ar|${target}`
+  const res = await fetch(url, { headers: { 'User-Agent': 'DEGITALE/1.0' } })
+
+  if (!res.ok) throw new Error(`MyMemory API error ${res.status}`)
+
+  const data = await res.json()
+
+  // MyMemory يرجع 200 دائماً حتى عند الخطأ، لذا نتحقق من responseStatus الداخلي
+  if (data?.responseStatus && data.responseStatus !== 200) {
+    throw new Error(`MyMemory error: ${data.responseDetails ?? 'unknown'}`)
+  }
+
+  const translated = data?.responseData?.translatedText
+  if (!translated || typeof translated !== 'string') {
+    throw new Error('MyMemory: no translation returned')
+  }
+
+  return translated
+}
+
+// تحذف أي ترجمات مخزّنة لمنتج معيّن — احتياطي لاستخدام يدوي مستقبلي (مثل زر "أعد الترجمة" بلوحة الأدمن)
+// (الحذف التلقائي عند التعديل يتم فعلياً عبر trigger بقاعدة البيانات، راجع migration 006)
 export async function invalidateListingTranslations(listingId: string) {
   const admin = createAdminClient()
   await admin.from('listing_translations').delete().eq('listing_id', listingId)
