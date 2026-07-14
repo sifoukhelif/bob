@@ -14,8 +14,24 @@ export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
 
+function safeDecodeSlug(raw: string): string {
+  let decoded = raw
+  // فك الترميز بشكل متكرر حتى يستقر (يعالج الترميز المزدوج بأمان)
+  for (let i = 0; i < 3; i++) {
+    try {
+      const next = decodeURIComponent(decoded)
+      if (next === decoded) break
+      decoded = next
+    } catch {
+      break
+    }
+  }
+  return decoded
+}
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = safeDecodeSlug(rawSlug)
   const supabase  = await createServerClient()
   const { data }  = await supabase.from('listings').select('title,description,base_price,thumbnail_url')
     .eq('slug', slug).eq('status', 'active').single()
@@ -37,7 +53,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function ProductPage({ params }: { params: Params }) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = safeDecodeSlug(rawSlug)
   const locale = await getServerLocale()
   const t = getDictionary(locale)
   const supabase  = await createServerClient()
@@ -55,7 +72,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     console.error('[product-page] query error for slug:', slug, JSON.stringify(productError))
   }
   if (!p) {
-    console.error('[product-page] no data returned for slug:', slug)
+    console.error('[product-page] no data returned for slug:', slug, 'raw:', rawSlug)
     notFound()
   }
 
