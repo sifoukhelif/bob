@@ -30,4 +30,17 @@ export const ar = {
     noStoreAdminDesc: 'حسابك أدمن، ولا يملك متجراً تلقائياً. يمكنك إنشاء متجر لتبيع كأي بائع آخر، أو الذهاب لوحة الأدمن لإدارة المنصة.',
     createStoreNow: 'أنشئ متجراً الآن', goToAdmin: 'الذهاب إلى لوحة الأدمن',
   },
+  store: {
+    notFoundTitle: 'متجر غير موجود',
+    verified: '✓ موثّق',
+    ratingSuffix: 'تقييم',
+    salesLabel: 'مبيعة',
+    memberSince: 'عضو منذ',
+    generalShop: 'المتجر العام',
+    productsTitlePrefix: 'منتجات المتجر',
+    emptyText: 'لا توجد منتجات منشورة لهذا المتجر بعد',
+    login: 'دخول',
+    adBannerLabel: 'مساحة إعلانية',
+    adCardLabel: 'إعلان',
+  },
 }
