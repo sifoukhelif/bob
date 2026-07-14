@@ -30,4 +30,17 @@ export const en = {
     noStoreAdminDesc: "Your account is an admin, and doesn't automatically have a store. You can create a store to sell like any other seller, or go to the admin panel to manage the platform.",
     createStoreNow: 'Create a Store Now', goToAdmin: 'Go to Admin Panel',
   },
+  store: {
+    notFoundTitle: 'Store not found',
+    verified: '✓ Verified',
+    ratingSuffix: 'reviews',
+    salesLabel: 'sales',
+    memberSince: 'Member since',
+    generalShop: 'Shop',
+    productsTitlePrefix: 'Store products',
+    emptyText: 'No products published in this store yet',
+    login: 'Login',
+    adBannerLabel: 'Advertisement Space',
+    adCardLabel: 'Ad',
+  },
 }
