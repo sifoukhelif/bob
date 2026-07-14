@@ -30,4 +30,17 @@ export const fr = {
     noStoreAdminDesc: "Votre compte est administrateur et ne possède pas de boutique automatiquement. Vous pouvez créer une boutique pour vendre comme n'importe quel vendeur, ou accéder au panneau d'administration pour gérer la plateforme.",
     createStoreNow: 'Créer une boutique maintenant', goToAdmin: "Aller au panneau d'administration",
   },
+  store: {
+    notFoundTitle: 'Boutique introuvable',
+    verified: '✓ Vérifié',
+    ratingSuffix: 'avis',
+    salesLabel: 'ventes',
+    memberSince: 'Membre depuis',
+    generalShop: 'Boutique',
+    productsTitlePrefix: 'Produits de la boutique',
+    emptyText: "Aucun produit publié dans cette boutique pour l'instant",
+    login: 'Connexion',
+    adBannerLabel: 'Espace publicitaire',
+    adCardLabel: 'Publicité',
+  },
 }
