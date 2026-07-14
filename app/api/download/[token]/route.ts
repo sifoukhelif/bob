@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
   // فك تشفير الـ signed URL
   let signedUrl: string
   try {
-    signedUrl = Buffer.from(item.download_token, 'base64').toString('utf-8')
+    signedUrl = Buffer.from(item.download_token, 'base64url').toString('utf-8')
   } catch {
     return new NextResponse('<h1>رابط تالف</h1>', { status: 410, headers: { 'Content-Type': 'text/html' } })
   }
