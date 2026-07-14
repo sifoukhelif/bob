@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       .createSignedUrl(file.storage_path, 48 * 3600, { download: true })
     if (signed?.signedUrl) {
       await admin.from('order_items').update({
-        download_token:   Buffer.from(signed.signedUrl).toString('base64'),
+        download_token:   Buffer.from(signed.signedUrl).toString('base64url'),
         token_expires_at: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
       }).eq('id', order_item_id)
     }
