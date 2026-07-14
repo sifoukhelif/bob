@@ -9,6 +9,7 @@ import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { getTranslatedListing } from '@/lib/translate'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,21 +33,23 @@ function safeDecodeSlug(raw: string): string {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug: rawSlug } = await params
   const slug = safeDecodeSlug(rawSlug)
+  const locale = await getServerLocale()
   const supabase  = await createServerClient()
-  const { data }  = await supabase.from('listings').select('title,description,base_price,thumbnail_url')
+  const { data }  = await supabase.from('listings').select('id,title,description,base_price,thumbnail_url')
     .eq('slug', slug).eq('status', 'active').single()
   if (!data) return { title: 'منتج غير موجود' }
+  const translated = locale === 'ar' ? data : await getTranslatedListing(data.id, data, locale)
   const price  = data.base_price ? `$${data.base_price.toFixed(2)}` : 'مجاناً'
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://degitale.com'
   return {
-    title: `${data.title} — ${price}`,
-    description: data.description?.slice(0, 155) ?? '',
+    title: `${translated.title} — ${price}`,
+    description: translated.description?.slice(0, 155) ?? '',
     openGraph: {
-      title: data.title, description: `${price}`,
+      title: translated.title, description: `${price}`,
       images: data.thumbnail_url ? [{ url: data.thumbnail_url, width: 1200, height: 630 }] : [],
       url: `${appUrl}/product/${slug}`, siteName: 'DEGITALE',
     },
-    twitter: { card: 'summary_large_image', title: data.title, description: price,
+    twitter: { card: 'summary_large_image', title: translated.title, description: price,
       images: data.thumbnail_url ? [data.thumbnail_url] : [] },
     other: { 'og:price:amount': String(data.base_price ?? 0), 'og:price:currency': 'USD' },
   }
@@ -76,6 +79,10 @@ export default async function ProductPage({ params }: { params: Params }) {
     notFound()
   }
 
+  const translated = locale === 'ar'
+    ? { title: p.title, description: p.description }
+    : await getTranslatedListing(p.id, { title: p.title, description: p.description }, locale)
+
   const store   = p.stores as any
   const price   = p.base_price ?? 0
   const savings = p.compare_price ? Math.round((1 - price / p.compare_price) * 100) : null
@@ -90,7 +97,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           <div className="flex items-center gap-2 text-xs text-gray-600 flex-1 min-w-0">
             <Link href="/shop" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.nav.shop}</Link>
             <span>/</span>
-            <span className="text-gray-400 truncate">{p.title}</span>
+            <span className="text-gray-400 truncate">{translated.title}</span>
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <LanguageSwitcher current={locale} />
@@ -107,7 +114,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           <div className="lg:sticky lg:top-28">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-[#12121A] border border-white/5">
               {p.thumbnail_url
-                ? <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover" />
+                ? <img src={p.thumbnail_url} alt={translated.title} className="w-full h-full object-cover" />
                 : <div className="w-full h-full flex items-center justify-center text-7xl opacity-15">📦</div>
               }
               {savings && (
@@ -134,7 +141,7 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <span className="text-xs text-gray-600">· {store.sales_count ?? 0} {t.product.sales}</span>
               </Link>
             )}
-            <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight">{p.title}</h1>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight">{translated.title}</h1>
             {p.rating_avg && (
               <div className="flex items-center gap-2">
                 <span className="text-[#C9A84C]">{'★'.repeat(Math.round(p.rating_avg))}</span>
@@ -143,8 +150,8 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <span className="text-xs text-gray-600">· {p.sales_count} {t.product.sales}</span>
               </div>
             )}
-            {p.description && (
-              <p className="text-gray-400 leading-relaxed text-sm">{p.description}</p>
+            {translated.description && (
+              <p className="text-gray-400 leading-relaxed text-sm">{translated.description}</p>
             )}
             {p.type === 'service' && p.delivery_days && (
               <div className="flex items-center gap-2 text-sm text-gray-400">
