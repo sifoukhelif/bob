@@ -229,6 +229,8 @@ export default async function Home() {
             <span className="text-xs text-gray-600">{t.footer.rights}</span>
           </div>
           <div className="flex items-center gap-8 text-xs font-bold text-gray-500 uppercase tracking-widest">
+            <Link href="/about" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.about.badge}</Link>
+            <Link href="/faq" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.faq.badge}</Link>
             <Link href="/terms" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.footer.terms}</Link>
             <Link href="/privacy" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.footer.privacy}</Link>
             <Link href="/contact" className="hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.footer.support}</Link>
