@@ -50,10 +50,10 @@ export const fr = {
   },
   about: {
     badge: 'À propos',
-    title: 'Une plateforme numérique arabe, aux standards mondiaux',
+    title: 'Une plateforme numérique, aux standards mondiaux',
     subtitle: "DEGITALE est une marketplace unifiée pour acheter et vendre des produits et services numériques — modèles, code, ebooks et services freelance — en toute sécurité.",
     missionTitle: 'Notre mission',
-    missionText: "Nous pensons que les créateurs numériques du monde arabe méritent une plateforme professionnelle qui les protège ainsi que leurs clients, avec une commission équitable et des outils simples leur permettant de se concentrer sur la création plutôt que sur la complexité technique.",
+    missionText: "Nous pensons que les créateurs numériques méritent une plateforme professionnelle qui les protège ainsi que leurs clients, avec une commission équitable et des outils simples leur permettant de se concentrer sur la création plutôt que sur la complexité technique.",
     howItWorksTitle: 'Comment ça marche',
     buyerStepTitle: 'Pour les acheteurs',
     buyerStepText: "Parcourez des milliers de produits, payez en toute sécurité via Stripe, et recevez un lien de téléchargement instantané valable 48 heures, avec une garantie de remboursement de 14 jours.",
