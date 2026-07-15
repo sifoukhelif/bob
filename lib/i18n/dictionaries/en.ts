@@ -44,6 +44,24 @@ export const en = {
     viewAllOrdersButton: 'View All My Orders',
     validityNote: 'The download link is valid for 48 hours from the time of purchase',
   },
+  contact: {
+    pageTitle: 'Support', homeLink: 'Home',
+    title: 'Contact Support',
+    subtitle: "Have a question or an issue with an order or product? Message us and we'll reply within 24 hours.",
+  },
+  account: {
+    pageTitle: 'Account Settings', homeLink: 'Home', title: 'Account Settings',
+    usernameLabel: 'Username', usernamePlaceholder: 'Sif Khelif',
+    usernameHint: 'English letters, numbers, spaces, and underscores — this name appears instead of your email on the site.',
+    saveButton: 'Save Changes',
+    successMessage: '✅ Username saved successfully',
+    errorTooShort: 'Username must be at least 2 characters',
+    errorTaken: 'This name is already taken, try another one',
+    errorSaveFailed: 'Could not save the name, please try again',
+  },
+  becomeSellerDone: {
+    preparingText: 'Preparing your store…',
+  },
   dashboard: {
     payoutSettingsLink: 'Payout Settings 💰', viewStoreLink: 'View my public store →',
     welcomePrefix: '🎉 Your store «', welcomeSuffix: '» has been activated! Add your first product to start selling.',
