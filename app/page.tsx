@@ -1,12 +1,14 @@
 // app/page.tsx — الصفحة الرئيسية
 import Link from 'next/link'
 import Image from 'next/image'
+import { Fragment } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { AdBanner, AdCard, AdStrip } from '@/components/ad-slot'
 
 function formatCount(n: number): string {
   if (n >= 1000) return `+${Math.floor(n / 1000)}K`
@@ -162,6 +164,11 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* مساحة إعلانية 1 — بعد الإحصائيات */}
+      <section className="max-w-5xl mx-auto px-6 mb-24">
+        <AdBanner label={t.ads.banner} />
+      </section>
+
       <section className="max-w-7xl mx-auto px-6 pb-28">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
@@ -174,8 +181,12 @@ export default async function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.length > 0 ? featuredProducts.map(p => (
-            <Link key={p.id} href={`/product/${p.slug}`} className="group block">
+          {featuredProducts.length > 0 ? featuredProducts.map((p, i) => (
+            <Fragment key={p.id}>
+            {i === 2 && (
+              <AdCard label={t.ads.banner} sublabel={t.ads.card} className="aspect-[4/5]" />
+            )}
+            <Link href={`/product/${p.slug}`} className="group block">
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-[#12121A] border border-white/5 group-hover:border-[#C9A84C]/35 transition-all duration-500 shadow-xl">
                 {p.thumbnail_url
                   ? <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover opacity-65 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700" />
@@ -193,6 +204,7 @@ export default async function Home() {
                 </div>
               </div>
             </Link>
+            </Fragment>
           )) : (
             <div className="col-span-full text-center py-20 text-gray-600 text-sm">
               {t.featured.empty}{' '}
@@ -200,6 +212,11 @@ export default async function Home() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* مساحة إعلانية 3 — قبل الفوتر مباشرة */}
+      <section className="max-w-7xl mx-auto px-6 mb-16">
+        <AdStrip label={t.ads.strip} />
       </section>
 
       <footer className="border-t border-white/5 py-16 bg-[#06060A]">
