@@ -6,6 +6,8 @@ import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { AdBanner, AdCard } from '@/components/ad-slot'
+import { Fragment } from 'react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'المتجر', description: 'اكتشف آلاف المنتجات والخدمات الرقمية' }
@@ -110,11 +112,20 @@ export default async function ShopPage({
           ))}
         </div>
 
+        {/* مساحة إعلانية — أعلى نتائج المتجر */}
+        <div className="mb-10">
+          <AdBanner label={t.ads.banner} />
+        </div>
+
         {products.length > 0 ? (
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-10">
-              {products.map(p => (
-                <Link key={p.id} href={`/product/${p.slug}`} className="group block">
+              {products.map((p, i) => (
+                <Fragment key={p.id}>
+                {i > 0 && i % 8 === 0 && (
+                  <AdCard label={t.ads.banner} sublabel={t.ads.card} className="aspect-[4/5]" />
+                )}
+                <Link href={`/product/${p.slug}`} className="group block">
                   <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#12121A] border border-white/5 group-hover:border-[#C9A84C]/30 transition-all duration-500">
                     {p.thumbnail_url
                       ? <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover opacity-65 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700" />
@@ -131,6 +142,7 @@ export default async function ShopPage({
                     </div>
                   </div>
                 </Link>
+                </Fragment>
               ))}
             </div>
 
