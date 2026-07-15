@@ -4,8 +4,15 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { revalidatePath } from 'next/cache'
+import { getServerLocale } from '@/lib/i18n/server'
+import { getDictionary } from '@/lib/i18n'
+import type { Metadata } from 'next'
 
-export const metadata = { title: 'إعدادات الحساب' }
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
+  return { title: t.account.pageTitle }
+}
 
 function sanitizeUsername(raw: string) {
   const clean = raw.replace(/[^a-zA-Z0-9_ ]/g, '').trim()
@@ -14,6 +21,8 @@ function sanitizeUsername(raw: string) {
 
 async function updateUsername(formData: FormData) {
   'use server'
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirectTo=/account')
@@ -22,14 +31,14 @@ async function updateUsername(formData: FormData) {
   const clean = sanitizeUsername(raw)
 
   if (clean.length < 2) {
-    redirect('/account?error=' + encodeURIComponent('اسم المستخدم يجب أن يكون حرفين على الأقل'))
+    redirect('/account?error=' + encodeURIComponent(t.account.errorTooShort))
   }
 
   const { error } = await supabase.from('users').update({ username: clean }).eq('id', user.id)
   if (error) {
     const message = error.code === '23505'
-      ? 'هذا الاسم مستخدم بالفعل، جرّب اسماً آخر'
-      : 'تعذّر حفظ الاسم، حاول مرة أخرى'
+      ? t.account.errorTaken
+      : t.account.errorSaveFailed
     redirect('/account?error=' + encodeURIComponent(message))
   }
 
@@ -40,6 +49,8 @@ async function updateUsername(formData: FormData) {
 export default async function AccountPage({
   searchParams,
 }: { searchParams: Promise<{ error?: string; success?: string }> }) {
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
   const { error, success } = await searchParams
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -55,31 +66,29 @@ export default async function AccountPage({
             <Logo size="sm" />
             <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
           </Link>
-          <Link href="/" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors">الرئيسية</Link>
+          <Link href="/" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors">{t.account.homeLink}</Link>
         </div>
       </nav>
 
       <main className="max-w-2xl mx-auto px-6 pt-28 pb-24">
-        <h1 className="text-3xl font-serif font-bold mb-2">إعدادات الحساب</h1>
+        <h1 className="text-3xl font-serif font-bold mb-2">{t.account.title}</h1>
         <p className="text-gray-500 text-sm mb-10" dir="ltr">{user.email}</p>
 
         <form action={updateUsername} className="bg-[#111118] border border-white/6 rounded-2xl p-6 flex flex-col gap-4 max-w-md">
           <div>
-            <label className="block text-xs text-gray-500 mb-1.5">اسم المستخدم</label>
+            <label className="block text-xs text-gray-500 mb-1.5">{t.account.usernameLabel}</label>
             <input
               name="username"
               type="text"
               dir="ltr"
               defaultValue={profile?.username ?? ''}
-              placeholder="Sif Khelif"
+              placeholder={t.account.usernamePlaceholder}
               minLength={2}
               maxLength={30}
               required
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors"
             />
-            <p className="text-[10px] text-gray-600 mt-1.5">
-              أحرف إنجليزية، أرقام، مسافات، وشرطة سفلية — يظهر هذا الاسم بدل بريدك في الموقع.
-            </p>
+            <p className="text-[10px] text-gray-600 mt-1.5">{t.account.usernameHint}</p>
           </div>
 
           {error && (
@@ -89,13 +98,13 @@ export default async function AccountPage({
           )}
           {success === '1' && (
             <div className="bg-[#2ECC9A]/10 border border-[#2ECC9A]/20 rounded-xl px-4 py-3 text-xs text-[#2ECC9A]">
-              ✅ تم حفظ اسم المستخدم بنجاح
+              {t.account.successMessage}
             </div>
           )}
 
           <button type="submit"
             className="w-full bg-[#C9A84C] text-[#08080E] py-3 rounded-xl font-black text-sm hover:opacity-90 transition-opacity mt-2">
-            حفظ التغييرات
+            {t.account.saveButton}
           </button>
         </form>
       </main>
