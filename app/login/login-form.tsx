@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { AdBanner } from '@/components/ad-slot'
 import type { Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n'
 
@@ -109,6 +110,11 @@ export function LoginForm({ locale, t }: { locale: Locale; t: ReturnType<typeof 
               {loading ? t.login.loadingText : mode === 'login' ? t.login.loginButton : t.login.signupButton}
             </button>
           </form>
+        </div>
+
+        {/* مساحة إعلانية — تظهر لكل زائر حتى قبل تسجيل الدخول */}
+        <div className="mt-6">
+          <AdBanner label={t.ads.banner} className="h-16 md:h-20" />
         </div>
       </div>
     </div>
