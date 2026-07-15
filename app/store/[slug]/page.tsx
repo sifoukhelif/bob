@@ -2,41 +2,30 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import type { Metadata } from 'next'
+import { Fragment } from 'react'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
-import { Fragment } from 'react'
+import { AdBanner, AdCard } from '@/components/ad-slot'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { safeDecodeSlug } from '@/lib/slug'
+import type { Metadata } from 'next'
 
+// يمنع أي تخزين مؤقت قديم يسبب صفحة متجر غير محدّثة (نفس منطق /product/[slug])
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
 
-// يعالج الترميز المزدوج المحتمل لأسماء/روابط المتاجر العربية
-// (نفس الحل المُطبَّق في app/product/[slug]/page.tsx)
-function safeDecodeSlug(raw: string): string {
-  let decoded = raw
-  for (let i = 0; i < 3; i++) {
-    try {
-      const next = decodeURIComponent(decoded)
-      if (next === decoded) break
-      decoded = next
-    } catch {
-      break
-    }
-  }
-  return decoded
-}
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug: rawSlug } = await params
   const slug = safeDecodeSlug(rawSlug)
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
   const supabase = await createServerClient()
   const { data } = await supabase.from('stores').select('name,bio').eq('slug', slug).maybeSingle()
-  if (!data) return { title: 'متجر غير موجود' }
-  return { title: data.name, description: data.bio ?? `تصفح منتجات ${data.name} على DEGITALE` }
+  if (!data) return { title: t.store.notFoundTitle }
+  return { title: data.name, description: data.bio ?? `${t.store.productsTitlePrefix} — ${data.name}` }
 }
 
 export default async function StorePage({ params }: { params: Params }) {
@@ -72,10 +61,6 @@ export default async function StorePage({ params }: { params: Params }) {
     .eq('status', 'active')
     .order('sales_count', { ascending: false })
 
-  // نُدرج بطاقة إعلانية بعد كل 6 منتجات داخل الشبكة
-  const AD_EVERY = 6
-  const items = listings ?? []
-
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -84,7 +69,7 @@ export default async function StorePage({ params }: { params: Params }) {
             <Logo size="sm" />
             <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
             <LanguageSwitcher current={locale} />
             {user ? (
               <UserMenu email={user.email ?? ''} username={username} role={user.app_metadata?.role as string | undefined} />
@@ -97,7 +82,7 @@ export default async function StorePage({ params }: { params: Params }) {
 
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-24">
         {/* STORE HEADER */}
-        <div className="bg-[#111118] border border-white/5 rounded-3xl p-8 mb-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+        <div className="bg-[#111118] border border-white/5 rounded-3xl p-8 mb-10 flex flex-col md:flex-row items-start md:items-center gap-6">
           <div className="w-20 h-20 rounded-2xl bg-[#C9A84C]/15 flex items-center justify-center text-[#C9A84C] text-3xl font-black shrink-0">
             {store.name?.charAt(0) ?? 'S'}
           </div>
@@ -117,18 +102,21 @@ export default async function StorePage({ params }: { params: Params }) {
           </div>
         </div>
 
-        {/* AD BANNER — مساحة إعلانية علوية */}
-        <div className="mb-12 rounded-2xl border border-dashed border-white/10 bg-[#111118]/50 h-24 md:h-28 flex items-center justify-center text-gray-600 text-xs tracking-wide">
-          {t.store.adBannerLabel}
+        {/* مساحة إعلانية — أعلى منتجات المتجر */}
+        <div className="mb-10">
+          <AdBanner label={t.store.adBannerLabel} />
         </div>
 
         {/* LISTINGS */}
-        <h2 className="text-xl font-serif font-bold mb-6">{t.store.productsTitlePrefix} ({items.length})</h2>
-        {items.length > 0 ? (
+        <h2 className="text-xl font-serif font-bold mb-6">{t.store.productsTitlePrefix} ({listings?.length ?? 0})</h2>
+        {listings && listings.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {items.map((p, i) => (
+            {listings.map((p, i) => (
               <Fragment key={p.id}>
-                <Link href={`/product/${encodeURIComponent(p.slug)}`} className="group block">
+                {i > 0 && i % 8 === 0 && (
+                  <AdCard label={t.store.adBannerLabel} sublabel={t.store.adCardLabel} className="aspect-[4/5]" />
+                )}
+                <Link href={`/product/${p.slug}`} className="group block">
                   <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#12121A] border border-white/5 group-hover:border-[#C9A84C]/30 transition-all duration-500">
                     {p.thumbnail_url
                       ? <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover opacity-65 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700" />
@@ -144,13 +132,6 @@ export default async function StorePage({ params }: { params: Params }) {
                     </div>
                   </div>
                 </Link>
-                {/* AD CARD — بطاقة إعلانية مدمجة كل 6 منتجات */}
-                {(i + 1) % AD_EVERY === 0 && (
-                  <div className="relative aspect-[4/5] rounded-2xl border border-dashed border-white/10 bg-[#111118]/50 flex flex-col items-center justify-center gap-1 text-gray-600">
-                    <span className="text-[9px] tracking-widest uppercase text-gray-700">{t.store.adCardLabel}</span>
-                    <span className="text-xs">{t.store.adBannerLabel}</span>
-                  </div>
-                )}
               </Fragment>
             ))}
           </div>
