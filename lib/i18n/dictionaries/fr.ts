@@ -44,6 +44,24 @@ export const fr = {
     viewAllOrdersButton: 'Voir toutes mes commandes',
     validityNote: "Le lien de téléchargement est valable 48 heures après l'achat",
   },
+  contact: {
+    pageTitle: 'Support', homeLink: 'Accueil',
+    title: 'Contactez le support',
+    subtitle: "Une question ou un problème avec une commande ou un produit ? Écrivez-nous, nous répondrons sous 24 heures.",
+  },
+  account: {
+    pageTitle: 'Paramètres du compte', homeLink: 'Accueil', title: 'Paramètres du compte',
+    usernameLabel: "Nom d'utilisateur", usernamePlaceholder: 'Sif Khelif',
+    usernameHint: "Lettres anglaises, chiffres, espaces et underscores — ce nom apparaît à la place de votre email sur le site.",
+    saveButton: 'Enregistrer les modifications',
+    successMessage: "✅ Nom d'utilisateur enregistré avec succès",
+    errorTooShort: "Le nom d'utilisateur doit contenir au moins 2 caractères",
+    errorTaken: 'Ce nom est déjà pris, essayez-en un autre',
+    errorSaveFailed: "Impossible d'enregistrer le nom, veuillez réessayer",
+  },
+  becomeSellerDone: {
+    preparingText: 'Préparation de votre boutique…',
+  },
   dashboard: {
     payoutSettingsLink: 'Paramètres de paiement 💰', viewStoreLink: 'Voir ma boutique publique →',
     welcomePrefix: '🎉 Votre boutique «', welcomeSuffix: '» a été activée avec succès ! Ajoutez votre premier produit pour commencer à vendre.',
