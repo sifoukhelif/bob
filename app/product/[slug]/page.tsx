@@ -9,26 +9,12 @@ import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { safeDecodeSlug } from '@/lib/slug'
 import { getTranslatedListing } from '@/lib/translate'
 
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
-
-function safeDecodeSlug(raw: string): string {
-  let decoded = raw
-  // فك الترميز بشكل متكرر حتى يستقر (يعالج الترميز المزدوج بأمان)
-  for (let i = 0; i < 3; i++) {
-    try {
-      const next = decodeURIComponent(decoded)
-      if (next === decoded) break
-      decoded = next
-    } catch {
-      break
-    }
-  }
-  return decoded
-}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug: rawSlug } = await params
