@@ -62,6 +62,114 @@ export const en = {
   becomeSellerDone: {
     preparingText: 'Preparing your store…',
   },
+  terms: {
+  "title": "Terms & Conditions",
+  "intro": "By using the DEGITALE platform, you agree to the following terms. Please read them carefully before selling or buying on the platform. If you do not agree to any part of these terms, please do not use the platform.",
+  "sections": [
+    {
+      "title": "1. Nature of the Platform",
+      "body": "DEGITALE is a marketplace connecting sellers and buyers of digital assets (templates, e-books, code) and digital services. The platform does not produce the listed content and does not guarantee its quality, though it reviews every product before publishing as an initial vetting step that is not a full guarantee of content quality."
+    },
+    {
+      "title": "2. Eligibility",
+      "body": "You must be at least 18 years old to create an account or make purchases or sales on the platform. By using the platform, you confirm that you meet this requirement."
+    },
+    {
+      "title": "3. Platform Commission & Pricing",
+      "body": "The platform charges a commission on every successful sale, based on the rate disclosed at the time of sale (currently shown in the platform settings). All displayed prices are in US Dollars (USD) unless stated otherwise."
+    },
+    {
+      "title": "4. Seller Payouts",
+      "body": "The seller's net earnings (after deducting the platform commission) are transferred manually based on the payout details (bank transfer, Payoneer, or another method) entered by the seller in their account settings, on a periodic basis according to the payment policy announced by the platform team. The platform may in the future move to an automated payout system (such as Stripe Connect) once available, and sellers will be notified at that time. The platform is not responsible for any delay resulting from incorrect payout details entered by the seller."
+    },
+    {
+      "title": "5. Seller Responsibilities & Intellectual Property",
+      "body": "The seller bears full responsibility for the accuracy of their product description, for owning full rights (or the necessary license) to the content they upload, and for the quality of the uploaded files. Uploading stolen or plagiarized content, or content that infringes a third party's intellectual property rights, is prohibited. The platform reserves the right to reject or remove any product that violates these terms without prior notice in serious cases.",
+      "body2": "To report intellectual property infringement, please contact us via the support page with proof of ownership and details of the infringing product; the platform will review every report and may temporarily remove the infringing product during review."
+    },
+    {
+      "title": "6. Buyer Rights & Product Delivery",
+      "body": "Upon successful completion of a purchase, the buyer receives a download link valid for 48 hours from the time of purchase. The buyer is advised to download the file immediately after purchase and keep a personal copy, as the platform does not guarantee automatic renewal of the link after it expires."
+    },
+    {
+      "title": "7. Refund Policy",
+      "body": "A refund may be granted within 14 days of purchase in the event of a material defect in the product (such as the file not matching the description, or a corrupted file), subject to the support team's assessment of each case individually. No refund is granted simply because the buyer changed their mind after successfully downloading the file."
+    },
+    {
+      "title": "8. Suspension & Account Bans",
+      "body": "The platform reserves the right to restrict or ban any account that violates these terms or is used in a harmful or fraudulent manner, with or without prior notice depending on the severity of the violation."
+    },
+    {
+      "title": "9. Account Deletion",
+      "body": "Any user may request the deletion of their account and personal data by contacting the support team via the contact page. The platform may retain certain transaction data for a limited period to comply with mandatory accounting or legal obligations."
+    },
+    {
+      "title": "10. Taxes",
+      "body": "Each seller is responsible for declaring their own taxes and complying with the tax laws applicable in their country, independently of the platform."
+    },
+    {
+      "title": "11. Disclaimer",
+      "body": "The platform is provided \"as is\" without any express or implied warranties regarding uninterrupted service continuity or being error-free. The platform is not liable for any indirect losses resulting from the use of the platform, to the maximum extent permitted by applicable law."
+    },
+    {
+      "title": "12. Governing Law",
+      "body": "The governing law for these terms and the competent jurisdiction for disputes will be finalized once the official registration of the platform's owning legal entity is completed, and this clause will be updated accordingly before the official launch."
+    }
+  ],
+  "footer": "Last updated: July 2026. These terms are a template and require specialized legal review by a licensed attorney before official launch."
+},
+  privacy: {
+  "title": "Privacy Policy",
+  "intro": "We respect your privacy and are committed to protecting your personal data. This page explains what data we collect, how we use it, and where it is stored.",
+  "sections": [
+    {
+      "title": "1. Data We Collect",
+      "body": "Email address, name (optional), username, and order and transaction data necessary to provide the service. We do not store your bank card details — all payments are processed directly via Stripe.",
+      "body2": "If you are a seller, we also collect the payout details you enter yourself (such as a bank account number / IBAN or Payoneer email), which are used exclusively by the platform's authorized team to process your payouts, and are not shown to any other party."
+    },
+    {
+      "title": "2. Cookies",
+      "body": "We use only essential cookies to manage your login session and authentication. We do not currently use tracking or third-party advertising cookies."
+    },
+    {
+      "title": "3. How We Use Your Data",
+      "body": "We use your data to operate your account, process orders, deliver digital products, execute payout transfers for sellers, and communicate with you about your orders or account."
+    },
+    {
+      "title": "4. Data Sharing & Storage Location",
+      "body": "We do not sell your data to third parties. We share the minimum data necessary with trusted service providers solely to operate the platform:",
+      "list": [
+        "Supabase — database and file storage (servers located in Frankfurt, Germany / European Union)",
+        "Stripe — payment processing",
+        "Resend — sending operational emails (account confirmation, order notifications)"
+      ]
+    },
+    {
+      "title": "5. Data Retention Period",
+      "body": "We retain your data for as long as your account is active. Upon requesting account deletion, your personal data is deleted within a reasonable period, except for data that must be retained for mandatory accounting or legal purposes."
+    },
+    {
+      "title": "6. Data Security",
+      "body": "We apply database-level security policies (Row Level Security) that ensure each user can only access their own data, in addition to encrypted connections (HTTPS) across the entire platform."
+    },
+    {
+      "title": "7. Your Rights",
+      "body": "You have the right at any time to:",
+      "list": [
+        "Access your personal data stored with us",
+        "Correct or update your data",
+        "Request deletion of your account and data",
+        "Object to the processing of your data in certain cases"
+      ],
+      "closing": "To exercise any of these rights, contact us via the support page."
+    },
+    {
+      "title": "8. Children & Minors",
+      "body": "The platform is not directed at individuals under 18 years of age, and we do not knowingly and intentionally collect data from users we know to be minors."
+    }
+  ],
+  "footer": "Last updated: July 2026. This policy is a template and requires specialized legal review by a licensed attorney before official launch, particularly regarding full compliance with data protection regulations (such as the European GDPR) if your audience includes users from the European Union."
+},
   dashboard: {
     payoutSettingsLink: 'Payout Settings 💰', viewStoreLink: 'View my public store →',
     welcomePrefix: '🎉 Your store «', welcomeSuffix: '» has been activated! Add your first product to start selling.',
