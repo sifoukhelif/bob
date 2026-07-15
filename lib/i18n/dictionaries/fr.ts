@@ -62,6 +62,114 @@ export const fr = {
   becomeSellerDone: {
     preparingText: 'Préparation de votre boutique…',
   },
+  terms: {
+  "title": "Conditions Générales",
+  "intro": "En utilisant la plateforme DEGITALE, vous acceptez les conditions suivantes. Veuillez les lire attentivement avant de vendre ou d'acheter sur la plateforme. Si vous n'acceptez pas l'une de ces conditions, veuillez ne pas utiliser la plateforme.",
+  "sections": [
+    {
+      "title": "1. Nature de la plateforme",
+      "body": "DEGITALE est une place de marché (Marketplace) qui met en relation vendeurs et acheteurs d'actifs numériques (modèles, livres numériques, code) et de services numériques. La plateforme ne produit pas le contenu proposé et n'en garantit pas la qualité, bien qu'elle examine chaque produit avant sa publication comme étape de vérification initiale, qui ne constitue pas une garantie complète de la qualité du contenu."
+    },
+    {
+      "title": "2. Éligibilité",
+      "body": "Vous devez avoir au moins 18 ans pour créer un compte ou effectuer des achats ou des ventes sur la plateforme. En utilisant la plateforme, vous confirmez que vous remplissez cette condition."
+    },
+    {
+      "title": "3. Commission de la plateforme et tarification",
+      "body": "La plateforme prélève une commission sur chaque vente réussie, selon le taux annoncé au moment de la vente (actuellement affiché dans les paramètres de la plateforme). Tous les prix affichés sont en dollars américains (USD), sauf indication contraire."
+    },
+    {
+      "title": "4. Versement des gains du vendeur",
+      "body": "Les gains nets du vendeur (après déduction de la commission de la plateforme) sont transférés manuellement sur la base des coordonnées de paiement (virement bancaire, Payoneer ou autre méthode) saisies par le vendeur dans les paramètres de son compte, de façon périodique selon la politique de paiement annoncée par l'équipe de la plateforme. La plateforme pourra à l'avenir migrer vers un système de versement automatique (comme Stripe Connect) dès qu'il sera disponible, et les vendeurs en seront alors informés. La plateforme n'est pas responsable de tout retard résultant de coordonnées de paiement incorrectes saisies par le vendeur."
+    },
+    {
+      "title": "5. Responsabilités du vendeur et propriété intellectuelle",
+      "body": "Le vendeur assume l'entière responsabilité de l'exactitude de la description de son produit, de la détention des droits complets (ou de la licence nécessaire) sur le contenu qu'il téléverse, et de la qualité des fichiers téléversés. Il est interdit de téléverser du contenu volé, plagié, ou portant atteinte aux droits de propriété intellectuelle d'un tiers. La plateforme se réserve le droit de refuser ou de retirer tout produit enfreignant ces conditions, sans préavis dans les cas graves.",
+      "body2": "Pour signaler une atteinte à la propriété intellectuelle, veuillez nous contacter via la page de support en fournissant une preuve de propriété et les détails du produit concerné ; la plateforme examinera chaque signalement et pourra retirer temporairement le produit concerné pendant l'examen."
+    },
+    {
+      "title": "6. Droits de l'acheteur et livraison du produit",
+      "body": "Une fois l'achat effectué avec succès, l'acheteur reçoit un lien de téléchargement valable 48 heures à partir du moment de l'achat. Il est conseillé à l'acheteur de télécharger le fichier immédiatement après l'achat et d'en conserver une copie personnelle, la plateforme ne garantissant pas le renouvellement automatique du lien après son expiration."
+    },
+    {
+      "title": "7. Politique de remboursement",
+      "body": "Un remboursement peut être accordé dans les 14 jours suivant l'achat en cas de défaut substantiel du produit (par exemple, un fichier ne correspondant pas à la description, ou un fichier corrompu), selon l'évaluation de l'équipe de support au cas par cas. Aucun remboursement n'est accordé simplement parce que l'acheteur a changé d'avis après avoir téléchargé le fichier avec succès."
+    },
+    {
+      "title": "8. Suspension et bannissement de compte",
+      "body": "La plateforme se réserve le droit de restreindre ou de bannir tout compte enfreignant ces conditions ou utilisé de manière nuisible ou frauduleuse, avec ou sans préavis selon la gravité de l'infraction."
+    },
+    {
+      "title": "9. Suppression de compte",
+      "body": "Tout utilisateur peut demander la suppression de son compte et de ses données personnelles en contactant l'équipe de support via la page de contact. La plateforme peut conserver certaines données de transaction pendant une durée limitée afin de respecter des obligations comptables ou légales."
+    },
+    {
+      "title": "10. Impôts",
+      "body": "Chaque vendeur est responsable de la déclaration de ses propres impôts et du respect des lois fiscales applicables dans son pays, indépendamment de la plateforme."
+    },
+    {
+      "title": "11. Clause de non-responsabilité",
+      "body": "La plateforme est fournie « telle quelle », sans aucune garantie expresse ou implicite quant à la continuité ininterrompue du service ou à son absence d'erreurs. La plateforme n'est pas responsable des pertes indirectes résultant de l'utilisation de la plateforme, dans la mesure maximale permise par la loi applicable."
+    },
+    {
+      "title": "12. Loi applicable",
+      "body": "Le droit applicable à ces conditions et la juridiction compétente pour les litiges seront définitivement déterminés une fois l'enregistrement officiel de l'entité juridique propriétaire de la plateforme finalisé, et cette clause sera mise à jour en conséquence avant le lancement officiel."
+    }
+  ],
+  "footer": "Dernière mise à jour : juillet 2026. Ces conditions sont un modèle et nécessitent une révision juridique spécialisée par un avocat agréé avant le lancement officiel."
+},
+  privacy: {
+  "title": "Politique de confidentialité",
+  "intro": "Nous respectons votre vie privée et nous engageons à protéger vos données personnelles. Cette page explique quelles données nous collectons, comment nous les utilisons et où elles sont stockées.",
+  "sections": [
+    {
+      "title": "1. Données que nous collectons",
+      "body": "Adresse email, nom (facultatif), nom d'utilisateur, et données de commandes et de transactions nécessaires à la fourniture du service. Nous ne stockons pas les données de votre carte bancaire — tous les paiements sont traités directement via Stripe.",
+      "body2": "Si vous êtes vendeur, nous collectons également les coordonnées de paiement que vous saisissez vous-même (comme un numéro de compte bancaire / IBAN ou un email Payoneer), utilisées exclusivement par l'équipe autorisée de la plateforme pour traiter vos versements, et qui ne sont communiquées à aucun autre tiers."
+    },
+    {
+      "title": "2. Cookies",
+      "body": "Nous utilisons uniquement des cookies essentiels pour gérer votre session de connexion et l'authentification. Nous n'utilisons actuellement aucun cookie de suivi ou de publicité tierce."
+    },
+    {
+      "title": "3. Comment nous utilisons vos données",
+      "body": "Nous utilisons vos données pour faire fonctionner votre compte, traiter les commandes, livrer les produits numériques, exécuter les versements aux vendeurs, et communiquer avec vous au sujet de vos commandes ou de votre compte."
+    },
+    {
+      "title": "4. Partage des données et lieu de stockage",
+      "body": "Nous ne vendons pas vos données à des tiers. Nous partageons le minimum de données nécessaires avec des prestataires de confiance, uniquement pour faire fonctionner la plateforme :",
+      "list": [
+        "Supabase — stockage de la base de données et des fichiers (serveurs situés à Francfort, Allemagne / Union européenne)",
+        "Stripe — traitement des paiements",
+        "Resend — envoi des emails opérationnels (confirmation de compte, notifications de commandes)"
+      ]
+    },
+    {
+      "title": "5. Durée de conservation des données",
+      "body": "Nous conservons vos données tant que votre compte est actif. Lors d'une demande de suppression de compte, vos données personnelles sont supprimées dans un délai raisonnable, à l'exception de ce qui doit être conservé à des fins comptables ou légales obligatoires."
+    },
+    {
+      "title": "6. Sécurité des données",
+      "body": "Nous appliquons des politiques de sécurité au niveau de la base de données (Row Level Security) garantissant que chaque utilisateur n'accède qu'à ses propres données, en plus d'un chiffrement des connexions (HTTPS) sur l'ensemble de la plateforme."
+    },
+    {
+      "title": "7. Vos droits",
+      "body": "Vous avez le droit, à tout moment, de :",
+      "list": [
+        "Accéder à vos données personnelles conservées chez nous",
+        "Corriger ou mettre à jour vos données",
+        "Demander la suppression de votre compte et de vos données",
+        "Vous opposer au traitement de vos données dans certains cas"
+      ],
+      "closing": "Pour exercer l'un de ces droits, contactez-nous via la page de support."
+    },
+    {
+      "title": "8. Enfants et mineurs",
+      "body": "La plateforme ne s'adresse pas aux personnes de moins de 18 ans, et nous ne collectons pas intentionnellement de données d'utilisateurs que nous savons être mineurs."
+    }
+  ],
+  "footer": "Dernière mise à jour : juillet 2026. Cette politique est un modèle et nécessite une révision juridique spécialisée par un avocat agréé avant le lancement officiel, notamment en ce qui concerne la pleine conformité aux réglementations de protection des données (comme le RGPD européen) si votre audience inclut des utilisateurs de l'Union européenne."
+},
   dashboard: {
     payoutSettingsLink: 'Paramètres de paiement 💰', viewStoreLink: 'Voir ma boutique publique →',
     welcomePrefix: '🎉 Votre boutique «', welcomeSuffix: '» a été activée avec succès ! Ajoutez votre premier produit pour commencer à vendre.',
