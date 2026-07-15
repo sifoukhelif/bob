@@ -43,4 +43,9 @@ export const en = {
     adBannerLabel: 'Advertisement Space',
     adCardLabel: 'Ad',
   },
+  ads: {
+    banner: 'Advertisement Space',
+    card: 'Ad',
+    strip: 'Advertisement Space',
+  },
 }
