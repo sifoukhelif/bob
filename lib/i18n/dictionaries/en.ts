@@ -50,10 +50,10 @@ export const en = {
   },
   about: {
     badge: 'About Us',
-    title: 'An Arabic digital platform, global standards',
+    title: 'A digital platform, global standards',
     subtitle: 'DEGITALE is a unified marketplace for buying and selling digital products and services — templates, code, ebooks, and freelance services — safely and easily.',
     missionTitle: 'Our Mission',
-    missionText: 'We believe digital creators in the Arab world deserve a professional platform that protects them and their customers, with fair commission and simple tools that let them focus on creating instead of technical complexity.',
+    missionText: 'We believe digital creators deserve a professional platform that protects them and their customers, with fair commission and simple tools that let them focus on creating instead of technical complexity.',
     howItWorksTitle: 'How It Works',
     buyerStepTitle: 'For Buyers',
     buyerStepText: 'Browse thousands of products, pay securely via Stripe, and get an instant download link valid for 48 hours, with a 14-day refund guarantee.',
