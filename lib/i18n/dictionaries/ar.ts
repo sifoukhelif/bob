@@ -44,6 +44,24 @@ export const ar = {
     viewAllOrdersButton: 'عرض كل طلباتي',
     validityNote: 'رابط التحميل صالح لمدة 48 ساعة من لحظة الشراء',
   },
+  contact: {
+    pageTitle: 'الدعم', homeLink: 'الرئيسية',
+    title: 'تواصل مع الدعم',
+    subtitle: 'لديك سؤال أو مشكلة في طلب أو منتج؟ راسلنا وسنرد عليك خلال 24 ساعة.',
+  },
+  account: {
+    pageTitle: 'إعدادات الحساب', homeLink: 'الرئيسية', title: 'إعدادات الحساب',
+    usernameLabel: 'اسم المستخدم', usernamePlaceholder: 'Sif Khelif',
+    usernameHint: 'أحرف إنجليزية، أرقام، مسافات، وشرطة سفلية — يظهر هذا الاسم بدل بريدك في الموقع.',
+    saveButton: 'حفظ التغييرات',
+    successMessage: '✅ تم حفظ اسم المستخدم بنجاح',
+    errorTooShort: 'اسم المستخدم يجب أن يكون حرفين على الأقل',
+    errorTaken: 'هذا الاسم مستخدم بالفعل، جرّب اسماً آخر',
+    errorSaveFailed: 'تعذّر حفظ الاسم، حاول مرة أخرى',
+  },
+  becomeSellerDone: {
+    preparingText: 'جارٍ تجهيز متجرك…',
+  },
   dashboard: {
     payoutSettingsLink: 'إعدادات الأرباح 💰', viewStoreLink: 'عرض متجري العام ←',
     welcomePrefix: '🎉 تم تفعيل متجرك «', welcomeSuffix: '» بنجاح! أضف أول منتج لك للبدء بالبيع.',
