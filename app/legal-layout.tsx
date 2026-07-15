@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
 
-export function LegalLayout({ title, children }: { title: string; children: React.ReactNode }) {
+export function LegalLayout({ title, homeLabel, children }: { title: string; homeLabel: string; children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -11,7 +11,7 @@ export function LegalLayout({ title, children }: { title: string; children: Reac
             <Logo size="sm" />
             <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
           </Link>
-          <Link href="/" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors">الرئيسية</Link>
+          <Link href="/" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors">{homeLabel}</Link>
         </div>
       </nav>
       <main className="max-w-3xl mx-auto px-6 pt-32 pb-24">
