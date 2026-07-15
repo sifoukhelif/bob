@@ -43,4 +43,9 @@ export const fr = {
     adBannerLabel: 'Espace publicitaire',
     adCardLabel: 'Publicité',
   },
+  ads: {
+    banner: 'Espace publicitaire',
+    card: 'Publicité',
+    strip: 'Espace publicitaire',
+  },
 }
