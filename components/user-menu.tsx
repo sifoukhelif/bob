@@ -60,6 +60,10 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
             className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
             إعدادات الحساب
           </Link>
+          <Link href="/wishlist" onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+            المفضلة
+          </Link>
           {role === 'admin' && (
             <Link href="/admin" onClick={() => setOpen(false)}
               className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
