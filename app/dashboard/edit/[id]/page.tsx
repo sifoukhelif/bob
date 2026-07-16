@@ -6,6 +6,7 @@ import { EditListingForm } from './form'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { getTranslatedCategories } from '@/lib/translate'
 
 export const metadata = { title: 'تعديل المنتج' }
 
@@ -28,11 +29,12 @@ export default async function EditListingPage({
     .eq('store_id', store.id)
     .maybeSingle()
   if (!listing) notFound()
-  const { data: categories } = await supabase
+  const { data: categoriesRaw } = await supabase
     .from('categories')
     .select('id,slug,name_ar,type,parent_id')
     .eq('is_active', true)
     .order('position')
+  const categories = await getTranslatedCategories(categoriesRaw ?? [], locale)
   const { data: existingFile } = await supabase
     .from('listing_files')
     .select('original_name')
@@ -56,7 +58,7 @@ export default async function EditListingPage({
         <EditListingForm
           listingId={listing.id}
           storeId={store.id}
-          categories={categories ?? []}
+          categories={categories}
           initial={{
             type: listing.type,
             title: listing.title,
