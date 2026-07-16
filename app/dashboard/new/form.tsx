@@ -6,7 +6,7 @@ import { getBrowserClient } from '@/lib/supabase/browser'
 import type { Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n'
 
-type Category = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service'; parent_id: string | null }
+type Category = { id: string; slug: string; name: string; type: 'product' | 'service'; parent_id: string | null }
 
 function sanitizeFileName(name: string): string {
   const lastDot = name.lastIndexOf('.')
@@ -181,9 +181,9 @@ export function NewListingForm({ storeId, categories, locale }: { storeId: strin
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors cursor-pointer">
             <option value="" style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{t.listingForm.categoryPlaceholder}</option>
             {categoryGroups.map(group => (
-              <optgroup key={group.main.id} label={group.main.name_ar ?? group.main.slug} style={{ backgroundColor: '#111118', color: '#C9A84C' }}>
+              <optgroup key={group.main.id} label={group.main.name} style={{ backgroundColor: '#111118', color: '#C9A84C' }}>
                 {group.subs.map(sub => (
-                  <option key={sub.id} value={sub.id} style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{sub.name_ar ?? sub.slug}</option>
+                  <option key={sub.id} value={sub.id} style={{ backgroundColor: '#111118', color: '#F0EDE6' }}>{sub.name}</option>
                 ))}
               </optgroup>
             ))}
