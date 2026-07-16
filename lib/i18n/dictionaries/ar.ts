@@ -20,7 +20,7 @@ export const ar = {
     backToDashboard: '← لوحة التحكم', title: 'إعدادات استلام الأرباح',
     subtitle: 'أدخل بيانات استلام أرباحك. حالياً التحويلات تتم يدوياً من فريق المنصة بشكل دوري بناءً على هذه البيانات.',
     methodLabel: 'وسيلة الاستلام', methodPlaceholder: 'اختر وسيلة',
-    methodBank: 'حوالة بنكية', methodPayoneer: 'Payoneer', methodVisa: 'بطاقة Visa', methodOther: 'وسيلة أخرى',
+    methodBank: 'حوالة بنكية', methodPayoneer: 'Payoneer', methodVisa: 'بطاقة Visa', methodRedotPay: 'RedotPay', methodBinance: 'Binance', methodOther: 'وسيلة أخرى',
     detailsLabel: 'بيانات الاستلام',
     detailsPlaceholder: 'مثال: اسم البنك، رقم الحساب / IBAN، اسم صاحب الحساب — أو بريد Payoneer الإلكتروني',
     detailsHint: 'هذه البيانات يراها فريق المنصة فقط عند تنفيذ التحويل.',
