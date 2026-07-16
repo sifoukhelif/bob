@@ -6,6 +6,7 @@ import { NewListingForm } from './form'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
+import { getTranslatedCategories } from '@/lib/translate'
 
 export const metadata = { title: 'إضافة منتج جديد' }
 
@@ -18,11 +19,12 @@ export default async function NewListingPage() {
   if (!user) redirect('/login?redirectTo=/dashboard/new')
   const { data: store } = await supabase.from('stores').select('id').eq('owner_id', user.id).maybeSingle()
   if (!store) redirect('/become-seller')
-  const { data: categories } = await supabase
+  const { data: categoriesRaw } = await supabase
     .from('categories')
     .select('id,slug,name_ar,type,parent_id')
     .eq('is_active', true)
     .order('position')
+  const categories = await getTranslatedCategories(categoriesRaw ?? [], locale)
 
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
@@ -38,7 +40,7 @@ export default async function NewListingPage() {
       <main className="max-w-2xl mx-auto px-6 pt-28 pb-24">
         <h1 className="text-3xl font-serif font-bold mb-2">{t.newListing.title}</h1>
         <p className="text-gray-500 text-sm mb-10">{t.newListing.subtitle}</p>
-        <NewListingForm storeId={store.id} categories={categories ?? []} locale={locale} />
+        <NewListingForm storeId={store.id} categories={categories} locale={locale} />
       </main>
     </div>
   )
