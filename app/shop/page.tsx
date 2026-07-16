@@ -8,6 +8,7 @@ import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 import { AdBanner, AdCard } from '@/components/ad-slot'
 import { ShopFilters } from '@/components/shop-filters'
+import { WishlistButton } from '@/components/wishlist-button'
 import { Fragment } from 'react'
 import type { Metadata } from 'next'
 
@@ -26,6 +27,7 @@ export default async function ShopPage({
   const to   = from + perPage - 1
 
   let products: any[] = [], count = 0, user: any = null, role: string | undefined, username: string | null = null
+  let wishlistedIds = new Set<string>()
   try {
     const supabase = await createServerClient()
     const { data: userData } = await supabase.auth.getUser()
@@ -56,6 +58,11 @@ export default async function ShopPage({
     if (max)  query = query.lte('base_price', parseFloat(max))
     const { data, count: c } = await query
     products = data ?? []; count = c ?? 0
+
+    if (user && products.length > 0) {
+      const { data: wl } = await supabase.from('wishlists').select('listing_id').eq('user_id', user.id).in('listing_id', products.map(p => p.id))
+      wishlistedIds = new Set((wl ?? []).map((w: any) => w.listing_id))
+    }
   } catch {}
 
   const totalPages = Math.ceil(count / perPage)
@@ -138,7 +145,10 @@ export default async function ShopPage({
                 {i > 0 && i % 8 === 0 && (
                   <AdCard label={t.ads.banner} sublabel={t.ads.card} className="aspect-[4/5]" />
                 )}
-                <Link href={`/product/${p.slug}`} className="group block">
+                <Link href={`/product/${p.slug}`} className="group block relative">
+                  <div className="absolute top-3 right-3 z-10">
+                    <WishlistButton listingId={p.id} userId={user?.id ?? null} initialSaved={wishlistedIds.has(p.id)} size="sm" />
+                  </div>
                   <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#12121A] border border-white/5 group-hover:border-[#C9A84C]/30 transition-all duration-500">
                     {p.thumbnail_url
                       ? <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover opacity-65 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700" />
