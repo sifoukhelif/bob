@@ -9,12 +9,27 @@ import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
-import { safeDecodeSlug } from '@/lib/slug'
 import { getTranslatedListing } from '@/lib/translate'
+import { AdBanner } from '@/components/ad-slot'
 
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
+
+function safeDecodeSlug(raw: string): string {
+  let decoded = raw
+  // فك الترميز بشكل متكرر حتى يستقر (يعالج الترميز المزدوج بأمان)
+  for (let i = 0; i < 3; i++) {
+    try {
+      const next = decodeURIComponent(decoded)
+      if (next === decoded) break
+      decoded = next
+    } catch {
+      break
+    }
+  }
+  return decoded
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug: rawSlug } = await params
@@ -72,6 +87,14 @@ export default async function ProductPage({ params }: { params: Params }) {
   const store   = p.stores as any
   const price   = p.base_price ?? 0
   const savings = p.compare_price ? Math.round((1 - price / p.compare_price) * 100) : null
+
+  const { data: productReviews } = await supabase
+    .from('reviews')
+    .select('id,rating,comment,created_at,users(username)')
+    .eq('listing_id', p.id)
+    .order('created_at', { ascending: false })
+    .limit(20)
+
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -147,6 +170,34 @@ export default async function ProductPage({ params }: { params: Params }) {
             )}
             <BuyBox listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} locale={locale} />
           </div>
+        </div>
+
+        {/* مساحة إعلانية */}
+        <div className="mt-16 mb-16">
+          <AdBanner label={t.ads.banner} />
+        </div>
+
+        {/* قسم التقييمات */}
+        <div className="max-w-3xl">
+          <h2 className="text-2xl font-serif font-bold mb-6">{t.reviews.title} {p.rating_count ? `(${p.rating_count})` : ''}</h2>
+          {productReviews && productReviews.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {productReviews.map((r: any) => (
+                <div key={r.id} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold">{r.users?.username ?? t.reviews.anonymous}</span>
+                    <span className="text-[#C9A84C] text-xs">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                  </div>
+                  {r.comment && <p className="text-gray-400 text-sm leading-relaxed">{r.comment}</p>}
+                  <div className="text-[10px] text-gray-600 mt-2">{new Date(r.created_at).toLocaleDateString()}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-600 text-sm bg-[#111118] border border-white/5 rounded-2xl">
+              {t.reviews.noReviewsYet}
+            </div>
+          )}
         </div>
       </main>
     </div>
