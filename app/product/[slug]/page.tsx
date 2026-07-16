@@ -11,6 +11,7 @@ import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 import { getTranslatedListing } from '@/lib/translate'
 import { AdBanner } from '@/components/ad-slot'
+import { WishlistButton } from '@/components/wishlist-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -95,6 +96,12 @@ export default async function ProductPage({ params }: { params: Params }) {
     .order('created_at', { ascending: false })
     .limit(20)
 
+  let isWishlisted = false
+  if (user) {
+    const { data: wl } = await supabase.from('wishlists').select('id').eq('user_id', user.id).eq('listing_id', p.id).maybeSingle()
+    isWishlisted = !!wl
+  }
+
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -131,6 +138,9 @@ export default async function ProductPage({ params }: { params: Params }) {
                   {t.product.save} {savings}%
                 </div>
               )}
+              <div className="absolute top-4 left-4">
+                <WishlistButton listingId={p.id} userId={user?.id ?? null} initialSaved={isWishlisted} />
+              </div>
             </div>
             {p.tags && (p.tags as string[]).length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
