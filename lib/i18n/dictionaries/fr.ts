@@ -250,4 +250,12 @@ export const fr = {
     anonymous: 'Acheteur',
     error: "Une erreur s'est produite, veuillez réessayer",
   },
+  wishlist: {
+    navLabel: 'Favoris',
+    title: 'Ma liste de favoris',
+    subtitle: 'Les produits que vous avez enregistrés pour plus tard',
+    emptyTitle: 'Votre liste de favoris est vide',
+    emptyCta: 'Parcourir la boutique →',
+    remove: 'Retirer',
+  },
 }
