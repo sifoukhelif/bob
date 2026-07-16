@@ -1,261 +1,261 @@
-// lib/i18n/dictionaries/fr.ts
-export const fr = {
-  nav: { shop: 'Boutique', services: 'Services', sell: 'Commencer à Vendre', orders: 'Mes Commandes', login: 'Connexion', searchPlaceholder: 'Rechercher un produit…' },
-  hero: { badge: "L'avenir du commerce numérique exclusif", titleLine1: 'Possédez les meilleurs', titleLine2: 'Actifs numériques', subtitle: 'La destination privilégiée des créateurs pour acheter et vendre des modèles, livres numériques et solutions logicielles exclusives.', ctaShop: 'Parcourir les produits', ctaSell: 'Commencer à vendre →' },
-  stats: { products: 'Produits numériques', sellers: 'Vendeurs vérifiés', rating: 'Note de la plateforme', new: 'Nouveau 🌱' },
-  featured: { title: 'Dernières sorties', subtitle: 'Sélections exclusives, vérifiées manuellement', viewAll: 'Voir toute la boutique →', empty: 'Aucun produit publié pour le moment.', emptyCta: 'Devenez le premier vendeur →' },
-  footer: { rights: '© 2026 Tous droits réservés', terms: 'Conditions', privacy: 'Confidentialité', support: 'Support' },
-  shop: { title: 'Boutique', itemsUnit: 'produits et services', searchingFor: 'Résultats de recherche pour :', clearSearch: 'Effacer la recherche', filters: { all: 'Tout', services: 'Services', ui: 'Kits UI', ebooks: 'Livres numériques', code: 'Code' }, noResultsTitle: 'Aucun résultat', noResultsSubtitle: 'Essayez un autre terme de recherche', login: 'Connexion', sortLabel: 'Trier par', sortPopular: 'Meilleures ventes', sortNewest: 'Plus récents', sortPriceAsc: 'Prix : croissant', sortPriceDesc: 'Prix : décroissant', sortTopRated: 'Mieux notés', priceRangeLabel: 'Fourchette de prix', minPricePlaceholder: 'Min $', maxPricePlaceholder: 'Max $', applyFilters: 'Appliquer', clearFilters: 'Effacer les filtres' },
-  product: { login: 'Connexion', notFoundTitle: 'Produit introuvable', freeLabel: 'Gratuit', save: 'Économisez', sales: 'ventes', reviews: 'avis', deliveryPrefix: 'Livraison sous', deliveryUnit: 'jours' },
-  buyBox: { freeLabel: 'Gratuit', loading: 'Redirection…', buyNow: 'Acheter maintenant', orderService: 'Commander le service', genericError: 'Une erreur est survenue, veuillez réessayer', checkoutError: "Impossible de démarrer le paiement", features: { secureDownload: 'Lien de téléchargement sécurisé et chiffré', validity: 'Valable 48 heures après achat', refund: 'Garantie de remboursement de 14 jours', securePayment: 'Paiement sécurisé via Stripe' } },
-  login: { welcomeBack: 'Content de vous revoir', createAccount: 'Créez votre compte gratuit', loginTab: 'Connexion', signupTab: 'Inscription', emailLabel: 'Email', passwordLabel: 'Mot de passe', loadingText: 'Chargement…', loginButton: 'Connexion', signupButton: 'Créer le compte', checkEmailTitle: 'Vérifiez votre email', checkEmailBodyPrefix: 'Nous avons envoyé un lien de confirmation à', checkEmailBodySuffix: 'Cliquez sur le lien pour activer votre compte, puis connectez-vous.', backToLogin: 'Retour à la connexion', emailNotConfirmedError: "Vous n'avez pas encore confirmé votre email. Vérifiez votre boîte de réception (et vos spams) et cliquez sur le lien de confirmation.", genericError: 'Une erreur est survenue' },
-  sell: { navShop: 'Boutique', badge: 'Pour les créateurs et freelances', titlePrefix: 'Transformez votre expertise', titleHighlight: 'en revenu', subtitle: "Vendez des modèles, des livres numériques, du code, ou proposez vos services de conseil à des milliers d'acheteurs intéressés.", ctaLogin: 'Connectez-vous pour commencer', ctaDashboard: 'Aller au tableau de bord vendeur →', ctaActivate: 'Activer le compte vendeur →', stats: { keepPercent: '80%', keepLabel: 'conservés sur chaque vente', reviewTime: '48h', reviewLabel: 'délai moyen de révision du produit', sellersCount: '+3K', sellersLabel: 'vendeurs vérifiés sur la plateforme' }, stepsTitle: 'Comment commencer', steps: [{ n: '01', title: 'Créez votre boutique', desc: 'Nom, URL personnalisée et bio — cela prend deux minutes.' }, { n: '02', title: 'Ajoutez votre produit ou service', desc: 'Téléchargez les fichiers, fixez votre prix et rédigez une description.' }, { n: '03', title: 'Révision rapide', desc: 'Notre équipe examine le produit pour garantir sa qualité avant publication.' }, { n: '04', title: 'Recevez vos paiements', desc: 'Nous transférons vos gains (virement bancaire ou Payoneer) après chaque vente, selon un calendrier périodique, après déduction de la commission de la plateforme.' }], footer: '© 2026 DEGITALE — Tous droits réservés' },
-  becomeSeller: { title: 'Créez votre boutique', subtitle: 'Une étape et vous devenez vendeur sur la plateforme', storeNameLabel: 'Nom de la boutique', storeNamePlaceholder: 'ex : Studio Authentique', bioLabel: 'À propos de votre boutique (facultatif)', bioPlaceholder: "Que vendez-vous ? Qu'est-ce qui vous distingue ?", submitButton: 'Créer la boutique et commencer', errorNameTooShort: 'Le nom de la boutique doit contenir au moins 3 caractères', errorCreateFailed: 'Impossible de créer la boutique, essayez un autre nom' },
-  orders: { title: 'Mes commandes', shopLink: 'Boutique', paidStatus: 'Payé', completedStatus: 'Terminé', downloadButton: 'Télécharger', linkExpired: 'Lien expiré', defaultProductName: 'Produit', emptyTitle: 'Aucune commande précédente.', emptyCta: 'Parcourir la boutique →' },
-  listingForm: { coverImageLabel: 'Image de couverture', noImage: 'Aucune image', titleLabel: 'Titre', descriptionLabel: 'Description', categoryLabel: 'Catégorie', categoryPlaceholder: 'Choisir une catégorie', priceLabel: 'Prix (USD)', fileLabel: 'Fichier du produit', errorTitleTooShort: 'Le titre doit contenir au moins 3 caractères', errorInvalidPrice: 'Entrez un prix valide', errorImageUploadPrefix: "Impossible de télécharger l'image :", genericError: 'Une erreur inattendue est survenue' },
-  newListing: { backToDashboard: '← Tableau de bord', title: 'Ajouter un nouveau produit', subtitle: 'Notre équipe examinera le produit avant de le publier aux acheteurs (généralement sous 48 heures).', typeProduct: 'Produit numérique', typeService: 'Service', coverImageHint: "Cette image sera visible par les acheteurs dans la boutique et sur la page d'accueil.", titlePlaceholder: 'ex : Modèle de tableau de bord pour boutique en ligne', descriptionPlaceholder: "Expliquez en détail ce que l'acheteur recevra", pricePlaceholder: '29.00', fileHint: "C'est le fichier que l'acheteur recevra après paiement.", errorFileRequired: 'Vous devez télécharger le fichier du produit numérique', errorCreateFailed: 'Impossible de créer le produit, veuillez réessayer', errorFileUploadPrefix: 'Impossible de télécharger le fichier :', submitButton: 'Soumettre pour révision', submittingText: 'Envoi en cours…' },
-  editListing: { backToDashboard: '← Tableau de bord', title: 'Modifier le produit', subtitle: 'Le produit sera renvoyé en révision après toute modification du titre, de la description ou du fichier.', keepImageHint: "Laissez ce champ vide si vous ne voulez pas changer l'image actuelle.", currentFilePrefix: '📄 Fichier actuel :', keepFileHint: 'Laissez ce champ vide si vous ne voulez pas changer le fichier actuel.', saveButton: 'Enregistrer les modifications', savingText: 'Enregistrement…', errorUpdateFailed: 'Impossible de mettre à jour le produit, veuillez réessayer', errorFileUploadPartialPrefix: "Les données du produit ont été mises à jour, mais le nouveau fichier n'a pas pu être téléchargé :" },
-  deleteListing: { confirmText: 'Confirmer ?', yesDelete: 'Oui, supprimer', cancel: 'Annuler', deleteLabel: 'Supprimer 🗑️' },
+// lib/i18n/dictionaries/en.ts
+export const en = {
+  nav: { shop: 'Shop', services: 'Services', sell: 'Start Selling', orders: 'My Orders', login: 'Log In', searchPlaceholder: 'Search for a product…' },
+  hero: { badge: 'The Future of Exclusive Digital Commerce', titleLine1: 'Own the Best', titleLine2: 'Digital Assets', subtitle: 'The go-to destination for creators to buy and sell templates, e-books, and exclusive software solutions.', ctaShop: 'Browse Products', ctaSell: 'Start Selling →' },
+  stats: { products: 'Digital Products', sellers: 'Verified Sellers', rating: 'Platform Rating', new: 'New 🌱' },
+  featured: { title: 'Latest Releases', subtitle: 'Exclusive picks, manually curated', viewAll: 'Browse Full Shop →', empty: 'No products published yet.', emptyCta: 'Be the first seller →' },
+  footer: { rights: '© 2026 All rights reserved', terms: 'Terms', privacy: 'Privacy', support: 'Support' },
+  shop: { title: 'Shop', itemsUnit: 'products & services', searchingFor: 'Search results for:', clearSearch: 'Clear search', filters: { all: 'All', services: 'Services', ui: 'UI Kits', ebooks: 'E-books', code: 'Code' }, noResultsTitle: 'No results found', noResultsSubtitle: 'Try a different search term', login: 'Log In', sortLabel: 'Sort by', sortPopular: 'Best selling', sortNewest: 'Newest', sortPriceAsc: 'Price: Low to High', sortPriceDesc: 'Price: High to Low', sortTopRated: 'Top rated', priceRangeLabel: 'Price range', minPricePlaceholder: 'Min $', maxPricePlaceholder: 'Max $', applyFilters: 'Apply', clearFilters: 'Clear filters' },
+  product: { login: 'Log In', notFoundTitle: 'Product not found', freeLabel: 'Free', save: 'Save', sales: 'sales', reviews: 'reviews', deliveryPrefix: 'Delivery within', deliveryUnit: 'days' },
+  buyBox: { freeLabel: 'Free', loading: 'Redirecting…', buyNow: 'Buy Now', orderService: 'Order Service', genericError: 'An error occurred, please try again', checkoutError: 'Could not start checkout', features: { secureDownload: 'Secure, encrypted download link', validity: 'Valid for 48 hours after purchase', refund: '14-day refund guarantee', securePayment: 'Secure payment via Stripe' } },
+  login: { welcomeBack: 'Welcome back', createAccount: 'Create your free account', loginTab: 'Log In', signupTab: 'Sign Up', emailLabel: 'Email', passwordLabel: 'Password', loadingText: 'Loading…', loginButton: 'Log In', signupButton: 'Create Account', checkEmailTitle: 'Check your email', checkEmailBodyPrefix: 'We sent a confirmation link to', checkEmailBodySuffix: 'Click the link to activate your account, then log in.', backToLogin: 'Back to login', emailNotConfirmedError: "You haven't confirmed your email yet. Check your inbox (and spam folder) and click the confirmation link.", genericError: 'An error occurred' },
+  sell: { navShop: 'Shop', badge: 'For Creators & Freelancers', titlePrefix: 'Turn your expertise', titleHighlight: 'into income', subtitle: 'Sell templates, e-books, code, or offer your consulting services to thousands of interested buyers.', ctaLogin: 'Log in to get started', ctaDashboard: 'Go to Seller Dashboard →', ctaActivate: 'Activate Seller Account →', stats: { keepPercent: '80%', keepLabel: 'you keep from every sale', reviewTime: '48h', reviewLabel: 'average product review time', sellersCount: '+3K', sellersLabel: 'verified sellers on the platform' }, stepsTitle: 'How to get started', steps: [{ n: '01', title: 'Create your store', desc: 'Name, custom URL, and bio — takes two minutes.' }, { n: '02', title: 'Add your product or service', desc: 'Upload files, set your price, and write a description.' }, { n: '03', title: 'Quick review', desc: 'Our team reviews the product to ensure quality before publishing.' }, { n: '04', title: 'Get paid', desc: 'We transfer your payout details (bank transfer or Payoneer) after each sale, on a periodic schedule, after deducting the platform fee.' }], footer: '© 2026 DEGITALE — All rights reserved' },
+  becomeSeller: { title: 'Create your store', subtitle: 'One step and you become a seller on the platform', storeNameLabel: 'Store name', storeNamePlaceholder: 'e.g. Authentic Studio', bioLabel: 'About your store (optional)', bioPlaceholder: 'What do you sell? What makes you unique?', submitButton: 'Create Store & Start', errorNameTooShort: 'Store name must be at least 3 characters', errorCreateFailed: 'Could not create the store, try a different name' },
+  orders: { title: 'My Orders', shopLink: 'Shop', paidStatus: 'Paid', completedStatus: 'Completed', downloadButton: 'Download', linkExpired: 'Link expired', defaultProductName: 'Product', emptyTitle: 'No previous orders.', emptyCta: 'Browse shop →' },
+  listingForm: { coverImageLabel: 'Cover Image', noImage: 'No image', titleLabel: 'Title', descriptionLabel: 'Description', categoryLabel: 'Category', categoryPlaceholder: 'Choose a category', priceLabel: 'Price (USD)', fileLabel: 'Product File', errorTitleTooShort: 'Title must be at least 3 characters', errorInvalidPrice: 'Enter a valid price', errorImageUploadPrefix: 'Could not upload image:', genericError: 'An unexpected error occurred' },
+  newListing: { backToDashboard: '← Dashboard', title: 'Add a new product', subtitle: 'Our team will review the product before publishing it to buyers (usually within 48 hours).', typeProduct: 'Digital Product', typeService: 'Service', coverImageHint: 'This image will be shown to buyers in the shop and homepage.', titlePlaceholder: 'e.g. Admin dashboard template for online stores', descriptionPlaceholder: 'Explain in detail what the buyer will receive', pricePlaceholder: '29.00', fileHint: 'This is the file the buyer will receive after payment.', errorFileRequired: 'You must upload the digital product file', errorCreateFailed: 'Could not create the product, please try again', errorFileUploadPrefix: 'Could not upload file:', submitButton: 'Submit for Review', submittingText: 'Submitting…' },
+  editListing: { backToDashboard: '← Dashboard', title: 'Edit Product', subtitle: 'The product will be sent for review again after any change to the title, description, or file.', keepImageHint: "Leave this field empty if you don't want to change the current image.", currentFilePrefix: '📄 Current file:', keepFileHint: "Leave this field empty if you don't want to change the current file.", saveButton: 'Save Changes', savingText: 'Saving…', errorUpdateFailed: 'Could not update the product, please try again', errorFileUploadPartialPrefix: 'Product data was updated, but the new file could not be uploaded:' },
+  deleteListing: { confirmText: 'Sure?', yesDelete: 'Yes, delete', cancel: 'Cancel', deleteLabel: 'Delete 🗑️' },
   payoutSettings: {
-    backToDashboard: '← Tableau de bord', title: 'Paramètres de paiement',
-    subtitle: 'Entrez vos coordonnées de paiement. Les virements sont actuellement effectués manuellement par notre équipe, périodiquement, sur la base de ces informations.',
-    methodLabel: 'Méthode de paiement', methodPlaceholder: 'Choisir une méthode',
-    methodBank: 'Virement bancaire', methodPayoneer: 'Payoneer', methodVisa: 'Carte Visa', methodOther: 'Autre méthode',
-    detailsLabel: 'Coordonnées de paiement',
-    detailsPlaceholder: "ex : nom de la banque, numéro de compte / IBAN, nom du titulaire — ou email Payoneer",
-    detailsHint: 'Ces informations ne sont visibles que par notre équipe lors du traitement du virement.',
-    errorMethodRequired: 'Choisissez une méthode de paiement',
-    errorDetailsInvalid: "Entrez des coordonnées claires (numéro de compte, IBAN, email Payoneer...)",
-    errorSaveFailed: "Impossible d'enregistrer les données, veuillez réessayer",
-    genericError: 'Une erreur inattendue est survenue',
-    savedSuccess: '✓ Enregistré avec succès',
-    saveButton: 'Enregistrer', savingText: 'Enregistrement…',
+    backToDashboard: '← Dashboard', title: 'Payout Settings',
+    subtitle: 'Enter your payout details. Transfers are currently handled manually by our team on a periodic basis, based on this information.',
+    methodLabel: 'Payout Method', methodPlaceholder: 'Choose a method',
+    methodBank: 'Bank Transfer', methodPayoneer: 'Payoneer', methodVisa: 'Visa Card', methodOther: 'Other',
+    detailsLabel: 'Payout Details',
+    detailsPlaceholder: 'e.g. bank name, account number / IBAN, account holder name — or Payoneer email',
+    detailsHint: 'This information is only seen by our team when processing the transfer.',
+    errorMethodRequired: 'Choose a payout method',
+    errorDetailsInvalid: 'Enter clear payout details (account number, IBAN, Payoneer email...)',
+    errorSaveFailed: 'Could not save the data, please try again',
+    genericError: 'An unexpected error occurred',
+    savedSuccess: '✓ Saved successfully',
+    saveButton: 'Save Details', savingText: 'Saving…',
   },
   checkoutSuccess: {
-    pageTitle: 'Paiement réussi',
-    processingTitle: 'Confirmation de votre paiement…',
-    processingBodyPrefix: "Cela peut prendre quelques secondes. Si la page ne se met pas à jour, consultez",
-    processingBodySuffix: 'dans un instant.',
-    ordersLink: 'Mes commandes',
-    viewOrdersButton: 'Voir mes commandes',
-    successTitlePrefix: 'Paiement', successTitleHighlight: 'réussi',
-    thankYouPrefix: 'Merci pour votre achat «', thankYouSuffix: '»',
-    downloadButton: 'Télécharger le fichier',
-    viewAllOrdersButton: 'Voir toutes mes commandes',
-    validityNote: "Le lien de téléchargement est valable 48 heures après l'achat",
+    pageTitle: 'Payment Successful',
+    processingTitle: 'Confirming your payment…',
+    processingBodyPrefix: "This may take a few seconds. If the page doesn't update, check",
+    processingBodySuffix: 'in a moment.',
+    ordersLink: 'My Orders',
+    viewOrdersButton: 'View My Orders',
+    successTitlePrefix: 'Payment', successTitleHighlight: 'Successful',
+    thankYouPrefix: 'Thank you for purchasing «', thankYouSuffix: '»',
+    downloadButton: 'Download File Now',
+    viewAllOrdersButton: 'View All My Orders',
+    validityNote: 'The download link is valid for 48 hours from the time of purchase',
   },
   contact: {
-    pageTitle: 'Support', homeLink: 'Accueil',
-    title: 'Contactez le support',
-    subtitle: "Une question ou un problème avec une commande ou un produit ? Écrivez-nous, nous répondrons sous 24 heures.",
+    pageTitle: 'Support', homeLink: 'Home',
+    title: 'Contact Support',
+    subtitle: "Have a question or an issue with an order or product? Message us and we'll reply within 24 hours.",
   },
   account: {
-    pageTitle: 'Paramètres du compte', homeLink: 'Accueil', title: 'Paramètres du compte',
-    usernameLabel: "Nom d'utilisateur", usernamePlaceholder: 'Sif Khelif',
-    usernameHint: "Lettres anglaises, chiffres, espaces et underscores — ce nom apparaît à la place de votre email sur le site.",
-    saveButton: 'Enregistrer les modifications',
-    successMessage: "✅ Nom d'utilisateur enregistré avec succès",
-    errorTooShort: "Le nom d'utilisateur doit contenir au moins 2 caractères",
-    errorTaken: 'Ce nom est déjà pris, essayez-en un autre',
-    errorSaveFailed: "Impossible d'enregistrer le nom, veuillez réessayer",
+    pageTitle: 'Account Settings', homeLink: 'Home', title: 'Account Settings',
+    usernameLabel: 'Username', usernamePlaceholder: 'Sif Khelif',
+    usernameHint: 'English letters, numbers, spaces, and underscores — this name appears instead of your email on the site.',
+    saveButton: 'Save Changes',
+    successMessage: '✅ Username saved successfully',
+    errorTooShort: 'Username must be at least 2 characters',
+    errorTaken: 'This name is already taken, try another one',
+    errorSaveFailed: 'Could not save the name, please try again',
   },
   becomeSellerDone: {
-    preparingText: 'Préparation de votre boutique…',
+    preparingText: 'Preparing your store…',
   },
   terms: {
-  "title": "Conditions Générales",
-  "intro": "En utilisant la plateforme DEGITALE, vous acceptez les conditions suivantes. Veuillez les lire attentivement avant de vendre ou d'acheter sur la plateforme. Si vous n'acceptez pas l'une de ces conditions, veuillez ne pas utiliser la plateforme.",
+  "title": "Terms & Conditions",
+  "intro": "By using the DEGITALE platform, you agree to the following terms. Please read them carefully before selling or buying on the platform. If you do not agree to any part of these terms, please do not use the platform.",
   "sections": [
     {
-      "title": "1. Nature de la plateforme",
-      "body": "DEGITALE est une place de marché (Marketplace) qui met en relation vendeurs et acheteurs d'actifs numériques (modèles, livres numériques, code) et de services numériques. La plateforme ne produit pas le contenu proposé et n'en garantit pas la qualité, bien qu'elle examine chaque produit avant sa publication comme étape de vérification initiale, qui ne constitue pas une garantie complète de la qualité du contenu."
+      "title": "1. Nature of the Platform",
+      "body": "DEGITALE is a marketplace connecting sellers and buyers of digital assets (templates, e-books, code) and digital services. The platform does not produce the listed content and does not guarantee its quality, though it reviews every product before publishing as an initial vetting step that is not a full guarantee of content quality."
     },
     {
-      "title": "2. Éligibilité",
-      "body": "Vous devez avoir au moins 18 ans pour créer un compte ou effectuer des achats ou des ventes sur la plateforme. En utilisant la plateforme, vous confirmez que vous remplissez cette condition."
+      "title": "2. Eligibility",
+      "body": "You must be at least 18 years old to create an account or make purchases or sales on the platform. By using the platform, you confirm that you meet this requirement."
     },
     {
-      "title": "3. Commission de la plateforme et tarification",
-      "body": "La plateforme prélève une commission sur chaque vente réussie, selon le taux annoncé au moment de la vente (actuellement affiché dans les paramètres de la plateforme). Tous les prix affichés sont en dollars américains (USD), sauf indication contraire."
+      "title": "3. Platform Commission & Pricing",
+      "body": "The platform charges a commission on every successful sale, based on the rate disclosed at the time of sale (currently shown in the platform settings). All displayed prices are in US Dollars (USD) unless stated otherwise."
     },
     {
-      "title": "4. Versement des gains du vendeur",
-      "body": "Les gains nets du vendeur (après déduction de la commission de la plateforme) sont transférés manuellement sur la base des coordonnées de paiement (virement bancaire, Payoneer ou autre méthode) saisies par le vendeur dans les paramètres de son compte, de façon périodique selon la politique de paiement annoncée par l'équipe de la plateforme. La plateforme pourra à l'avenir migrer vers un système de versement automatique (comme Stripe Connect) dès qu'il sera disponible, et les vendeurs en seront alors informés. La plateforme n'est pas responsable de tout retard résultant de coordonnées de paiement incorrectes saisies par le vendeur."
+      "title": "4. Seller Payouts",
+      "body": "The seller's net earnings (after deducting the platform commission) are transferred manually based on the payout details (bank transfer, Payoneer, or another method) entered by the seller in their account settings, on a periodic basis according to the payment policy announced by the platform team. The platform may in the future move to an automated payout system (such as Stripe Connect) once available, and sellers will be notified at that time. The platform is not responsible for any delay resulting from incorrect payout details entered by the seller."
     },
     {
-      "title": "5. Responsabilités du vendeur et propriété intellectuelle",
-      "body": "Le vendeur assume l'entière responsabilité de l'exactitude de la description de son produit, de la détention des droits complets (ou de la licence nécessaire) sur le contenu qu'il téléverse, et de la qualité des fichiers téléversés. Il est interdit de téléverser du contenu volé, plagié, ou portant atteinte aux droits de propriété intellectuelle d'un tiers. La plateforme se réserve le droit de refuser ou de retirer tout produit enfreignant ces conditions, sans préavis dans les cas graves.",
-      "body2": "Pour signaler une atteinte à la propriété intellectuelle, veuillez nous contacter via la page de support en fournissant une preuve de propriété et les détails du produit concerné ; la plateforme examinera chaque signalement et pourra retirer temporairement le produit concerné pendant l'examen."
+      "title": "5. Seller Responsibilities & Intellectual Property",
+      "body": "The seller bears full responsibility for the accuracy of their product description, for owning full rights (or the necessary license) to the content they upload, and for the quality of the uploaded files. Uploading stolen or plagiarized content, or content that infringes a third party's intellectual property rights, is prohibited. The platform reserves the right to reject or remove any product that violates these terms without prior notice in serious cases.",
+      "body2": "To report intellectual property infringement, please contact us via the support page with proof of ownership and details of the infringing product; the platform will review every report and may temporarily remove the infringing product during review."
     },
     {
-      "title": "6. Droits de l'acheteur et livraison du produit",
-      "body": "Une fois l'achat effectué avec succès, l'acheteur reçoit un lien de téléchargement valable 48 heures à partir du moment de l'achat. Il est conseillé à l'acheteur de télécharger le fichier immédiatement après l'achat et d'en conserver une copie personnelle, la plateforme ne garantissant pas le renouvellement automatique du lien après son expiration."
+      "title": "6. Buyer Rights & Product Delivery",
+      "body": "Upon successful completion of a purchase, the buyer receives a download link valid for 48 hours from the time of purchase. The buyer is advised to download the file immediately after purchase and keep a personal copy, as the platform does not guarantee automatic renewal of the link after it expires."
     },
     {
-      "title": "7. Politique de remboursement",
-      "body": "Un remboursement peut être accordé dans les 14 jours suivant l'achat en cas de défaut substantiel du produit (par exemple, un fichier ne correspondant pas à la description, ou un fichier corrompu), selon l'évaluation de l'équipe de support au cas par cas. Aucun remboursement n'est accordé simplement parce que l'acheteur a changé d'avis après avoir téléchargé le fichier avec succès."
+      "title": "7. Refund Policy",
+      "body": "A refund may be granted within 14 days of purchase in the event of a material defect in the product (such as the file not matching the description, or a corrupted file), subject to the support team's assessment of each case individually. No refund is granted simply because the buyer changed their mind after successfully downloading the file."
     },
     {
-      "title": "8. Suspension et bannissement de compte",
-      "body": "La plateforme se réserve le droit de restreindre ou de bannir tout compte enfreignant ces conditions ou utilisé de manière nuisible ou frauduleuse, avec ou sans préavis selon la gravité de l'infraction."
+      "title": "8. Suspension & Account Bans",
+      "body": "The platform reserves the right to restrict or ban any account that violates these terms or is used in a harmful or fraudulent manner, with or without prior notice depending on the severity of the violation."
     },
     {
-      "title": "9. Suppression de compte",
-      "body": "Tout utilisateur peut demander la suppression de son compte et de ses données personnelles en contactant l'équipe de support via la page de contact. La plateforme peut conserver certaines données de transaction pendant une durée limitée afin de respecter des obligations comptables ou légales."
+      "title": "9. Account Deletion",
+      "body": "Any user may request the deletion of their account and personal data by contacting the support team via the contact page. The platform may retain certain transaction data for a limited period to comply with mandatory accounting or legal obligations."
     },
     {
-      "title": "10. Impôts",
-      "body": "Chaque vendeur est responsable de la déclaration de ses propres impôts et du respect des lois fiscales applicables dans son pays, indépendamment de la plateforme."
+      "title": "10. Taxes",
+      "body": "Each seller is responsible for declaring their own taxes and complying with the tax laws applicable in their country, independently of the platform."
     },
     {
-      "title": "11. Clause de non-responsabilité",
-      "body": "La plateforme est fournie « telle quelle », sans aucune garantie expresse ou implicite quant à la continuité ininterrompue du service ou à son absence d'erreurs. La plateforme n'est pas responsable des pertes indirectes résultant de l'utilisation de la plateforme, dans la mesure maximale permise par la loi applicable."
+      "title": "11. Disclaimer",
+      "body": "The platform is provided \"as is\" without any express or implied warranties regarding uninterrupted service continuity or being error-free. The platform is not liable for any indirect losses resulting from the use of the platform, to the maximum extent permitted by applicable law."
     },
     {
-      "title": "12. Loi applicable",
-      "body": "Le droit applicable à ces conditions et la juridiction compétente pour les litiges seront définitivement déterminés une fois l'enregistrement officiel de l'entité juridique propriétaire de la plateforme finalisé, et cette clause sera mise à jour en conséquence avant le lancement officiel."
+      "title": "12. Governing Law",
+      "body": "The governing law for these terms and the competent jurisdiction for disputes will be finalized once the official registration of the platform's owning legal entity is completed, and this clause will be updated accordingly before the official launch."
     }
   ],
-  "footer": "Dernière mise à jour : juillet 2026. Ces conditions sont un modèle et nécessitent une révision juridique spécialisée par un avocat agréé avant le lancement officiel."
+  "footer": "Last updated: July 2026. These terms are a template and require specialized legal review by a licensed attorney before official launch."
 },
   privacy: {
-  "title": "Politique de confidentialité",
-  "intro": "Nous respectons votre vie privée et nous engageons à protéger vos données personnelles. Cette page explique quelles données nous collectons, comment nous les utilisons et où elles sont stockées.",
+  "title": "Privacy Policy",
+  "intro": "We respect your privacy and are committed to protecting your personal data. This page explains what data we collect, how we use it, and where it is stored.",
   "sections": [
     {
-      "title": "1. Données que nous collectons",
-      "body": "Adresse email, nom (facultatif), nom d'utilisateur, et données de commandes et de transactions nécessaires à la fourniture du service. Nous ne stockons pas les données de votre carte bancaire — tous les paiements sont traités directement via Stripe.",
-      "body2": "Si vous êtes vendeur, nous collectons également les coordonnées de paiement que vous saisissez vous-même (comme un numéro de compte bancaire / IBAN ou un email Payoneer), utilisées exclusivement par l'équipe autorisée de la plateforme pour traiter vos versements, et qui ne sont communiquées à aucun autre tiers."
+      "title": "1. Data We Collect",
+      "body": "Email address, name (optional), username, and order and transaction data necessary to provide the service. We do not store your bank card details — all payments are processed directly via Stripe.",
+      "body2": "If you are a seller, we also collect the payout details you enter yourself (such as a bank account number / IBAN or Payoneer email), which are used exclusively by the platform's authorized team to process your payouts, and are not shown to any other party."
     },
     {
       "title": "2. Cookies",
-      "body": "Nous utilisons uniquement des cookies essentiels pour gérer votre session de connexion et l'authentification. Nous n'utilisons actuellement aucun cookie de suivi ou de publicité tierce."
+      "body": "We use only essential cookies to manage your login session and authentication. We do not currently use tracking or third-party advertising cookies."
     },
     {
-      "title": "3. Comment nous utilisons vos données",
-      "body": "Nous utilisons vos données pour faire fonctionner votre compte, traiter les commandes, livrer les produits numériques, exécuter les versements aux vendeurs, et communiquer avec vous au sujet de vos commandes ou de votre compte."
+      "title": "3. How We Use Your Data",
+      "body": "We use your data to operate your account, process orders, deliver digital products, execute payout transfers for sellers, and communicate with you about your orders or account."
     },
     {
-      "title": "4. Partage des données et lieu de stockage",
-      "body": "Nous ne vendons pas vos données à des tiers. Nous partageons le minimum de données nécessaires avec des prestataires de confiance, uniquement pour faire fonctionner la plateforme :",
+      "title": "4. Data Sharing & Storage Location",
+      "body": "We do not sell your data to third parties. We share the minimum data necessary with trusted service providers solely to operate the platform:",
       "list": [
-        "Supabase — stockage de la base de données et des fichiers (serveurs situés à Francfort, Allemagne / Union européenne)",
-        "Stripe — traitement des paiements",
-        "Resend — envoi des emails opérationnels (confirmation de compte, notifications de commandes)"
+        "Supabase — database and file storage (servers located in Frankfurt, Germany / European Union)",
+        "Stripe — payment processing",
+        "Resend — sending operational emails (account confirmation, order notifications)"
       ]
     },
     {
-      "title": "5. Durée de conservation des données",
-      "body": "Nous conservons vos données tant que votre compte est actif. Lors d'une demande de suppression de compte, vos données personnelles sont supprimées dans un délai raisonnable, à l'exception de ce qui doit être conservé à des fins comptables ou légales obligatoires."
+      "title": "5. Data Retention Period",
+      "body": "We retain your data for as long as your account is active. Upon requesting account deletion, your personal data is deleted within a reasonable period, except for data that must be retained for mandatory accounting or legal purposes."
     },
     {
-      "title": "6. Sécurité des données",
-      "body": "Nous appliquons des politiques de sécurité au niveau de la base de données (Row Level Security) garantissant que chaque utilisateur n'accède qu'à ses propres données, en plus d'un chiffrement des connexions (HTTPS) sur l'ensemble de la plateforme."
+      "title": "6. Data Security",
+      "body": "We apply database-level security policies (Row Level Security) that ensure each user can only access their own data, in addition to encrypted connections (HTTPS) across the entire platform."
     },
     {
-      "title": "7. Vos droits",
-      "body": "Vous avez le droit, à tout moment, de :",
+      "title": "7. Your Rights",
+      "body": "You have the right at any time to:",
       "list": [
-        "Accéder à vos données personnelles conservées chez nous",
-        "Corriger ou mettre à jour vos données",
-        "Demander la suppression de votre compte et de vos données",
-        "Vous opposer au traitement de vos données dans certains cas"
+        "Access your personal data stored with us",
+        "Correct or update your data",
+        "Request deletion of your account and data",
+        "Object to the processing of your data in certain cases"
       ],
-      "closing": "Pour exercer l'un de ces droits, contactez-nous via la page de support."
+      "closing": "To exercise any of these rights, contact us via the support page."
     },
     {
-      "title": "8. Enfants et mineurs",
-      "body": "La plateforme ne s'adresse pas aux personnes de moins de 18 ans, et nous ne collectons pas intentionnellement de données d'utilisateurs que nous savons être mineurs."
+      "title": "8. Children & Minors",
+      "body": "The platform is not directed at individuals under 18 years of age, and we do not knowingly and intentionally collect data from users we know to be minors."
     }
   ],
-  "footer": "Dernière mise à jour : juillet 2026. Cette politique est un modèle et nécessite une révision juridique spécialisée par un avocat agréé avant le lancement officiel, notamment en ce qui concerne la pleine conformité aux réglementations de protection des données (comme le RGPD européen) si votre audience inclut des utilisateurs de l'Union européenne."
+  "footer": "Last updated: July 2026. This policy is a template and requires specialized legal review by a licensed attorney before official launch, particularly regarding full compliance with data protection regulations (such as the European GDPR) if your audience includes users from the European Union."
 },
   dashboard: {
-    payoutSettingsLink: 'Paramètres de paiement 💰', viewStoreLink: 'Voir ma boutique publique →',
-    welcomePrefix: '🎉 Votre boutique «', welcomeSuffix: '» a été activée avec succès ! Ajoutez votre premier produit pour commencer à vendre.',
-    addProductButton: '+ Ajouter un nouveau produit',
-    statActive: 'Produits publiés', statPending: 'En attente de révision', statSales: 'Ventes totales', statRating: 'Note',
-    myProductsTitle: 'Mes produits',
-    colProduct: 'Produit', colPrice: 'Prix', colStatus: 'Statut', colSales: 'Ventes', colViews: 'Vues', colActions: 'Actions',
-    editLink: 'Modifier ✏️',
-    emptyText: "Vous n'avez ajouté aucun produit pour le moment.", emptyCta: 'Ajoutez votre premier produit →',
-    statusActive: 'Publié', statusPending: 'En attente', statusRejected: 'Rejeté', statusPaused: 'En pause', statusDraft: 'Brouillon',
-    noStoreAdminTitle: 'Aucune boutique liée à votre compte',
-    noStoreAdminDesc: "Votre compte est administrateur et ne possède pas de boutique automatiquement. Vous pouvez créer une boutique pour vendre comme n'importe quel vendeur, ou accéder au panneau d'administration pour gérer la plateforme.",
-    createStoreNow: 'Créer une boutique maintenant', goToAdmin: "Aller au panneau d'administration",
+    payoutSettingsLink: 'Payout Settings 💰', viewStoreLink: 'View my public store →',
+    welcomePrefix: '🎉 Your store «', welcomeSuffix: '» has been activated! Add your first product to start selling.',
+    addProductButton: '+ Add New Product',
+    statActive: 'Published Products', statPending: 'Pending Review', statSales: 'Total Sales', statRating: 'Rating',
+    myProductsTitle: 'My Products',
+    colProduct: 'Product', colPrice: 'Price', colStatus: 'Status', colSales: 'Sales', colViews: 'Views', colActions: 'Actions',
+    editLink: 'Edit ✏️',
+    emptyText: "You haven't added any product yet.", emptyCta: 'Add your first product →',
+    statusActive: 'Published', statusPending: 'Pending Review', statusRejected: 'Rejected', statusPaused: 'Paused', statusDraft: 'Draft',
+    noStoreAdminTitle: 'No store linked to your account',
+    noStoreAdminDesc: "Your account is an admin, and doesn't automatically have a store. You can create a store to sell like any other seller, or go to the admin panel to manage the platform.",
+    createStoreNow: 'Create a Store Now', goToAdmin: 'Go to Admin Panel',
   },
   store: {
-    notFoundTitle: 'Boutique introuvable',
-    verified: '✓ Vérifié',
-    ratingSuffix: 'avis',
-    salesLabel: 'ventes',
-    memberSince: 'Membre depuis',
-    generalShop: 'Boutique',
-    productsTitlePrefix: 'Produits de la boutique',
-    emptyText: "Aucun produit publié dans cette boutique pour l'instant",
-    login: 'Connexion',
-    adBannerLabel: 'Espace publicitaire',
-    adCardLabel: 'Publicité',
+    notFoundTitle: 'Store not found',
+    verified: '✓ Verified',
+    ratingSuffix: 'reviews',
+    salesLabel: 'sales',
+    memberSince: 'Member since',
+    generalShop: 'Shop',
+    productsTitlePrefix: 'Store products',
+    emptyText: 'No products published in this store yet',
+    login: 'Login',
+    adBannerLabel: 'Advertisement Space',
+    adCardLabel: 'Ad',
   },
   ads: {
-    banner: 'Espace publicitaire',
-    card: 'Publicité',
-    strip: 'Espace publicitaire',
+    banner: 'Advertisement Space',
+    card: 'Ad',
+    strip: 'Advertisement Space',
   },
   about: {
-    badge: 'À propos',
-    title: 'Une plateforme numérique arabe, aux standards mondiaux',
-    subtitle: "DEGITALE est une marketplace unifiée pour acheter et vendre des produits et services numériques — modèles, code, ebooks et services freelance — en toute sécurité.",
-    missionTitle: 'Notre mission',
-    missionText: "Nous pensons que les créateurs numériques du monde arabe méritent une plateforme professionnelle qui les protège ainsi que leurs clients, avec une commission équitable et des outils simples leur permettant de se concentrer sur la création plutôt que sur la complexité technique.",
-    howItWorksTitle: 'Comment ça marche',
-    buyerStepTitle: 'Pour les acheteurs',
-    buyerStepText: "Parcourez des milliers de produits, payez en toute sécurité via Stripe, et recevez un lien de téléchargement instantané valable 48 heures, avec une garantie de remboursement de 14 jours.",
-    sellerStepTitle: 'Pour les vendeurs',
-    sellerStepText: "Créez votre boutique en quelques minutes, publiez votre produit, et commencez à vendre après une validation rapide de notre équipe sous 48 heures.",
-    trustTitle: 'Pourquoi DEGITALE ?',
-    trust1Title: 'Paiements sécurisés',
-    trust1Text: "Toutes les transactions passent par Stripe, nous ne stockons jamais vos données bancaires.",
-    trust2Title: 'Liens protégés',
-    trust2Text: "Chaque lien de téléchargement est chiffré et limité dans le temps, il ne peut donc pas être partagé ou détourné.",
-    trust3Title: 'Support réactif',
-    trust3Text: "Notre équipe de support répond sous 24 heures à toute question ou problème.",
-    ctaTitle: 'Prêt à commencer ?',
-    ctaShop: 'Parcourir la boutique',
-    ctaSell: 'Commencer à vendre',
+    badge: 'About Us',
+    title: 'A digital platform, global standards',
+    subtitle: 'DEGITALE is a unified marketplace for buying and selling digital products and services — templates, code, ebooks, and freelance services — safely and easily.',
+    missionTitle: 'Our Mission',
+    missionText: 'We believe digital creators deserve a professional platform that protects them and their customers, with fair commission and simple tools that let them focus on creating instead of technical complexity.',
+    howItWorksTitle: 'How It Works',
+    buyerStepTitle: 'For Buyers',
+    buyerStepText: 'Browse thousands of products, pay securely via Stripe, and get an instant download link valid for 48 hours, with a 14-day refund guarantee.',
+    sellerStepTitle: 'For Sellers',
+    sellerStepText: 'Set up your store in minutes, upload your product, and start selling right after quick approval from our team within 48 hours.',
+    trustTitle: 'Why DEGITALE?',
+    trust1Title: 'Secure Payments',
+    trust1Text: 'All transactions go through Stripe, we never store your card details.',
+    trust2Title: 'Protected Links',
+    trust2Text: 'Every download link is encrypted and time-limited, so it can\'t be shared or misused.',
+    trust3Title: 'Fast Support',
+    trust3Text: 'Our support team replies within 24 hours to any question or issue.',
+    ctaTitle: 'Ready to start?',
+    ctaShop: 'Browse the Shop',
+    ctaSell: 'Start Selling',
   },
   faq: {
     badge: 'FAQ',
-    title: 'Tout ce que vous devez savoir',
-    subtitle: 'Réponses rapides aux questions les plus fréquentes',
-    q1: "Comment acheter un produit numérique ?", a1: "Choisissez un produit, cliquez sur « Acheter maintenant », finalisez le paiement sécurisé via Stripe, et recevez un lien de téléchargement instantané valable 48 heures.",
-    q2: "Quelle est la politique de remboursement ?", a2: "Vous pouvez obtenir un remboursement complet sous 14 jours après l'achat si le produit ne correspond pas à sa description — contactez le support pour lancer une demande.",
-    q3: "Comment devenir vendeur ?", a3: "Cliquez sur « Commencer à vendre » sur la page d'accueil, créez votre boutique, et publiez votre premier produit — notre équipe le valide sous 48 heures avant sa mise en ligne.",
-    q4: "Quelle est la commission de la plateforme ?", a4: "Les vendeurs conservent 80 % de chaque vente, le reste couvre le fonctionnement de la plateforme, le support et le traitement des paiements.",
-    q5: "Mes données de paiement sont-elles sécurisées ?", a5: "Oui, tous les paiements sont traités directement par Stripe, vos données bancaires n'atteignent jamais nos serveurs.",
-    q6: "Que faire si mon lien de téléchargement a expiré ?", a6: "Contactez le support via la page « Nous contacter » avec votre numéro de commande, et nous générerons un nouveau lien immédiatement.",
+    title: 'Everything you need to know',
+    subtitle: 'Quick answers to the most common questions',
+    q1: 'How do I buy a digital product?', a1: 'Pick a product, click "Buy Now", complete secure checkout via Stripe, and get an instant download link valid for 48 hours.',
+    q2: 'What is the refund policy?', a2: 'You can get a full refund within 14 days of purchase if the product isn\'t as described — contact support to start a request.',
+    q3: 'How do I become a seller?', a3: 'Click "Start Selling" on the homepage, set up your store, and upload your first product — our team reviews it within 48 hours before it goes live.',
+    q4: 'What is the platform commission?', a4: 'Sellers keep 80% of every sale, the rest covers platform operations, support, and payment processing.',
+    q5: 'Is my payment data safe?', a5: 'Yes, all payments are processed directly through Stripe, your card details never reach our servers.',
+    q6: 'What if my download link expires?', a6: 'Contact support via the "Contact Us" page with your order number, and we\'ll generate a new link right away.',
   },
   reviews: {
-    title: 'Avis',
-    leaveReview: 'Laisser un avis',
-    yourRating: 'Votre note',
-    commentPlaceholder: 'Partagez votre avis sur le produit (optionnel)',
-    submit: "Envoyer l'avis",
-    submitting: 'Envoi en cours...',
-    editReview: 'Modifier votre avis',
-    update: "Mettre à jour l'avis",
-    thanks: 'Merci pour votre avis !',
-    alreadyReviewed: 'Votre avis envoyé',
-    noReviewsYet: "Aucun avis pour l'instant — soyez le premier à évaluer ce produit",
-    anonymous: 'Acheteur',
-    error: "Une erreur s'est produite, veuillez réessayer",
+    title: 'Reviews',
+    leaveReview: 'Leave a review',
+    yourRating: 'Your rating',
+    commentPlaceholder: 'Share your thoughts about the product (optional)',
+    submit: 'Submit Review',
+    submitting: 'Submitting...',
+    editReview: 'Edit your review',
+    update: 'Update Review',
+    thanks: 'Thanks for your review!',
+    alreadyReviewed: 'Your submitted review',
+    noReviewsYet: 'No reviews yet — be the first to review this product',
+    anonymous: 'Buyer',
+    error: 'Something went wrong, please try again',
   },
   wishlist: {
-    navLabel: 'Favoris',
-    title: 'Ma liste de favoris',
-    subtitle: 'Les produits que vous avez enregistrés pour plus tard',
-    emptyTitle: 'Votre liste de favoris est vide',
-    emptyCta: 'Parcourir la boutique →',
-    remove: 'Retirer',
+    navLabel: 'Wishlist',
+    title: 'Wishlist',
+    subtitle: 'Products you saved to come back to later',
+    emptyTitle: 'Your wishlist is empty',
+    emptyCta: 'Browse the shop →',
+    remove: 'Remove',
   },
 }
