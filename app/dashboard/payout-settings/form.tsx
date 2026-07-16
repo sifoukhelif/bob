@@ -6,7 +6,7 @@ import { getBrowserClient } from '@/lib/supabase/browser'
 
 type PayoutSettingsDict = {
   methodLabel: string; methodPlaceholder: string
-  methodBank: string; methodPayoneer: string; methodVisa: string; methodOther: string
+  methodBank: string; methodPayoneer: string; methodVisa: string; methodRedotPay: string; methodBinance: string; methodOther: string
   detailsLabel: string; detailsPlaceholder: string; detailsHint: string
   errorMethodRequired: string; errorDetailsInvalid: string; errorSaveFailed: string
   genericError: string; savedSuccess: string
@@ -31,6 +31,8 @@ export function PayoutSettingsForm({
     { value: 'bank_transfer', label: t.methodBank },
     { value: 'payoneer', label: t.methodPayoneer },
     { value: 'visa_card', label: t.methodVisa },
+    { value: 'redotpay', label: t.methodRedotPay },
+    { value: 'binance', label: t.methodBinance },
     { value: 'other', label: t.methodOther },
   ]
 
