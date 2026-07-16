@@ -250,4 +250,12 @@ export const ar = {
     anonymous: 'مشترٍ',
     error: 'حدث خطأ، حاول مرة أخرى',
   },
+  wishlist: {
+    navLabel: 'المفضلة',
+    title: 'قائمة المفضلة',
+    subtitle: 'المنتجات التي حفظتها لتعود إليها لاحقاً',
+    emptyTitle: 'قائمة مفضلتك فارغة',
+    emptyCta: 'تصفح المتجر ←',
+    remove: 'إزالة',
+  },
 }
