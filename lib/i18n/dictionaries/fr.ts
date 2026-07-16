@@ -20,7 +20,7 @@ export const fr = {
     backToDashboard: '← Tableau de bord', title: 'Paramètres de paiement',
     subtitle: 'Entrez vos coordonnées de paiement. Les virements sont actuellement effectués manuellement par notre équipe, périodiquement, sur la base de ces informations.',
     methodLabel: 'Méthode de paiement', methodPlaceholder: 'Choisir une méthode',
-    methodBank: 'Virement bancaire', methodPayoneer: 'Payoneer', methodVisa: 'Carte Visa', methodOther: 'Autre méthode',
+    methodBank: 'Virement bancaire', methodPayoneer: 'Payoneer', methodVisa: 'Carte Visa', methodRedotPay: 'RedotPay', methodBinance: 'Binance', methodOther: 'Autre méthode',
     detailsLabel: 'Coordonnées de paiement',
     detailsPlaceholder: "ex : nom de la banque, numéro de compte / IBAN, nom du titulaire — ou email Payoneer",
     detailsHint: 'Ces informations ne sont visibles que par notre équipe lors du traitement du virement.',
