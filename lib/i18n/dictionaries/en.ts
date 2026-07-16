@@ -250,4 +250,12 @@ export const en = {
     anonymous: 'Buyer',
     error: 'Something went wrong, please try again',
   },
+  wishlist: {
+    navLabel: 'Wishlist',
+    title: 'Wishlist',
+    subtitle: 'Products you saved to come back to later',
+    emptyTitle: 'Your wishlist is empty',
+    emptyCta: 'Browse the shop →',
+    remove: 'Remove',
+  },
 }
