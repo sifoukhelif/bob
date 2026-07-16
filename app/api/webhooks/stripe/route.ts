@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendSellerSaleNotification } from '@/lib/email/notifications'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
 
@@ -58,6 +59,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'DB error' }, { status: 500 })
   }
   const { order_item_id } = result as { order_id: string; order_item_id: string }
+
+  // إشعار البائع ببريد إلكتروني (لا يوقف التدفق لو فشل)
+  try {
+    const { data: listingInfo } = await admin
+      .from('listings')
+      .select('title, stores(owner_id, users:owner_id(email))')
+      .eq('id', listingId).maybeSingle()
+    const sellerEmail = (listingInfo?.stores as any)?.users?.email
+    if (sellerEmail) {
+      await sendSellerSaleNotification({
+        sellerEmail,
+        listingTitle: listingInfo?.title ?? '',
+        amount,
+        currency,
+      })
+    }
+  } catch (err) {
+    console.error('[webhook] seller notification error:', err)
+  }
 
   // حساب المبلغ الصافي المستحق للبائع (نظام التحويل اليدوي)
   try {
