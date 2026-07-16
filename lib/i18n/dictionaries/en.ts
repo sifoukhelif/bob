@@ -20,7 +20,7 @@ export const en = {
     backToDashboard: '← Dashboard', title: 'Payout Settings',
     subtitle: 'Enter your payout details. Transfers are currently handled manually by our team on a periodic basis, based on this information.',
     methodLabel: 'Payout Method', methodPlaceholder: 'Choose a method',
-    methodBank: 'Bank Transfer', methodPayoneer: 'Payoneer', methodVisa: 'Visa Card', methodOther: 'Other',
+    methodBank: 'Bank Transfer', methodPayoneer: 'Payoneer', methodVisa: 'Visa Card', methodRedotPay: 'RedotPay', methodBinance: 'Binance', methodOther: 'Other',
     detailsLabel: 'Payout Details',
     detailsPlaceholder: 'e.g. bank name, account number / IBAN, account holder name — or Payoneer email',
     detailsHint: 'This information is only seen by our team when processing the transfer.',
