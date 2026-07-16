@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 import { AdBanner, AdCard } from '@/components/ad-slot'
+import { ShopFilters } from '@/components/shop-filters'
 import { Fragment } from 'react'
 import type { Metadata } from 'next'
 
@@ -14,11 +15,11 @@ export const metadata: Metadata = { title: 'المتجر', description: 'اكت�
 
 export default async function ShopPage({
   searchParams,
-}: { searchParams: Promise<{ q?: string; cat?: string; type?: string; page?: string }> }) {
+}: { searchParams: Promise<{ q?: string; cat?: string; type?: string; page?: string; sort?: string; min?: string; max?: string }> }) {
   const locale = await getServerLocale()
   const t = getDictionary(locale)
 
-  const { q, cat, type, page } = await searchParams
+  const { q, cat, type, page, sort, min, max } = await searchParams
   const currentPage = Math.max(1, parseInt(page ?? '1'))
   const perPage = 12
   const from = (currentPage - 1) * perPage
@@ -36,13 +37,23 @@ export default async function ShopPage({
     }
     const categoriesEmbed = cat ? 'categories!inner(slug)' : 'categories(slug)'
     let query = supabase.from('listings')
-      .select(`id,title,slug,base_price,thumbnail_url,type,rating_avg,sales_count,stores(name),${categoriesEmbed}`, { count: 'exact' })
+      .select(`id,title,slug,base_price,thumbnail_url,type,rating_avg,sales_count,created_at,stores(name),${categoriesEmbed}`, { count: 'exact' })
       .eq('status', 'active')
-      .order('sales_count', { ascending: false })
       .range(from, to)
+
+    switch (sort) {
+      case 'newest':     query = query.order('created_at', { ascending: false }); break
+      case 'price_asc':  query = query.order('base_price', { ascending: true });  break
+      case 'price_desc': query = query.order('base_price', { ascending: false }); break
+      case 'top_rated':  query = query.order('rating_avg', { ascending: false, nullsFirst: false }); break
+      default:            query = query.order('sales_count', { ascending: false })
+    }
+
     if (q)    query = query.ilike('title', `%${q}%`)
     if (type) query = query.eq('type', type)
     if (cat)  query = query.eq('categories.slug', cat)
+    if (min)  query = query.gte('base_price', parseFloat(min))
+    if (max)  query = query.lte('base_price', parseFloat(max))
     const { data, count: c } = await query
     products = data ?? []; count = c ?? 0
   } catch {}
@@ -112,6 +123,8 @@ export default async function ShopPage({
           ))}
         </div>
 
+        <ShopFilters t={t} locale={locale} />
+
         {/* مساحة إعلانية — أعلى نتائج المتجر */}
         <div className="mb-10">
           <AdBanner label={t.ads.banner} />
@@ -150,7 +163,7 @@ export default async function ShopPage({
               <div className="flex justify-center gap-2">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).slice(0, 7).map(p => (
                   <Link key={p}
-                    href={`/shop?${new URLSearchParams({ ...(q ? { q } : {}), ...(cat ? { cat } : {}), ...(type ? { type } : {}), page: String(p) })}`}
+                    href={`/shop?${new URLSearchParams({ ...(q ? { q } : {}), ...(cat ? { cat } : {}), ...(type ? { type } : {}), ...(sort ? { sort } : {}), ...(min ? { min } : {}), ...(max ? { max } : {}), page: String(p) })}`}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold transition-all ${p === currentPage ? 'bg-[#C9A84C] text-[#08080E]' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
                     {p}
                   </Link>
