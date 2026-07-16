@@ -86,3 +86,53 @@ export async function invalidateListingTranslations(listingId: string) {
   const admin = createAdminClient()
   await admin.from('listing_translations').delete().eq('listing_id', listingId)
 }
+
+// ————————————————————————————————————————————
+// ترجمة أسماء التصنيفات (نفس آلية ترجمة المنتجات أعلاه بالضبط، بكاش دائم أيضاً)
+// ————————————————————————————————————————————
+
+export async function getTranslatedCategoryName(
+  categoryId: string,
+  originalName: string,
+  locale: 'en' | 'fr'
+): Promise<string> {
+  const admin = createAdminClient()
+
+  const { data: cached } = await admin
+    .from('category_translations')
+    .select('name')
+    .eq('category_id', categoryId)
+    .eq('locale', locale)
+    .maybeSingle()
+
+  if (cached) return cached.name
+
+  try {
+    const translated = await translateText(originalName, locale)
+    await admin.from('category_translations').upsert(
+      { category_id: categoryId, locale, name: translated },
+      { onConflict: 'category_id,locale' }
+    )
+    return translated
+  } catch (err) {
+    console.error('[translate] category failed', categoryId, locale, err)
+    return originalName
+  }
+}
+
+type CategoryRow = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service'; parent_id: string | null }
+
+// تُرجم قائمة تصنيفات كاملة دفعة وحدة حسب اللغة الحالية، وتعيدها مع حقل name جاهز للعرض.
+// إذا كانت اللغة عربي، ترجع name_ar مباشرة بدون أي طلب شبكة.
+export async function getTranslatedCategories<T extends CategoryRow>(
+  categories: T[],
+  locale: 'ar' | 'en' | 'fr'
+): Promise<(T & { name: string })[]> {
+  if (locale === 'ar') {
+    return categories.map(c => ({ ...c, name: c.name_ar ?? c.slug }))
+  }
+  const names = await Promise.all(
+    categories.map(c => getTranslatedCategoryName(c.id, c.name_ar ?? c.slug, locale))
+  )
+  return categories.map((c, i) => ({ ...c, name: names[i] }))
+}
