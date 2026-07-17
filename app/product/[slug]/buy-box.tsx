@@ -27,8 +27,13 @@ export function BuyBox({
         router.push(`/login?redirectTo=/product/${listingId}`)
         return
       }
+      if (data.error === 'service_manual_only') {
+        setError(t.buyBox.serviceManualOnly)
+        setLoading(false)
+        return
+      }
       if (!res.ok || !data.url) {
-        throw new Error(data.error ?? t.buyBox.checkoutError)
+        throw new Error(t.buyBox.checkoutError)
       }
       window.location.href = data.url
     } catch (err: any) {
@@ -62,8 +67,11 @@ export function BuyBox({
         {loading ? t.buyBox.loading : type === 'product' ? t.buyBox.buyNow : t.buyBox.orderService}
       </button>
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400">
-          {error}
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400 flex flex-col gap-2">
+          <span>{error}</span>
+          {error === t.buyBox.serviceManualOnly && (
+            <a href="/contact" className="text-[#C9A84C] hover:underline w-fit">{t.buyBox.contactSellerCta}</a>
+          )}
         </div>
       )}
       <div className="flex flex-col gap-2">
