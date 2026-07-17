@@ -4,13 +4,26 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getBrowserClient } from '@/lib/supabase/browser'
+import { getDictionary, DEFAULT_LOCALE, type Locale } from '@/lib/i18n'
+
+function readLocaleCookie(): Locale {
+  if (typeof document === 'undefined') return DEFAULT_LOCALE
+  const match = document.cookie.match(/(?:^|;\s*)locale=([^;]+)/)
+  const value = match?.[1]
+  return value === 'en' || value === 'fr' || value === 'ar' ? value : DEFAULT_LOCALE
+}
 
 export function UserMenu({ email, username, role }: { email: string; username?: string | null; role?: string }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE)
   const ref = useRef<HTMLDivElement>(null)
 
+  // نقرأ الكوكي بعد التحميل على العميل فقط (تفادي اختلاف عرض السيرفر/العميل)
+  useEffect(() => { setLocale(readLocaleCookie()) }, [])
+
+  const t = getDictionary(locale)
   const displayName = username ?? email
 
   useEffect(() => {
@@ -30,7 +43,7 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
   }
 
   const dashboardHref = role === 'seller' || role === 'admin' ? '/dashboard' : '/orders'
-  const dashboardLabel = role === 'seller' || role === 'admin' ? 'لوحة البائع' : 'طلباتي'
+  const dashboardLabel = role === 'seller' || role === 'admin' ? t.userMenu.sellerDashboard : t.userMenu.myOrders
 
   return (
     <div className="relative" ref={ref}>
@@ -52,22 +65,22 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
             <p className="text-xs text-gray-500 truncate" dir="ltr">{email}</p>
             {role && (
               <span className="inline-block mt-1 text-[10px] bg-[#C9A84C]/10 text-[#C9A84C] px-2 py-0.5 rounded-full font-bold">
-                {role === 'admin' ? 'أدمن' : role === 'seller' ? 'بائع' : 'مشترٍ'}
+                {role === 'admin' ? t.userMenu.roleAdmin : role === 'seller' ? t.userMenu.roleSeller : t.userMenu.roleBuyer}
               </span>
             )}
           </div>
           <Link href="/account" onClick={() => setOpen(false)}
             className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-            إعدادات الحساب
+            {t.userMenu.accountSettings}
           </Link>
           <Link href="/wishlist" onClick={() => setOpen(false)}
             className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-            المفضلة
+            {t.userMenu.wishlist}
           </Link>
           {role === 'admin' && (
             <Link href="/admin" onClick={() => setOpen(false)}
               className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-              لوحة الأدمن
+              {t.userMenu.adminPanel}
             </Link>
           )}
           <Link href={dashboardHref} onClick={() => setOpen(false)}
@@ -77,12 +90,12 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
           {role !== 'admin' && role === 'seller' && (
             <Link href="/orders" onClick={() => setOpen(false)}
               className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-              طلباتي
+              {t.userMenu.myOrders}
             </Link>
           )}
           <button onClick={handleSignOut} disabled={loading}
             className="w-full text-right px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50">
-            {loading ? 'جارٍ الخروج…' : 'تسجيل الخروج'}
+            {loading ? t.userMenu.signingOut : t.userMenu.signOut}
           </button>
         </div>
       )}
