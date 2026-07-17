@@ -258,4 +258,14 @@ export const fr = {
     emptyCta: 'Parcourir la boutique →',
     remove: 'Retirer',
   },
+  userMenu: {
+    accountSettings: 'Paramètres du compte',
+    wishlist: 'Favoris',
+    adminPanel: "Panneau d'administration",
+    sellerDashboard: 'Tableau de bord vendeur',
+    myOrders: 'Mes commandes',
+    roleAdmin: 'Admin', roleSeller: 'Vendeur', roleBuyer: 'Acheteur',
+    signingOut: 'Déconnexion…',
+    signOut: 'Se déconnecter',
+  },
 }
