@@ -258,4 +258,14 @@ export const en = {
     emptyCta: 'Browse the shop →',
     remove: 'Remove',
   },
+  userMenu: {
+    accountSettings: 'Account Settings',
+    wishlist: 'Wishlist',
+    adminPanel: 'Admin Panel',
+    sellerDashboard: 'Seller Dashboard',
+    myOrders: 'My Orders',
+    roleAdmin: 'Admin', roleSeller: 'Seller', roleBuyer: 'Buyer',
+    signingOut: 'Signing out…',
+    signOut: 'Sign Out',
+  },
 }
