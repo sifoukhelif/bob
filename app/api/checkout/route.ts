@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendSellerSaleNotification } from '@/lib/email/notifications'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     const { data: listing } = await supabase
       .from('listings')
-      .select('id,slug,title,base_price,currency,thumbnail_url,stores(id,owner_id,users:owner_id(stripe_account_id))')
+      .select('id,slug,title,base_price,currency,thumbnail_url,stores(id,owner_id,users:owner_id(stripe_account_id,email))')
       .eq('id', listingId).eq('status', 'active').single()
 
     if (!listing) return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
@@ -77,6 +78,17 @@ export async function POST(req: NextRequest) {
           }).eq('id', order_item_id)
         }
       }
+      // إشعار البائع (منتج مجاني أيضاً يستحق إشعاراً، لا مبلغ لكن عملية بيع/تحميل فعلية)
+      try {
+        const sellerEmail = (listing.stores as any)?.users?.email
+        if (sellerEmail) {
+          await sendSellerSaleNotification({
+            sellerEmail, listingTitle: listing.title, amount: 0,
+            currency: (listing.currency ?? 'USD').toUpperCase(),
+          })
+        }
+      } catch (err) { console.error('[checkout] seller notification error:', err) }
+
       return NextResponse.json({ url: `${origin}/checkout/success?order_item=${order_item_id}` })
     }
 
