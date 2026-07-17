@@ -1,26 +1,10 @@
-// app/api/checkout/route.ts — Stripe 2024-06-20
+// app/api/checkout/route.ts — Lemon Squeezy (بديل Stripe لقسم المنتجات الرقمية)
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
+import crypto from 'node:crypto'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSellerSaleNotification } from '@/lib/email/notifications'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-})
-
-async function getPlatformFeePercent(admin: ReturnType<typeof createAdminClient>): Promise<number> {
-  let feePercent = parseInt(process.env.PLATFORM_FEE_PERCENT ?? '20')
-  try {
-    const { data: setting } = await admin.from('platform_settings')
-      .select('value').eq('key', 'platform_fee_percent').maybeSingle()
-    if (setting?.value != null) {
-      const parsed = parseInt(JSON.parse(setting.value as string))
-      if (!Number.isNaN(parsed)) feePercent = parsed
-    }
-  } catch { /* احتياط: يبقى على قيمة env */ }
-  return feePercent
-}
+import { createLemonSqueezyCheckout } from '@/lib/lemonsqueezy'
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,17 +17,19 @@ export async function POST(req: NextRequest) {
 
     const { data: listing } = await supabase
       .from('listings')
-      .select('id,slug,title,base_price,currency,thumbnail_url,stores(id,owner_id,users:owner_id(stripe_account_id,email))')
+      .select('id,slug,title,base_price,currency,thumbnail_url,type,stores(id,owner_id,users:owner_id(email))')
       .eq('id', listingId).eq('status', 'active').single()
 
     if (!listing) return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
 
+    // الخدمات ممنوعة على Lemon Squeezy (شروط استخدامهم) — تُحوَّل لتدفق يدوي بدل بوابة دفع تلقائية
+    if (listing.type === 'service') {
+      return NextResponse.json({ error: 'service_manual_only' }, { status: 422 })
+    }
+
     const store          = listing.stores as any
-    const sellerStripeId = store?.users?.stripe_account_id as string | undefined
     const unitAmount     = Math.round((listing.base_price ?? 0) * 100)
     const origin         = req.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL!
-    // ترميز الـ slug عشان الروابط اللي فيها أحرف عربية/غير لاتينية تكون صالحة لـ Stripe
-    const cancelUrl      = `${origin}/product/${encodeURIComponent(listing.slug)}`
 
     // منتجات مجانية: تُنشأ كطلب مباشرة بدون المرور بـ Stripe
     if (unitAmount === 0) {
@@ -94,40 +80,26 @@ export async function POST(req: NextRequest) {
 
     if (unitAmount < 50) return NextResponse.json({ error: 'الحد الأدنى للسعر هو $0.50' }, { status: 422 })
 
-    const admin = createAdminClient()
-    const feePercent = await getPlatformFeePercent(admin)
-    const appFee = Math.round(unitAmount * feePercent / 100)
+    // مرجع فريد نولّده نحن ونمرره لـ Lemon Squeezy عبر custom_data، ونستخدمه كـ "معرّف جلسة"
+    // بنفس عمود stripe_session_id الموجود أصلاً — يخلينا نعيد استخدام صفحة النجاح والـ RPC بدون أي تعديل عليهم.
+    const checkoutRef = crypto.randomUUID()
+    const sessionId    = `ls_${checkoutRef}`
 
-    const sessionParams: Stripe.Checkout.SessionCreateParams = {
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: (listing.currency ?? 'usd').toLowerCase(),
-          unit_amount: unitAmount,
-          product_data: {
-            name: listing.title,
-            images: listing.thumbnail_url ? [listing.thumbnail_url] : [],
-          },
-        },
-        quantity: 1,
-      }],
-      customer_email: user.email,
-      metadata: { buyerId: user.id, listingId: listing.id, storeId: store?.id ?? '' },
-      success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  cancelUrl,
-    }
+    const checkoutUrl = await createLemonSqueezyCheckout({
+      unitAmountCents: unitAmount,
+      productName: listing.title,
+      productImageUrl: listing.thumbnail_url,
+      buyerEmail: user.email,
+      successUrl: `${origin}/checkout/success?session_id=${sessionId}`,
+      customData: {
+        buyerId: user.id,
+        listingId: listing.id,
+        storeId: store?.id ?? '',
+        checkoutRef,
+      },
+    })
 
-    // أضف Connect split فقط إذا عنده Stripe account (غير مفعّل حالياً — يُفعّل لاحقاً)
-    if (sellerStripeId) {
-      sessionParams.payment_intent_data = {
-        application_fee_amount: appFee,
-        transfer_data: { destination: sellerStripeId },
-      }
-    }
-
-    const session = await stripe.checkout.sessions.create(sessionParams)
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url: checkoutUrl })
   } catch (err: any) {
     console.error('[checkout]', err)
     return NextResponse.json({ error: err.message ?? 'Server error' }, { status: 500 })
