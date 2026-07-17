@@ -258,4 +258,14 @@ export const ar = {
     emptyCta: 'تصفح المتجر ←',
     remove: 'إزالة',
   },
+  userMenu: {
+    accountSettings: 'إعدادات الحساب',
+    wishlist: 'المفضلة',
+    adminPanel: 'لوحة الأدمن',
+    sellerDashboard: 'لوحة البائع',
+    myOrders: 'طلباتي',
+    roleAdmin: 'أدمن', roleSeller: 'بائع', roleBuyer: 'مشترٍ',
+    signingOut: 'جارٍ الخروج…',
+    signOut: 'تسجيل الخروج',
+  },
 }
