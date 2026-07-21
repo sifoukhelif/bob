@@ -27,15 +27,6 @@ export async function createLemonSqueezyCheckout(params: CreateCheckoutParams) {
     throw new Error('LEMONSQUEEZY_STORE_ID / LEMONSQUEEZY_VARIANT_ID / LEMONSQUEEZY_API_KEY غير مضبوطة')
   }
 
-  // تشخيص مؤقت — يطبع معلومات آمنة عن المفتاح بدون كشفه بالكامل، لتحديد سبب 401
-  console.log('[ls-debug] apiKey length:', apiKey.length)
-  console.log('[ls-debug] apiKey first6:', apiKey.slice(0, 6))
-  console.log('[ls-debug] apiKey last4:', apiKey.slice(-4))
-  console.log('[ls-debug] apiKey has whitespace/newline:', /\s/.test(apiKey))
-  console.log('[ls-debug] apiKey trimmed !== original:', apiKey.trim() !== apiKey)
-  console.log('[ls-debug] storeId:', JSON.stringify(storeId))
-  console.log('[ls-debug] variantId:', JSON.stringify(variantId))
-
   const res = await fetch(`${LS_API_BASE}/checkouts`, {
     method: 'POST',
     headers: {
