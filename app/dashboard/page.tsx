@@ -97,6 +97,7 @@ export default async function DashboardPage({
           </Link>
           <div className="flex items-center gap-4">
             <LanguageSwitcher current={locale} />
+            <Link href="/dashboard/orders" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.sellerOrders.navLink}</Link>
             <Link href="/dashboard/payout-settings" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.dashboard.payoutSettingsLink}</Link>
             <Link href={`/store/${store.slug}`} className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">{t.dashboard.viewStoreLink}</Link>
             <UserMenu email={user.email ?? ''} username={username} role={role} />
