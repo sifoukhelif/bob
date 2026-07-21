@@ -185,6 +185,13 @@ export const ar = {
   ],
   "footer": "آخر تحديث: يوليو 2026. هذه السياسة نموذجية وتحتاج مراجعة قانونية متخصصة من محامٍ مرخّص قبل الإطلاق الرسمي، خصوصاً فيما يتعلق بالامتثال الكامل لأنظمة حماية البيانات (مثل GDPR الأوروبي) إذا كان جمهورك يشمل مستخدمين من الاتحاد الأوروبي."
 },
+  sellerOrders: {
+    title: 'طلبات المشترين', backToDashboard: '← لوحة التحكم',
+    colProduct: 'المنتج', colBuyer: 'المشتري', colAmount: 'المبلغ', colDate: 'التاريخ', colStatus: 'الحالة',
+    statusPaid: 'مدفوع', statusPending: 'قيد المعالجة', statusFree: 'مجاني',
+    emptyText: 'لا توجد طلبات على منتجاتك بعد.',
+    navLink: 'طلبات المشترين 🧾',
+  },
   dashboard: {
     payoutSettingsLink: 'إعدادات الأرباح 💰', viewStoreLink: 'عرض متجري العام ←',
     welcomePrefix: '🎉 تم تفعيل متجرك «', welcomeSuffix: '» بنجاح! أضف أول منتج لك للبدء بالبيع.',
