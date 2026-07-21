@@ -104,6 +104,11 @@ export function LoginForm({ locale, t }: { locale: Locale; t: ReturnType<typeof 
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} dir="ltr"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A84C]/40 transition-colors" />
             </div>
+            {mode === 'login' && (
+              <Link href="/forgot-password" className="text-xs text-gray-500 hover:text-[#C9A84C] transition-colors text-left -mt-2">
+                {t.login.forgotPasswordLink}
+              </Link>
+            )}
             {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400">{error}</div>}
             <button type="submit" disabled={loading}
               className="w-full bg-[#C9A84C] text-[#08080E] py-3 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 mt-2">
