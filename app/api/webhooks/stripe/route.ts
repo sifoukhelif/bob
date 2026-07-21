@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendSellerSaleNotification } from '@/lib/email/notifications'
+import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
 
@@ -94,16 +94,36 @@ export async function POST(req: NextRequest) {
   const { data: file } = await admin.from('listing_files')
     .select('storage_path').eq('listing_id', listingId)
     .order('version', { ascending: false }).maybeSingle()
+  let downloadToken: string | null = null
   if (file) {
     const { data: signed } = await admin.storage
       .from('listing-files')
       .createSignedUrl(file.storage_path, 48 * 3600, { download: true })
     if (signed?.signedUrl) {
+      downloadToken = Buffer.from(signed.signedUrl).toString('base64url')
       await admin.from('order_items').update({
-        download_token:   Buffer.from(signed.signedUrl).toString('base64url'),
+        download_token:   downloadToken,
         token_expires_at: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
       }).eq('id', order_item_id)
     }
   }
+
+  // إشعار المشتري بتأكيد الطلب (لا يوقف التدفق لو فشل)
+  try {
+    const { data: buyerProfile } = await admin.from('users').select('email').eq('id', buyerId).maybeSingle()
+    const { data: listingInfo2 } = await admin.from('listings').select('title').eq('id', listingId).maybeSingle()
+    if (buyerProfile?.email) {
+      await sendBuyerOrderConfirmation({
+        buyerEmail: buyerProfile.email,
+        listingTitle: listingInfo2?.title ?? '',
+        amount,
+        currency,
+        downloadUrl: downloadToken ? `${process.env.NEXT_PUBLIC_APP_URL}/api/download/${downloadToken}` : null,
+      })
+    }
+  } catch (err) {
+    console.error('[webhook] buyer confirmation error:', err)
+  }
+
   return NextResponse.json({ received: true })
 }
