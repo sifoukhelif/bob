@@ -197,6 +197,8 @@ export const ar = {
     welcomePrefix: '🎉 تم تفعيل متجرك «', welcomeSuffix: '» بنجاح! أضف أول منتج لك للبدء بالبيع.',
     addProductButton: '+ أضف منتجاً جديداً',
     statActive: 'منتجات منشورة', statPending: 'بانتظار المراجعة', statSales: 'إجمالي المبيعات', statRating: 'التقييم',
+    statTotalRevenue: 'إجمالي الأرباح', statMonthRevenue: 'أرباح هذا الشهر', statBestSeller: 'الأكثر مبيعاً',
+    revenueChartTitle: 'الأرباح آخر 30 يوماً', noBestSeller: 'لا يوجد بعد',
     myProductsTitle: 'منتجاتي',
     colProduct: 'المنتج', colPrice: 'السعر', colStatus: 'الحالة', colSales: 'المبيعات', colViews: 'المشاهدات', colActions: 'الإجراءات',
     editLink: 'تعديل ✏️',
