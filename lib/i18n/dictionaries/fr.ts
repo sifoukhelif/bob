@@ -185,6 +185,13 @@ export const fr = {
   ],
   "footer": "Dernière mise à jour : juillet 2026. Cette politique est un modèle et nécessite une révision juridique spécialisée par un avocat agréé avant le lancement officiel, notamment en ce qui concerne la pleine conformité aux réglementations de protection des données (comme le RGPD européen) si votre audience inclut des utilisateurs de l'Union européenne."
 },
+  sellerOrders: {
+    title: 'Commandes des acheteurs', backToDashboard: '← Tableau de bord',
+    colProduct: 'Produit', colBuyer: 'Acheteur', colAmount: 'Montant', colDate: 'Date', colStatus: 'Statut',
+    statusPaid: 'Payé', statusPending: 'En traitement', statusFree: 'Gratuit',
+    emptyText: "Aucune commande sur vos produits pour l'instant.",
+    navLink: 'Commandes des acheteurs 🧾',
+  },
   dashboard: {
     payoutSettingsLink: 'Paramètres de paiement 💰', viewStoreLink: 'Voir ma boutique publique →',
     welcomePrefix: '🎉 Votre boutique «', welcomeSuffix: '» a été activée avec succès ! Ajoutez votre premier produit pour commencer à vendre.',
