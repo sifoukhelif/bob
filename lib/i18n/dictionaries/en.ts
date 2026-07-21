@@ -185,6 +185,13 @@ export const en = {
   ],
   "footer": "Last updated: July 2026. This policy is a template and requires specialized legal review by a licensed attorney before official launch, particularly regarding full compliance with data protection regulations (such as the European GDPR) if your audience includes users from the European Union."
 },
+  sellerOrders: {
+    title: 'Buyer Orders', backToDashboard: '← Dashboard',
+    colProduct: 'Product', colBuyer: 'Buyer', colAmount: 'Amount', colDate: 'Date', colStatus: 'Status',
+    statusPaid: 'Paid', statusPending: 'Processing', statusFree: 'Free',
+    emptyText: 'No orders on your products yet.',
+    navLink: 'Buyer Orders 🧾',
+  },
   dashboard: {
     payoutSettingsLink: 'Payout Settings 💰', viewStoreLink: 'View my public store →',
     welcomePrefix: '🎉 Your store «', welcomeSuffix: '» has been activated! Add your first product to start selling.',
