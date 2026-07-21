@@ -197,6 +197,8 @@ export const fr = {
     welcomePrefix: '🎉 Votre boutique «', welcomeSuffix: '» a été activée avec succès ! Ajoutez votre premier produit pour commencer à vendre.',
     addProductButton: '+ Ajouter un nouveau produit',
     statActive: 'Produits publiés', statPending: 'En attente de révision', statSales: 'Ventes totales', statRating: 'Note',
+    statTotalRevenue: 'Revenu total', statMonthRevenue: 'Revenu de ce mois', statBestSeller: 'Meilleure vente',
+    revenueChartTitle: 'Revenus — 30 derniers jours', noBestSeller: 'Aucun pour le moment',
     myProductsTitle: 'Mes produits',
     colProduct: 'Produit', colPrice: 'Prix', colStatus: 'Statut', colSales: 'Ventes', colViews: 'Vues', colActions: 'Actions',
     editLink: 'Modifier ✏️',
