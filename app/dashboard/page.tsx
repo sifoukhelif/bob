@@ -1,11 +1,14 @@
 // app/dashboard/page.tsx
 import { createServerClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { DeleteListingButton } from './delete-listing-button'
+import { RevenueChart } from '@/components/revenue-chart'
+import { AdBanner } from '@/components/ad-slot'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 
@@ -87,6 +90,44 @@ export default async function DashboardPage({
   const pendingCount = listings?.filter(l => l.status === 'pending_review').length ?? 0
   const totalSales   = listings?.reduce((s, l) => s + (l.sales_count ?? 0), 0) ?? 0
 
+  // بيانات الأرباح — نستخدم admin client لأن order_items ليس له سياسة قراءة للبائع،
+  // لكن الاستعلام مقيّد صراحة بمعرّفات منتجات مالكها الموثّق (store.id أعلاه)
+  let totalRevenue = 0, monthRevenue = 0
+  let revenuePoints: { date: string; amount: number }[] = []
+  const listingIds = (listings ?? []).map(l => l.id)
+
+  if (listingIds.length > 0) {
+    const admin = createAdminClient()
+    const { data: orderItems } = await admin
+      .from('order_items')
+      .select('net_amount, created_at')
+      .in('listing_id', listingIds)
+      .not('net_amount', 'is', null)
+
+    const items = orderItems ?? []
+    totalRevenue = items.reduce((s, o) => s + (o.net_amount ?? 0), 0)
+
+    const now = new Date()
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    monthRevenue = items
+      .filter(o => new Date(o.created_at) >= startOfMonth)
+      .reduce((s, o) => s + (o.net_amount ?? 0), 0)
+
+    const days: Record<string, number> = {}
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i)
+      days[d.toISOString().slice(0, 10)] = 0
+    }
+    for (const o of items) {
+      const key = new Date(o.created_at).toISOString().slice(0, 10)
+      if (key in days) days[key] += (o.net_amount ?? 0)
+    }
+    revenuePoints = Object.entries(days).map(([date, amount]) => ({ date, amount }))
+  }
+
+  const bestSeller = (listings ?? []).reduce((best: any, l: any) =>
+    (l.sales_count ?? 0) > (best?.sales_count ?? 0) ? l : best, null as any)
+
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -123,7 +164,7 @@ export default async function DashboardPage({
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
             { label: t.dashboard.statActive, value: activeCount, color: 'text-[#2ECC9A]' },
             { label: t.dashboard.statPending, value: pendingCount, color: 'text-[#E8A030]' },
@@ -135,6 +176,31 @@ export default async function DashboardPage({
               <div className="text-xs text-gray-500">{k.label}</div>
             </div>
           ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="text-2xl font-serif font-bold mb-1 text-[#C9A84C]">${totalRevenue.toFixed(2)}</div>
+            <div className="text-xs text-gray-500">{t.dashboard.statTotalRevenue}</div>
+          </div>
+          <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="text-2xl font-serif font-bold mb-1 text-[#2ECC9A]">${monthRevenue.toFixed(2)}</div>
+            <div className="text-xs text-gray-500">{t.dashboard.statMonthRevenue}</div>
+          </div>
+          <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="text-sm font-bold mb-1 truncate">{bestSeller?.title ?? t.dashboard.noBestSeller}</div>
+            <div className="text-xs text-gray-500">{t.dashboard.statBestSeller}</div>
+          </div>
+        </div>
+
+        <div className="bg-[#111118] border border-white/5 rounded-2xl p-6 mb-10">
+          <div className="text-sm font-semibold mb-4">{t.dashboard.revenueChartTitle}</div>
+          <RevenueChart data={revenuePoints} />
+        </div>
+
+        {/* مساحة إعلانية */}
+        <div className="mb-10">
+          <AdBanner label={t.ads.banner} className="h-16 md:h-20" />
         </div>
 
         <div className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
