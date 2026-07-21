@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'node:crypto'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendSellerSaleNotification } from '@/lib/email/notifications'
+import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
 import { createLemonSqueezyCheckout } from '@/lib/lemonsqueezy'
 
 export async function POST(req: NextRequest) {
@@ -53,13 +53,15 @@ export async function POST(req: NextRequest) {
       const { data: file } = await admin.from('listing_files')
         .select('storage_path').eq('listing_id', listing.id)
         .order('version', { ascending: false }).maybeSingle()
+      let downloadToken: string | null = null
       if (file) {
         const { data: signed } = await admin.storage
           .from('listing-files')
           .createSignedUrl(file.storage_path, 48 * 3600, { download: true })
         if (signed?.signedUrl) {
+          downloadToken = Buffer.from(signed.signedUrl).toString('base64url')
           await admin.from('order_items').update({
-           download_token:   Buffer.from(signed.signedUrl).toString('base64url'),
+            download_token:   downloadToken,
             token_expires_at: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
           }).eq('id', order_item_id)
         }
@@ -74,6 +76,19 @@ export async function POST(req: NextRequest) {
           })
         }
       } catch (err) { console.error('[checkout] seller notification error:', err) }
+
+      // إشعار المشتري بتأكيد الطلب (البريد متوفر مباشرة من جلسته، بدون استعلام إضافي)
+      try {
+        if (user.email) {
+          await sendBuyerOrderConfirmation({
+            buyerEmail: user.email,
+            listingTitle: listing.title,
+            amount: 0,
+            currency: (listing.currency ?? 'USD').toUpperCase(),
+            downloadUrl: downloadToken ? `${origin}/api/download/${downloadToken}` : null,
+          })
+        }
+      } catch (err) { console.error('[checkout] buyer confirmation error:', err) }
 
       return NextResponse.json({ url: `${origin}/checkout/success?order_item=${order_item_id}` })
     }
