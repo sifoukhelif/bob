@@ -81,6 +81,13 @@ export default async function StorePage({ params }: { params: Params }) {
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-24">
+        {/* BANNER */}
+        {store.banner_url && (
+          <div className="w-full aspect-[4/1] rounded-3xl overflow-hidden mb-4 border border-white/5">
+            <img src={store.banner_url} alt="" className="w-full h-full object-cover" />
+          </div>
+        )}
+
         {/* STORE HEADER */}
         <div className="bg-[#111118] border border-white/5 rounded-3xl p-8 mb-10 flex flex-col md:flex-row items-start md:items-center gap-6">
           <div className="w-20 h-20 rounded-2xl bg-[#C9A84C]/15 flex items-center justify-center text-[#C9A84C] text-3xl font-black shrink-0">
