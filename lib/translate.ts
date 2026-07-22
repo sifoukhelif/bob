@@ -120,19 +120,19 @@ export async function getTranslatedCategoryName(
   }
 }
 
-type CategoryRow = { id: string; slug: string; name_ar: string | null; type: 'product' | 'service'; parent_id: string | null }
+type CategoryRow = { id: string; slug: string; name?: string | null; name_ar: string | null; name_fr?: string | null; type: 'product' | 'service'; parent_id: string | null }
 
-// تُرجم قائمة تصنيفات كاملة دفعة وحدة حسب اللغة الحالية، وتعيدها مع حقل name جاهز للعرض.
-// إذا كانت اللغة عربي، ترجع name_ar مباشرة بدون أي طلب شبكة.
-export async function getTranslatedCategories<T extends CategoryRow>(
+// الفئات لها ترجمات جاهزة مكتوبة يدويًا بقاعدة البيانات (name = إنجليزي، name_fr = فرنسي)
+// لذا لا حاجة إطلاقًا لاستدعاء API ترجمة هنا — فقط اختيار العمود الصحيح حسب اللغة (فوري، بدون شبكة)
+export function getTranslatedCategories<T extends CategoryRow>(
   categories: T[],
   locale: 'ar' | 'en' | 'fr'
-): Promise<(T & { name: string })[]> {
-  if (locale === 'ar') {
-    return categories.map(c => ({ ...c, name: c.name_ar ?? c.slug }))
-  }
-  const names = await Promise.all(
-    categories.map(c => getTranslatedCategoryName(c.id, c.name_ar ?? c.slug, locale))
-  )
-  return categories.map((c, i) => ({ ...c, name: names[i] }))
+): (T & { name: string })[] {
+  return categories.map(c => ({
+    ...c,
+    name:
+      locale === 'ar' ? (c.name_ar ?? c.slug) :
+      locale === 'fr' ? (c.name_fr ?? c.name ?? c.slug) :
+      (c.name ?? c.slug),
+  }))
 }
