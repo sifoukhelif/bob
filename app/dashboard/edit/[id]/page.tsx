@@ -31,10 +31,10 @@ export default async function EditListingPage({
   if (!listing) notFound()
   const { data: categoriesRaw } = await supabase
     .from('categories')
-    .select('id,slug,name_ar,type,parent_id')
+    .select('id,slug,name,name_ar,name_fr,type,parent_id')
     .eq('is_active', true)
     .order('position')
-  const categories = await getTranslatedCategories(categoriesRaw ?? [], locale)
+  const categories = getTranslatedCategories(categoriesRaw ?? [], locale)
   const { data: existingFile } = await supabase
     .from('listing_files')
     .select('original_name')
