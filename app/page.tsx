@@ -115,7 +115,7 @@ export default async function Home() {
         </div>
       </nav>
 
-      <section className="relative pt-52 pb-36 flex flex-col items-center overflow-hidden">
+      <section className="relative pt-28 pb-36 flex flex-col items-center overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#C9A84C]/8 blur-[140px] rounded-full" />
           <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#4F8EF7]/4 blur-[100px] rounded-full" />
