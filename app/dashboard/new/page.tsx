@@ -21,10 +21,10 @@ export default async function NewListingPage() {
   if (!store) redirect('/become-seller')
   const { data: categoriesRaw } = await supabase
     .from('categories')
-    .select('id,slug,name_ar,type,parent_id')
+    .select('id,slug,name,name_ar,name_fr,type,parent_id')
     .eq('is_active', true)
     .order('position')
-  const categories = await getTranslatedCategories(categoriesRaw ?? [], locale)
+  const categories = getTranslatedCategories(categoriesRaw ?? [], locale)
 
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
