@@ -127,6 +127,8 @@ export default async function Home() {
             {t.hero.badge}
           </div>
 
+          <AdStrip label={t.ads.strip} className="w-full max-w-xs mb-10 animate-fade-up" />
+
           <Image src="/logo.png" alt="DEGITALE" width={120} height={120} priority
             className="mb-8 rounded-3xl shadow-[0_0_50px_rgba(201,168,76,0.3)] animate-fade-up" style={{ animationDelay: '0.05s' }} />
 
