@@ -37,6 +37,19 @@ export default async function ShopPage({
       const { data: profile } = await supabase.from('users').select('username').eq('id', user.id).maybeSingle()
       username = profile?.username ?? null
     }
+    // فلاتر "كتب/قوالب/أكواد" تصنيفات رئيسية — لازم نطابق التصنيف نفسه + كل تصنيفاته الفرعية،
+    // لأن المنتجات الفعلية غالباً مصنّفة تحت تصنيف فرعي (مثل "روايات" تحت "كتب") لا الرئيسي مباشرة.
+    let catSlugs: string[] | null = null
+    if (cat) {
+      const { data: catRow } = await supabase.from('categories').select('id,slug').eq('slug', cat).maybeSingle()
+      if (catRow) {
+        const { data: subCats } = await supabase.from('categories').select('slug').eq('parent_id', catRow.id)
+        catSlugs = [catRow.slug, ...(subCats ?? []).map(s => s.slug)]
+      } else {
+        catSlugs = [cat]
+      }
+    }
+
     const categoriesEmbed = cat ? 'categories!inner(slug)' : 'categories(slug)'
     let query = supabase.from('listings')
       .select(`id,title,slug,base_price,thumbnail_url,type,rating_avg,sales_count,created_at,stores(name),${categoriesEmbed}`, { count: 'exact' })
@@ -53,7 +66,7 @@ export default async function ShopPage({
 
     if (q)    query = query.ilike('title', `%${q}%`)
     if (type) query = query.eq('type', type)
-    if (cat)  query = query.eq('categories.slug', cat)
+    if (catSlugs) query = query.in('categories.slug', catSlugs)
     if (min)  query = query.gte('base_price', parseFloat(min))
     if (max)  query = query.lte('base_price', parseFloat(max))
     const { data, count: c } = await query
