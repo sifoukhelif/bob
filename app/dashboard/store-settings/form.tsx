@@ -15,11 +15,12 @@ function sanitizeFileName(name: string): string {
   return `${cleanBase || 'file'}${ext.toLowerCase()}`
 }
 
-type Store = { id: string; name: string; bio: string | null; banner_url: string | null }
+type Store = { id: string; name: string; bio: string | null; banner_url: string | null; logo_url?: string | null }
 type Dict = {
   bannerLabel: string; bannerHint: string; changeBanner: string
   nameLabel: string; bioLabel: string
   saveButton: string; saving: string; savedSuccess: string; errorGeneric: string
+  logoLabel?: string; logoHint?: string; changeLogo?: string
 }
 
 export function StoreSettingsForm({ store, t }: { store: Store; t: Dict }) {
@@ -28,10 +29,21 @@ export function StoreSettingsForm({ store, t }: { store: Store; t: Dict }) {
   const [bannerUrl, setBannerUrl] = useState(store.banner_url)
   const [bannerFile, setBannerFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [logoUrl, setLogoUrl] = useState(store.logo_url ?? null)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const logoInputRef = useRef<HTMLInputElement>(null)
+
+  function handleLogoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setLogoFile(file)
+    setLogoPreviewUrl(URL.createObjectURL(file))
+  }
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -57,13 +69,24 @@ export function StoreSettingsForm({ store, t }: { store: Store; t: Dict }) {
         finalBannerUrl = publicUrlData.publicUrl
       }
 
+      let finalLogoUrl = logoUrl
+      if (logoFile) {
+        const path = `${user.id}/logo-${crypto.randomUUID()}-${sanitizeFileName(logoFile.name)}`
+        const { error: logoUploadError } = await sb.storage.from('listing-images').upload(path, logoFile)
+        if (logoUploadError) throw logoUploadError
+        const { data: logoPublicUrlData } = sb.storage.from('listing-images').getPublicUrl(path)
+        finalLogoUrl = logoPublicUrlData.publicUrl
+      }
+
       const { error: updateError } = await sb.from('stores')
-        .update({ name: name.trim(), bio: bio.trim() || null, banner_url: finalBannerUrl })
+        .update({ name: name.trim(), bio: bio.trim() || null, banner_url: finalBannerUrl, logo_url: finalLogoUrl })
         .eq('id', store.id)
       if (updateError) throw updateError
 
       setBannerUrl(finalBannerUrl)
       setBannerFile(null)
+      setLogoUrl(finalLogoUrl)
+      setLogoFile(null)
       setSaved(true)
     } catch {
       setError(t.errorGeneric)
@@ -95,6 +118,30 @@ export function StoreSettingsForm({ store, t }: { store: Store; t: Dict }) {
         <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleFileSelect} className="hidden" />
         <p className="text-xs text-gray-600 mt-2">{t.bannerHint}</p>
       </div>
+
+      {/* الشعار */}
+      {t.logoLabel && (
+        <div>
+          <label className="block text-sm font-semibold mb-2">{t.logoLabel}</label>
+          <div className="flex items-center gap-4">
+            <div
+              onClick={() => logoInputRef.current?.click()}
+              className="relative w-20 h-20 rounded-2xl overflow-hidden bg-[#111118] border border-white/10 cursor-pointer group shrink-0 flex items-center justify-center"
+            >
+              {(logoPreviewUrl ?? logoUrl) ? (
+                <img src={logoPreviewUrl ?? logoUrl ?? ''} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-gray-600 text-2xl">🏬</span>
+              )}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span className="text-white text-[10px] font-bold text-center px-1">{t.changeLogo}</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600">{t.logoHint}</p>
+          </div>
+          <input ref={logoInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogoSelect} className="hidden" />
+        </div>
+      )}
 
       {/* الاسم */}
       <div>
