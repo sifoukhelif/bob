@@ -37,14 +37,24 @@ export default async function ShopPage({
       const { data: profile } = await supabase.from('users').select('username').eq('id', user.id).maybeSingle()
       username = profile?.username ?? null
     }
-    // فلاتر "كتب/قوالب/أكواد" تصنيفات رئيسية — نطابق التصنيف نفسه + كل تصنيفاته الفرعية،
-    // بالفلترة المباشرة على عمود category_id بجدول listings (أدق وأثبت من الفلترة عبر جدول مرتبط).
+    // فلاتر "كتب/قوالب/أكواد" تصنيفات رئيسية — نطابق التصنيف نفسه + كل ذرّياته على أي عمق
+    // (اكتُشف إن الهيكل 3 مستويات فعلياً: رئيسي ← فرعي وسيط ← فرعي فرعي، مو مستويين بس)،
+    // بالفلترة المباشرة على عمود category_id بجدول listings.
     let categoryIds: string[] | null = null
     if (cat) {
       const { data: catRow } = await supabase.from('categories').select('id').eq('slug', cat).maybeSingle()
       if (catRow) {
-        const { data: subCats } = await supabase.from('categories').select('id').eq('parent_id', catRow.id)
-        categoryIds = [catRow.id, ...(subCats ?? []).map(s => s.id)]
+        const collected = new Set<string>([catRow.id])
+        let frontier = [catRow.id]
+        // ندور طبقة بطبقة لين ما نلقى أطفال جدد (يغطي أي عمق هرمي بدون افتراض عدد مستويات ثابت)
+        while (frontier.length > 0) {
+          const { data: children } = await supabase.from('categories').select('id').in('parent_id', frontier)
+          const newIds = (children ?? []).map(c => c.id).filter(id => !collected.has(id))
+          if (newIds.length === 0) break
+          newIds.forEach(id => collected.add(id))
+          frontier = newIds
+        }
+        categoryIds = Array.from(collected)
       }
     }
 
