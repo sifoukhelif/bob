@@ -27,7 +27,7 @@ export default async function StoreSettingsPage() {
 
   const { data: store } = await supabase
     .from('stores')
-    .select('id,name,slug,bio,banner_url')
+    .select('id,name,slug,bio,banner_url,logo_url')
     .eq('owner_id', user.id).maybeSingle()
 
   if (!store) redirect('/dashboard')
