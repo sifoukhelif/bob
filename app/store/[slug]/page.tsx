@@ -1,175 +1,74 @@
-// app/dashboard/store-settings/form.tsx
-'use client'
-import { useState, useRef } from 'react'
-import { getBrowserClient } from '@/lib/supabase/browser'
+// app/dashboard/store-settings/page.tsx
+import { createServerClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import { UserMenu } from '@/components/user-menu'
+import { Logo } from '@/components/logo'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { AdBanner } from '@/components/ad-slot'
+import { getServerLocale } from '@/lib/i18n/server'
+import { getDictionary } from '@/lib/i18n'
+import { StoreSettingsForm } from './form'
 
-function sanitizeFileName(name: string): string {
-  const lastDot = name.lastIndexOf('.')
-  const ext = lastDot !== -1 ? name.slice(lastDot) : ''
-  const base = lastDot !== -1 ? name.slice(0, lastDot) : name
-  const cleanBase = base
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9_-]/g, '-')
-    .replace(/-+/g, '-')
-    .toLowerCase()
-  return `${cleanBase || 'file'}${ext.toLowerCase()}`
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
+  return { title: t.storeSettings.title }
 }
 
-type Store = { id: string; name: string; bio: string | null; banner_url: string | null; logo_url?: string | null }
-type Dict = {
-  bannerLabel: string; bannerHint: string; changeBanner: string
-  nameLabel: string; bioLabel: string
-  saveButton: string; saving: string; savedSuccess: string; errorGeneric: string
-  logoLabel?: string; logoHint?: string; changeLogo?: string
-}
+export default async function StoreSettingsPage() {
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
 
-export function StoreSettingsForm({ store, t }: { store: Store; t: Dict }) {
-  const [name, setName] = useState(store.name)
-  const [bio, setBio] = useState(store.bio ?? '')
-  const [bannerUrl, setBannerUrl] = useState(store.banner_url)
-  const [bannerFile, setBannerFile] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [logoUrl, setLogoUrl] = useState(store.logo_url ?? null)
-  const [logoFile, setLogoFile] = useState<File | null>(null)
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState('')
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const logoInputRef = useRef<HTMLInputElement>(null)
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login?redirectTo=/dashboard/store-settings')
 
-  function handleLogoSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setLogoFile(file)
-    setLogoPreviewUrl(URL.createObjectURL(file))
-  }
+  const { data: store } = await supabase
+    .from('stores')
+    .select('id,name,slug,bio,banner_url,logo_url')
+    .eq('owner_id', user.id).maybeSingle()
 
-  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setBannerFile(file)
-    setPreviewUrl(URL.createObjectURL(file))
-  }
+  if (!store) redirect('/dashboard')
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setSaving(true); setError(''); setSaved(false)
-    try {
-      const sb = getBrowserClient()
-      const { data: { user } } = await sb.auth.getUser()
-      if (!user) throw new Error('unauthorized')
-
-      let finalBannerUrl = bannerUrl
-      if (bannerFile) {
-        const path = `${user.id}/banner-${crypto.randomUUID()}-${sanitizeFileName(bannerFile.name)}`
-        const { error: uploadError } = await sb.storage.from('listing-images').upload(path, bannerFile)
-        if (uploadError) throw uploadError
-        const { data: publicUrlData } = sb.storage.from('listing-images').getPublicUrl(path)
-        finalBannerUrl = publicUrlData.publicUrl
-      }
-
-      let finalLogoUrl = logoUrl
-      if (logoFile) {
-        const path = `${user.id}/logo-${crypto.randomUUID()}-${sanitizeFileName(logoFile.name)}`
-        const { error: logoUploadError } = await sb.storage.from('listing-images').upload(path, logoFile)
-        if (logoUploadError) throw logoUploadError
-        const { data: logoPublicUrlData } = sb.storage.from('listing-images').getPublicUrl(path)
-        finalLogoUrl = logoPublicUrlData.publicUrl
-      }
-
-      const { error: updateError } = await sb.from('stores')
-        .update({ name: name.trim(), bio: bio.trim() || null, banner_url: finalBannerUrl, logo_url: finalLogoUrl })
-        .eq('id', store.id)
-      if (updateError) throw updateError
-
-      setBannerUrl(finalBannerUrl)
-      setBannerFile(null)
-      setLogoUrl(finalLogoUrl)
-      setLogoFile(null)
-      setSaved(true)
-    } catch {
-      setError(t.errorGeneric)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const displayBanner = previewUrl ?? bannerUrl
+  const { data: profile } = await supabase.from('users').select('username').eq('id', user.id).maybeSingle()
+  const role = user.app_metadata?.role as string | undefined
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {/* الغلاف */}
-      <div>
-        <label className="block text-sm font-semibold mb-2">{t.bannerLabel}</label>
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          className="relative w-full aspect-[4/1] rounded-2xl overflow-hidden bg-[#111118] border border-white/10 cursor-pointer group"
-        >
-          {displayBanner ? (
-            <img src={displayBanner} alt="" className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">🖼️</div>
-          )}
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span className="text-white text-sm font-bold">{t.changeBanner}</span>
-          </div>
-        </div>
-        <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleFileSelect} className="hidden" />
-        <p className="text-xs text-gray-600 mt-2">{t.bannerHint}</p>
-      </div>
-
-      {/* الشعار */}
-      {t.logoLabel && (
-        <div>
-          <label className="block text-sm font-semibold mb-2">{t.logoLabel}</label>
+    <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
+        <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Logo size="sm" />
+            <span className="font-bold tracking-widest uppercase text-sm hidden sm:block">DEGITALE</span>
+          </Link>
           <div className="flex items-center gap-4">
-            <div
-              onClick={() => logoInputRef.current?.click()}
-              className="relative w-20 h-20 rounded-2xl overflow-hidden bg-[#111118] border border-white/10 cursor-pointer group shrink-0 flex items-center justify-center"
-            >
-              {(logoPreviewUrl ?? logoUrl) ? (
-                <img src={logoPreviewUrl ?? logoUrl ?? ''} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-gray-600 text-2xl">🏬</span>
-              )}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="text-white text-[10px] font-bold text-center px-1">{t.changeLogo}</span>
-              </div>
-            </div>
-            <p className="text-xs text-gray-600">{t.logoHint}</p>
+            <LanguageSwitcher current={locale} />
+            <Link href="/dashboard" className="text-xs text-gray-400 hover:text-[#C9A84C] transition-colors whitespace-nowrap">
+              {locale === 'ar' ? 'لوحتي ←' : locale === 'fr' ? 'Mon tableau de bord ←' : 'My Dashboard ←'}
+            </Link>
+            <UserMenu email={user.email ?? ''} username={profile?.username ?? null} role={role} />
           </div>
-          <input ref={logoInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogoSelect} className="hidden" />
         </div>
-      )}
+      </nav>
 
-      {/* الاسم */}
-      <div>
-        <label className="block text-sm font-semibold mb-2">{t.nameLabel}</label>
-        <input
-          value={name} onChange={(e) => setName(e.target.value)} required
-          className="w-full bg-[#111118] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors"
-        />
-      </div>
+      <main className="max-w-3xl mx-auto px-6 pt-28 pb-24">
+        <h1 className="text-3xl font-serif font-bold mb-1">{t.storeSettings.title}</h1>
+        <p className="text-gray-500 text-sm mb-2">{t.storeSettings.subtitle}</p>
+        <Link href={`/store/${store.slug}`} className="text-xs text-[#C9A84C] hover:underline">
+          {t.storeSettings.previewLink}
+        </Link>
 
-      {/* النبذة */}
-      <div>
-        <label className="block text-sm font-semibold mb-2">{t.bioLabel}</label>
-        <textarea
-          value={bio} onChange={(e) => setBio(e.target.value)} rows={3}
-          className="w-full bg-[#111118] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors resize-none"
-        />
-      </div>
+        <div className="mt-8">
+          <StoreSettingsForm store={store} t={t.storeSettings} />
+        </div>
 
-      {error && <div className="text-xs text-red-400">{error}</div>}
-      {saved && <div className="text-xs text-[#2ECC9A]">{t.savedSuccess}</div>}
-
-      <button
-        type="submit" disabled={saving}
-        className="bg-[#C9A84C] text-[#08080E] py-3 rounded-xl font-black text-sm hover:opacity-90 transition-opacity disabled:opacity-50 self-start px-8"
-      >
-        {saving ? t.saving : t.saveButton}
-      </button>
-    </form>
+        {/* مساحة إعلانية */}
+        <div className="mt-10">
+          <AdBanner label={t.ads.banner} className="h-16 md:h-20" />
+        </div>
+      </main>
+    </div>
   )
 }
