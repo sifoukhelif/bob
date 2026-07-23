@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <aside className="w-60 bg-[#0D0D14] border-l border-white/5 flex flex-col fixed h-full z-40">
         <div className="p-5 border-b border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#C9A84C] rounded-lg flex items-center justify-center text-[#08080E] font-black text-sm">A</div>
+            <img src="/logo.png" alt="DEGITALE" className="w-9 h-9 rounded-lg object-cover" />
             <div>
               <div className="font-bold text-sm">DEGITALE</div>
               <div className="text-[10px] text-[#C9A84C] font-bold uppercase tracking-widest">Super Admin</div>
