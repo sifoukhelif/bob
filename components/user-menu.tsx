@@ -18,10 +18,22 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
 
   // نقرأ الكوكي بعد التحميل على العميل فقط (تفادي اختلاف عرض السيرفر/العميل)
   useEffect(() => { setLocale(readLocaleCookie()) }, [])
+
+  // نجلب صورة المستخدم بأنفسنا (بدل تمريرها كـ prop عبر كل صفحة تستخدم هذا المكوّن)
+  useEffect(() => {
+    let active = true
+    getBrowserClient().auth.getUser().then(({ data }) => {
+      if (!data.user) return
+      getBrowserClient().from('users').select('avatar_url').eq('id', data.user.id).maybeSingle()
+        .then(({ data: profile }) => { if (active && profile?.avatar_url) setAvatarUrl(profile.avatar_url) })
+    })
+    return () => { active = false }
+  }, [])
 
   const t = getDictionary(locale)
   const displayName = username ?? email
@@ -49,8 +61,8 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
     <div className="relative" ref={ref}>
       <button onClick={() => setOpen(o => !o)}
         className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-sm font-semibold hover:border-[#C9A84C]/40 transition-all shrink-0 whitespace-nowrap">
-        <span className="w-6 h-6 rounded-full bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center text-xs font-black">
-          {(displayName ?? '?').charAt(0).toUpperCase()}
+        <span className="w-6 h-6 rounded-full bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center text-xs font-black overflow-hidden shrink-0">
+          {avatarUrl ? <img src={avatarUrl} alt="" className="w-full h-full object-cover" /> : (displayName ?? '?').charAt(0).toUpperCase()}
         </span>
         <span className="hidden sm:inline max-w-[120px] truncate" dir="ltr">{displayName}</span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className={`transition-transform ${open ? 'rotate-180' : ''}`}>
@@ -60,14 +72,19 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
 
       {open && (
         <div className="absolute left-0 mt-2 w-56 bg-[#15151D] border border-white/10 rounded-2xl shadow-2xl overflow-hidden py-1.5 z-50">
-          <div className="px-4 py-2.5 border-b border-white/5">
-            <p className="text-sm text-white font-bold truncate" dir="ltr">{displayName}</p>
-            <p className="text-xs text-gray-500 truncate" dir="ltr">{email}</p>
-            {role && (
-              <span className="inline-block mt-1 text-[10px] bg-[#C9A84C]/10 text-[#C9A84C] px-2 py-0.5 rounded-full font-bold">
-                {role === 'admin' ? t.userMenu.roleAdmin : role === 'seller' ? t.userMenu.roleSeller : t.userMenu.roleBuyer}
-              </span>
-            )}
+          <div className="px-4 py-2.5 border-b border-white/5 flex items-center gap-3">
+            <span className="w-9 h-9 rounded-full bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center text-sm font-black overflow-hidden shrink-0">
+              {avatarUrl ? <img src={avatarUrl} alt="" className="w-full h-full object-cover" /> : (displayName ?? '?').charAt(0).toUpperCase()}
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm text-white font-bold truncate" dir="ltr">{displayName}</p>
+              <p className="text-xs text-gray-500 truncate" dir="ltr">{email}</p>
+              {role && (
+                <span className="inline-block mt-1 text-[10px] bg-[#C9A84C]/10 text-[#C9A84C] px-2 py-0.5 rounded-full font-bold">
+                  {role === 'admin' ? t.userMenu.roleAdmin : role === 'seller' ? t.userMenu.roleSeller : t.userMenu.roleBuyer}
+                </span>
+              )}
+            </div>
           </div>
           <Link href="/account" onClick={() => setOpen(false)}
             className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
