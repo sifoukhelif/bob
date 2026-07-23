@@ -328,6 +328,7 @@ export const en = {
     navLink: 'Store Settings',
     title: 'Store Settings',
     subtitle: 'Customize your public store page',
+    logoLabel: 'Store Logo', logoHint: 'Square image recommended (~400×400)', changeLogo: 'Change Logo',
     bannerLabel: 'Store Banner Image',
     bannerHint: 'Wide dimensions recommended (~1600×400), JPG or PNG',
     changeBanner: 'Change Image',
