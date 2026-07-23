@@ -328,6 +328,7 @@ export const fr = {
     navLink: 'Paramètres de la boutique',
     title: 'Paramètres de la boutique',
     subtitle: 'Personnalisez la page publique de votre boutique',
+    logoLabel: 'Logo de la boutique', logoHint: 'Image carrée recommandée (~400×400)', changeLogo: 'Changer le logo',
     bannerLabel: 'Image de couverture',
     bannerHint: 'Dimensions larges recommandées (~1600×400), JPG ou PNG',
     changeBanner: "Changer l'image",
