@@ -328,6 +328,7 @@ export const ar = {
     navLink: 'إعدادات المتجر',
     title: 'إعدادات المتجر',
     subtitle: 'خصّص واجهة متجرك العامة',
+    logoLabel: 'شعار المتجر', logoHint: 'صورة مربّعة يُفضّل (400×400 تقريباً)', changeLogo: 'تغيير الشعار',
     bannerLabel: 'صورة غلاف المتجر',
     bannerHint: 'يُفضّل أبعاد عريضة (1600×400 تقريباً)، JPG أو PNG',
     changeBanner: 'تغيير الصورة',
