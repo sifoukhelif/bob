@@ -78,7 +78,15 @@ export default async function ShopPage({
       default:            query = query.order('sales_count', { ascending: false })
     }
 
-    if (q)    query = query.ilike('title', `%${q}%`)
+    // بحث أذكى: يطابق العنوان والوصف معاً، ويقسّم العبارة لكلمات ويشترط وجود كل كلمة
+    // (بدل اشتراط تطابق العبارة الكاملة كنص واحد متجاور بالعنوان فقط)
+    if (q) {
+      const words = q.trim().split(/\s+/).filter(Boolean).slice(0, 6)
+      for (const word of words) {
+        const escaped = word.replace(/[%_]/g, c => `\\${c}`)
+        query = query.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`)
+      }
+    }
     if (type) query = query.eq('type', type)
     if (categoryIds) query = query.in('category_id', categoryIds)
     if (min)  query = query.gte('base_price', parseFloat(min))
