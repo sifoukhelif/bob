@@ -61,6 +61,18 @@ export default async function StorePage({ params }: { params: Params }) {
     .eq('status', 'active')
     .order('sales_count', { ascending: false })
 
+  const listingIds = (listings ?? []).map(l => l.id)
+  let storeReviews: any[] = []
+  if (listingIds.length > 0) {
+    const { data } = await supabase
+      .from('reviews')
+      .select('id,rating,comment,created_at,users(username),listings(title,slug)')
+      .in('listing_id', listingIds)
+      .order('created_at', { ascending: false })
+      .limit(20)
+    storeReviews = data ?? []
+  }
+
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#08080E]/85 backdrop-blur-xl">
@@ -145,6 +157,36 @@ export default async function StorePage({ params }: { params: Params }) {
         ) : (
           <div className="text-center py-20 text-gray-600 text-sm">{t.store.emptyText}</div>
         )}
+
+        {/* REVIEWS — كل تقييمات منتجات هذا المتجر مجمّعة بمكان واحد */}
+        <div className="mt-16">
+          <h2 className="text-xl font-serif font-bold mb-6">
+            {t.reviews.title} {store.rating_count ? `(${store.rating_count})` : ''}
+          </h2>
+          {storeReviews.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {storeReviews.map((r: any) => (
+                <div key={r.id} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+                  <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <span className="text-sm font-bold">{r.users?.username ?? t.reviews.anonymous}</span>
+                    <span className="text-[#C9A84C] text-xs">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                  </div>
+                  {r.comment && <p className="text-gray-400 text-sm leading-relaxed mb-2">{r.comment}</p>}
+                  <div className="flex items-center justify-between text-[10px] text-gray-600">
+                    <Link href={`/product/${r.listings?.slug}`} className="hover:text-[#C9A84C] transition-colors truncate max-w-[60%]">
+                      {r.listings?.title}
+                    </Link>
+                    <span>{new Date(r.created_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-600 text-sm bg-[#111118] border border-white/5 rounded-2xl">
+              {t.reviews.noReviewsYet}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   )
