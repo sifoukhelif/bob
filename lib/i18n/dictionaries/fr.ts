@@ -340,4 +340,10 @@ export const fr = {
     errorGeneric: "Une erreur s'est produite, veuillez réessayer",
     previewLink: 'Aperçu de ma boutique publique ←',
   },
+  cookieConsent: {
+    message: "Nous utilisons des cookies pour améliorer votre expérience et mémoriser vos préférences (comme la langue et la connexion). En continuant à utiliser le site, vous acceptez leur utilisation.",
+    accept: 'Accepter',
+    decline: 'Refuser le facultatif',
+    privacyLink: 'Politique de confidentialité',
+  },
 }
