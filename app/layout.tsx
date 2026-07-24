@@ -4,6 +4,7 @@ import { Playfair_Display, DM_Sans, Cairo } from 'next/font/google'
 import '@/styles/globals.css'
 import { getServerLocale } from '@/lib/i18n/server'
 import { isRTL } from '@/lib/i18n'
+import { CookieConsent } from '@/components/cookie-consent'
 
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-display', display: 'swap' })
 const dmSans   = DM_Sans({ subsets: ['latin'], variable: '--font-sans', weight: ['300','400','500','600'], display: 'swap' })
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning>
       <body className={`${bodyFontClass} antialiased w-full bg-[#08080E] text-[#F0EDE6]`}>
         <div className="relative flex flex-col min-h-screen w-full">{children}</div>
+        <CookieConsent locale={locale} />
       </body>
     </html>
   )
