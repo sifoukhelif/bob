@@ -12,7 +12,14 @@ import { WishlistButton } from '@/components/wishlist-button'
 import { Fragment } from 'react'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'المتجر', description: 'اكتشف آلاف المنتجات والخدمات الرقمية' }
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {
+  const locale = await getServerLocale()
+  const t = getDictionary(locale)
+  const { q } = await searchParams
+  return q
+    ? { title: `${t.shop.searchingFor} ${q} — ${t.shop.title}` }
+    : { title: t.shop.title, description: t.about.subtitle }
+}
 
 export default async function ShopPage({
   searchParams,
