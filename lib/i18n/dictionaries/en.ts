@@ -340,4 +340,10 @@ export const en = {
     errorGeneric: 'Something went wrong, please try again',
     previewLink: 'Preview my public store ←',
   },
+  cookieConsent: {
+    message: 'We use cookies to improve your experience and remember your preferences (like language and login). By continuing to use the site, you agree to their use.',
+    accept: 'Accept',
+    decline: 'Decline optional',
+    privacyLink: 'Privacy Policy',
+  },
 }
