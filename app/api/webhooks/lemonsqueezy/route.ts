@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
+import { createNotification } from '@/lib/notify-inapp'
 import { verifyLemonSqueezySignature } from '@/lib/lemonsqueezy'
 
 async function getPlatformFeePercent(admin: ReturnType<typeof createAdminClient>): Promise<number> {
@@ -66,19 +67,29 @@ export async function POST(req: NextRequest) {
   }
   const { order_item_id } = result as { order_id: string; order_item_id: string }
 
-  // إشعار البائع بالبريد (لا يوقف التدفق لو فشل)
+  // إشعار البائع بالبريد + داخل الموقع (لا يوقف التدفق لو فشل)
   try {
     const { data: listingInfo } = await admin
       .from('listings')
       .select('title, stores(owner_id, users:owner_id(email))')
       .eq('id', listingId).maybeSingle()
     const sellerEmail = (listingInfo?.stores as any)?.users?.email
+    const sellerOwnerId = (listingInfo?.stores as any)?.owner_id
     if (sellerEmail) {
       await sendSellerSaleNotification({
         sellerEmail,
         listingTitle: listingInfo?.title ?? '',
         amount,
         currency,
+      })
+    }
+    if (sellerOwnerId) {
+      await createNotification({
+        userId: sellerOwnerId,
+        type: 'sale',
+        title: 'عملية بيع جديدة 🎉',
+        body: listingInfo?.title ?? '',
+        link: '/dashboard/orders',
       })
     }
   } catch (err) {
@@ -114,7 +125,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // إشعار المشتري بتأكيد الطلب (لا يوقف التدفق لو فشل)
+  // إشعار المشتري بتأكيد الطلب بالبريد + داخل الموقع (لا يوقف التدفق لو فشل)
   try {
     const { data: buyerProfile } = await admin.from('users').select('email').eq('id', buyerId).maybeSingle()
     const { data: listingInfo } = await admin.from('listings').select('title').eq('id', listingId).maybeSingle()
@@ -127,6 +138,13 @@ export async function POST(req: NextRequest) {
         downloadUrl: downloadToken ? `${process.env.NEXT_PUBLIC_APP_URL}/api/download/${downloadToken}` : null,
       })
     }
+    await createNotification({
+      userId: buyerId,
+      type: 'order_confirmed',
+      title: 'تم تأكيد طلبك',
+      body: listingInfo?.title ?? '',
+      link: '/orders',
+    })
   } catch (err) {
     console.error('[ls-webhook] buyer confirmation error:', err)
   }
