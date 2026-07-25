@@ -12,6 +12,7 @@ import { getDictionary } from '@/lib/i18n'
 import { getTranslatedListing } from '@/lib/translate'
 import { AdBanner } from '@/components/ad-slot'
 import { WishlistButton } from '@/components/wishlist-button'
+import { WhatsappShare } from '@/components/whatsapp-share'
 
 export const dynamic = 'force-dynamic'
 
@@ -179,6 +180,13 @@ export default async function ProductPage({ params }: { params: Params }) {
               </div>
             )}
             <BuyBox listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} locale={locale} />
+
+            <WhatsappShare
+              title={translated.title}
+              url={`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://degitale.com'}/product/${encodeURIComponent(slug)}`}
+              message={t.product.shareMessage}
+              label={t.product.shareWhatsapp}
+            />
           </div>
         </div>
 
