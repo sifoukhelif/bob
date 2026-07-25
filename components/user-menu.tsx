@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getBrowserClient } from '@/lib/supabase/browser'
 import { getDictionary, DEFAULT_LOCALE, type Locale } from '@/lib/i18n'
+import { NotificationBell } from './notification-bell'
 
 function readLocaleCookie(): Locale {
   if (typeof document === 'undefined') return DEFAULT_LOCALE
@@ -58,7 +59,9 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
   const dashboardLabel = role === 'seller' || role === 'admin' ? t.userMenu.sellerDashboard : t.userMenu.myOrders
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="flex items-center gap-2">
+      <NotificationBell />
+      <div className="relative" ref={ref}>
       <button onClick={() => setOpen(o => !o)}
         className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-sm font-semibold hover:border-[#C9A84C]/40 transition-all shrink-0 whitespace-nowrap">
         <span className="w-6 h-6 rounded-full bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center text-xs font-black overflow-hidden shrink-0">
@@ -116,6 +119,7 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
           </button>
         </div>
       )}
+      </div>
     </div>
   )
 }
