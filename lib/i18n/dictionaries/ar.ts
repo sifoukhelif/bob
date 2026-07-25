@@ -311,6 +311,11 @@ export const ar = {
     anonymous: 'مشترٍ',
     error: 'حدث خطأ، حاول مرة أخرى',
   },
+  notifications: {
+    title: 'الإشعارات', markAllRead: 'تحديد الكل كمقروء', emptyText: 'لا توجد إشعارات بعد',
+    orderConfirmedTitle: 'تم تأكيد طلبك', saleTitle: 'عملية بيع جديدة 🎉', newListingTitle: 'منتج جديد بانتظار المراجعة',
+    timeJustNow: 'الآن', timeMinutesAgo: 'قبل {n} دقيقة', timeHoursAgo: 'قبل {n} ساعة', timeDaysAgo: 'قبل {n} يوم',
+  },
   wishlist: {
     navLabel: 'المفضلة',
     title: 'قائمة المفضلة',
