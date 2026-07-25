@@ -306,6 +306,11 @@ export const fr = {
     anonymous: 'Acheteur',
     error: "Une erreur s'est produite, veuillez réessayer",
   },
+  notifications: {
+    title: 'Notifications', markAllRead: 'Tout marquer comme lu', emptyText: 'Aucune notification pour le moment',
+    orderConfirmedTitle: 'Votre commande est confirmée', saleTitle: 'Nouvelle vente 🎉', newListingTitle: 'Nouveau produit en attente de validation',
+    timeJustNow: "À l'instant", timeMinutesAgo: 'il y a {n} min', timeHoursAgo: 'il y a {n} h', timeDaysAgo: 'il y a {n} j',
+  },
   wishlist: {
     navLabel: 'Favoris',
     title: 'Ma liste de favoris',
