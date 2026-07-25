@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendAdminNewListingNotification } from '@/lib/email/notifications'
+import { createNotification } from '@/lib/notify-inapp'
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,6 +34,23 @@ export async function POST(req: NextRequest) {
       listingTitle: listing.title,
       sellerStoreName: (listing.stores as any)?.name ?? '',
     })
+
+    // إشعار داخل الموقع لكل حسابات الأدمن (لا يوقف التدفق لو فشل)
+    try {
+      const { data: admins } = await admin.from('users').select('id').eq('role', 'admin')
+      for (const a of admins ?? []) {
+        await createNotification({
+          userId: a.id,
+          type: 'new_listing',
+          title: 'منتج جديد بانتظار المراجعة',
+          body: listing.title,
+          link: '/admin/products',
+        })
+      }
+    } catch (err) {
+      console.error('[notify/new-listing] in-app notification error:', err)
+    }
+
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[notify/new-listing] error:', err)
