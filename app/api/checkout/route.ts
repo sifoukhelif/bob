@@ -4,6 +4,7 @@ import crypto from 'node:crypto'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
+import { createNotification } from '@/lib/notify-inapp'
 import { createLemonSqueezyCheckout } from '@/lib/lemonsqueezy'
 
 export async function POST(req: NextRequest) {
@@ -69,10 +70,17 @@ export async function POST(req: NextRequest) {
       // إشعار البائع (منتج مجاني أيضاً يستحق إشعاراً، لا مبلغ لكن عملية بيع/تحميل فعلية)
       try {
         const sellerEmail = (listing.stores as any)?.users?.email
+        const sellerOwnerId = (listing.stores as any)?.owner_id
         if (sellerEmail) {
           await sendSellerSaleNotification({
             sellerEmail, listingTitle: listing.title, amount: 0,
             currency: (listing.currency ?? 'USD').toUpperCase(),
+          })
+        }
+        if (sellerOwnerId) {
+          await createNotification({
+            userId: sellerOwnerId, type: 'sale', title: 'عملية بيع جديدة 🎉',
+            body: listing.title, link: '/dashboard/orders',
           })
         }
       } catch (err) { console.error('[checkout] seller notification error:', err) }
@@ -88,6 +96,10 @@ export async function POST(req: NextRequest) {
             downloadUrl: downloadToken ? `${origin}/api/download/${downloadToken}` : null,
           })
         }
+        await createNotification({
+          userId: user.id, type: 'order_confirmed', title: 'تم تأكيد طلبك',
+          body: listing.title, link: '/orders',
+        })
       } catch (err) { console.error('[checkout] buyer confirmation error:', err) }
 
       return NextResponse.json({ url: `${origin}/checkout/success?order_item=${order_item_id}` })
