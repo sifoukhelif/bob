@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     username = profile?.username ?? null
   }
   const { data: p, error: productError } = await supabase.from('listings')
-    .select('id,title,slug,description,base_price,compare_price,currency,thumbnail_url,gallery_urls,sales_count,rating_avg,rating_count,type,tags,delivery_days,stores(id,name,slug,logo_url,rating_avg,sales_count)')
+    .select('id,title,slug,description,base_price,compare_price,currency,thumbnail_url,gallery_urls,sales_count,rating_avg,rating_count,type,tags,delivery_days,category_id,store_id,stores(id,name,slug,logo_url,rating_avg,sales_count)')
     .eq('slug', slug).eq('status', 'active').single()
 
   if (productError) {
@@ -101,6 +101,26 @@ export default async function ProductPage({ params }: { params: Params }) {
   if (user) {
     const { data: wl } = await supabase.from('wishlists').select('id').eq('user_id', user.id).eq('listing_id', p.id).maybeSingle()
     isWishlisted = !!wl
+  }
+
+  // منتجات مشابهة: نفس الفئة أولاً، ثم نكمل من نفس المتجر لو النتائج قليلة
+  let related: any[] = []
+  if (p.category_id) {
+    const { data } = await supabase
+      .from('listings')
+      .select('id,title,slug,base_price,thumbnail_url,rating_avg')
+      .eq('status', 'active').eq('category_id', p.category_id).neq('id', p.id)
+      .order('sales_count', { ascending: false }).limit(4)
+    related = data ?? []
+  }
+  if (related.length < 4 && p.store_id) {
+    const { data } = await supabase
+      .from('listings')
+      .select('id,title,slug,base_price,thumbnail_url,rating_avg')
+      .eq('status', 'active').eq('store_id', p.store_id).neq('id', p.id)
+      .order('sales_count', { ascending: false }).limit(4 - related.length)
+    const existingIds = new Set(related.map(r => r.id))
+    related = [...related, ...(data ?? []).filter(d => !existingIds.has(d.id))]
   }
 
   return (
@@ -189,6 +209,32 @@ export default async function ProductPage({ params }: { params: Params }) {
             />
           </div>
         </div>
+
+        {/* منتجات مشابهة */}
+        {related.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-xl font-serif font-bold mb-6">{t.relatedProducts.title}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {related.map((r) => (
+                <Link key={r.id} href={`/product/${encodeURIComponent(r.slug)}`} className="group block">
+                  <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#12121A] border border-white/5 group-hover:border-[#C9A84C]/30 transition-all duration-500">
+                    {r.thumbnail_url
+                      ? <img src={r.thumbnail_url} alt={r.title} className="w-full h-full object-cover opacity-65 group-hover:opacity-95 transition-opacity duration-700" />
+                      : <div className="w-full h-full flex items-center justify-center text-4xl opacity-20">📦</div>}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#08080E] via-[#08080E]/20 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-xs font-bold text-white leading-snug line-clamp-2 mb-1.5">{r.title}</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="font-serif font-black text-sm text-[#C9A84C]">${r.base_price?.toFixed(2)}</span>
+                        {r.rating_avg && <span className="text-[10px] text-gray-500">★ {r.rating_avg.toFixed(1)}</span>}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* مساحة إعلانية */}
         <div className="mt-16 mb-16">
