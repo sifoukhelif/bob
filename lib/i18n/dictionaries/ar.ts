@@ -30,6 +30,7 @@ export const ar = {
     viewDetails: 'التفاصيل ←', backToOrders: 'العودة لطلباتي ←', detailTitle: 'تفاصيل الطلب',
     orderRef: 'رقم الطلب', orderDate: 'تاريخ الطلب', paymentRef: 'مرجع الدفع', statusLabel: 'الحالة',
     itemsTitle: 'المنتجات', sellerLabel: 'البائع', totalLabel: 'الإجمالي', notFound: 'الطلب غير موجود',
+    downloadInvoice: 'تحميل الفاتورة (PDF)',
     visitStore: 'زيارة المتجر ←', viewProduct: 'عرض المنتج ←',
   },
   listingForm: { coverImageLabel: 'صورة الغلاف', noImage: 'بدون صورة', titleLabel: 'العنوان', descriptionLabel: 'الوصف', categoryLabel: 'التصنيف', categoryPlaceholder: 'اختر تصنيفاً', priceLabel: 'السعر (USD)', fileLabel: 'ملف المنتج', errorTitleTooShort: 'عنوان المنتج يجب أن يكون 3 أحرف على الأقل', errorInvalidPrice: 'أدخل سعراً صحيحاً', errorImageUploadPrefix: 'تعذّر رفع الصورة:', genericError: 'حدث خطأ غير متوقع' },
