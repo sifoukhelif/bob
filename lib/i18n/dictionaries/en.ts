@@ -30,6 +30,7 @@ export const en = {
     viewDetails: 'Details →', backToOrders: 'Back to my orders →', detailTitle: 'Order Details',
     orderRef: 'Order Reference', orderDate: 'Order Date', paymentRef: 'Payment Reference', statusLabel: 'Status',
     itemsTitle: 'Items', sellerLabel: 'Seller', totalLabel: 'Total', notFound: 'Order not found',
+    downloadInvoice: 'Download Invoice (PDF)',
     visitStore: 'Visit Store →', viewProduct: 'View Product →',
   },
   listingForm: { coverImageLabel: 'Cover Image', noImage: 'No image', titleLabel: 'Title', descriptionLabel: 'Description', categoryLabel: 'Category', categoryPlaceholder: 'Choose a category', priceLabel: 'Price (USD)', fileLabel: 'Product File', errorTitleTooShort: 'Title must be at least 3 characters', errorInvalidPrice: 'Enter a valid price', errorImageUploadPrefix: 'Could not upload image:', genericError: 'An unexpected error occurred' },
