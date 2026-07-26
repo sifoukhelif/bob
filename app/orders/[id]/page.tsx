@@ -90,6 +90,13 @@ export default async function OrderDetailPage({ params }: { params: Params }) {
           )}
         </div>
 
+        <a
+          href={`/api/orders/${order.id}/invoice`}
+          className="inline-flex items-center gap-2 mb-6 text-xs font-semibold text-[#C9A84C] hover:underline"
+        >
+          📄 {t.orders.downloadInvoice}
+        </a>
+
         {/* مساحة إعلانية */}
         <AdBanner label={t.ads.banner} className="h-16 md:h-20 mb-6" />
 
