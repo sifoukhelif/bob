@@ -296,6 +296,7 @@ export const fr = {
     q5: "Mes données de paiement sont-elles sécurisées ?", a5: "Oui, tous les paiements sont traités directement par Stripe, vos données bancaires n'atteignent jamais nos serveurs.",
     q6: "Que faire si mon lien de téléchargement a expiré ?", a6: "Contactez le support via la page « Nous contacter » avec votre numéro de commande, et nous générerons un nouveau lien immédiatement.",
   },
+  relatedProducts: { title: 'Produits similaires qui pourraient vous plaire' },
   reviews: {
     title: 'Avis',
     leaveReview: 'Laisser un avis',
