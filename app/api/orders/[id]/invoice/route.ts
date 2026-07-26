@@ -99,8 +99,9 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
   )
 
   const buffer = await renderToBuffer(doc as any)
+  const body = new Uint8Array(buffer)
 
-  return new NextResponse(buffer, {
+  return new NextResponse(body, {
     status: 200,
     headers: {
       'Content-Type': 'application/pdf',
