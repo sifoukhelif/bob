@@ -30,6 +30,7 @@ export const fr = {
     viewDetails: 'Détails →', backToOrders: 'Retour à mes commandes →', detailTitle: 'Détails de la commande',
     orderRef: 'Référence de commande', orderDate: 'Date de commande', paymentRef: 'Référence de paiement', statusLabel: 'Statut',
     itemsTitle: 'Articles', sellerLabel: 'Vendeur', totalLabel: 'Total', notFound: 'Commande introuvable',
+    downloadInvoice: 'Télécharger la facture (PDF)',
     visitStore: 'Visiter la boutique →', viewProduct: 'Voir le produit →',
   },
   listingForm: { coverImageLabel: 'Image de couverture', noImage: 'Aucune image', titleLabel: 'Titre', descriptionLabel: 'Description', categoryLabel: 'Catégorie', categoryPlaceholder: 'Choisir une catégorie', priceLabel: 'Prix (USD)', fileLabel: 'Fichier du produit', errorTitleTooShort: 'Le titre doit contenir au moins 3 caractères', errorInvalidPrice: 'Entrez un prix valide', errorImageUploadPrefix: "Impossible de télécharger l'image :", genericError: 'Une erreur inattendue est survenue' },
