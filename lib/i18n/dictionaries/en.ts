@@ -296,6 +296,7 @@ export const en = {
     q5: 'Is my payment data safe?', a5: 'Yes, all payments are processed directly through Stripe, your card details never reach our servers.',
     q6: 'What if my download link expires?', a6: 'Contact support via the "Contact Us" page with your order number, and we\'ll generate a new link right away.',
   },
+  relatedProducts: { title: 'Related products you might like' },
   reviews: {
     title: 'Reviews',
     leaveReview: 'Leave a review',
