@@ -6,12 +6,13 @@ import { getDictionary } from '@/lib/i18n'
 import type { Locale } from '@/lib/i18n'
 
 export function BuyBox({
-  listingId, type, price, comparePrice, locale,
-}: { listingId: string; type: string; price: number; comparePrice: number | null; locale: Locale }) {
+  listingId, type, price, comparePrice, locale, sellerId,
+}: { listingId: string; type: string; price: number; comparePrice: number | null; locale: Locale; sellerId?: string }) {
   const router = useRouter()
   const t = getDictionary(locale)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [contactLoading, setContactLoading] = useState(false)
 
   async function handleBuy() {
     setLoading(true)
@@ -42,6 +43,36 @@ export function BuyBox({
     }
   }
 
+  async function handleContactSeller() {
+    if (!sellerId || contactLoading) return
+    setContactLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/messages/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sellerId, listingId }),
+      })
+      const data = await res.json()
+      if (res.status === 401) {
+        router.push(`/login?redirectTo=/product/${listingId}`)
+        return
+      }
+      if (data.error === 'cannot_message_self') {
+        setError(t.messages.cannotMessageSelf)
+        setContactLoading(false)
+        return
+      }
+      if (!res.ok || !data.conversationId) {
+        throw new Error(t.messages.startConversationError)
+      }
+      router.push(`/messages/${data.conversationId}`)
+    } catch (err: any) {
+      setError(err.message ?? t.messages.startConversationError)
+      setContactLoading(false)
+    }
+  }
+
   const features = [
     t.buyBox.features.secureDownload,
     t.buyBox.features.validity,
@@ -66,6 +97,17 @@ export function BuyBox({
       >
         {loading ? t.buyBox.loading : type === 'product' ? t.buyBox.buyNow : t.buyBox.orderService}
       </button>
+
+      {sellerId && (
+        <button
+          onClick={handleContactSeller}
+          disabled={contactLoading}
+          className="w-full bg-white/5 border border-white/10 text-white py-3 rounded-xl font-bold text-sm hover:border-[#C9A84C]/40 transition-all disabled:opacity-50"
+        >
+          {contactLoading ? t.messages.startingConversation : t.messages.contactSeller}
+        </button>
+      )}
+
       {error && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400 flex flex-col gap-2">
           <span>{error}</span>
