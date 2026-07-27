@@ -286,6 +286,14 @@ export const ar = {
     ctaShop: 'تصفّح المتجر',
     ctaSell: 'ابدأ البيع',
   },
+  discover: {
+    badge: 'اكتشف', title: 'استكشف المنصة', subtitle: 'أفضل ما فيها بمكان واحد — منتجات، تصنيفات، ومتاجر تستحق الاكتشاف.',
+    homeLink: 'الرئيسية',
+    topRatedTitle: '⭐ الأعلى تقييماً', bestSellersTitle: '🔥 الأكثر مبيعاً', newArrivalsTitle: '✨ وصل حديثاً',
+    categoriesTitle: 'تصفّح حسب التصنيف', featuredStoresTitle: '🏆 متاجر مميّزة',
+    viewStore: 'زيارة المتجر', productsCount: 'منتج',
+    emptyText: 'لا يوجد محتوى كافٍ بعد لعرضه بهذا القسم.',
+  },
   pricing: {
     badge: 'التسعير', title: 'تسعير بسيط وشفاف', subtitle: 'لا رسوم اشتراك، لا رسوم إدراج — تربح فقط لما تبيع.',
     homeLink: 'الرئيسية',
