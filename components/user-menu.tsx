@@ -97,6 +97,10 @@ export function UserMenu({ email, username, role }: { email: string; username?: 
             className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
             {t.userMenu.wishlist}
           </Link>
+          <Link href="/messages" onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+            {t.messages.navLabel}
+          </Link>
           {role === 'admin' && (
             <Link href="/admin" onClick={() => setOpen(false)}
               className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
