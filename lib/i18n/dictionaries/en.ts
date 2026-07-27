@@ -286,6 +286,14 @@ export const en = {
     ctaShop: 'Browse the Shop',
     ctaSell: 'Start Selling',
   },
+  discover: {
+    badge: 'Discover', title: 'Explore the Platform', subtitle: 'The best of it in one place — products, categories, and stores worth discovering.',
+    homeLink: 'Home',
+    topRatedTitle: '⭐ Top Rated', bestSellersTitle: '🔥 Best Sellers', newArrivalsTitle: '✨ New Arrivals',
+    categoriesTitle: 'Browse by Category', featuredStoresTitle: '🏆 Featured Stores',
+    viewStore: 'Visit Store', productsCount: 'products',
+    emptyText: 'Not enough content to show in this section yet.',
+  },
   pricing: {
     badge: 'Pricing', title: 'Simple, Transparent Pricing', subtitle: 'No subscription fees, no listing fees — you only earn when you sell.',
     homeLink: 'Home',
