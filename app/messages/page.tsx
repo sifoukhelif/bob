@@ -3,7 +3,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 import { redirect } from 'next/navigation'
-import { AdStrip } from '@/components/ad-slot'
+import { AdBanner } from '@/components/ad-slot'
 
 export default async function MessagesPage() {
   const supabase = await createServerClient()
@@ -23,7 +23,7 @@ export default async function MessagesPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <h1 className="text-xl font-bold text-white mb-6">{t.title}</h1>
-      <AdStrip label="مساحة إعلانية" className="mb-6" />
+      <AdBanner label="مساحة إعلانية" className="mb-6" />
 
       {conversations && conversations.length > 0 ? (
         <div className="space-y-2">
