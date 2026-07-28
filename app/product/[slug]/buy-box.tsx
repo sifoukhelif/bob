@@ -111,8 +111,14 @@ export function BuyBox({
       {error && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-xs text-red-400 flex flex-col gap-2">
           <span>{error}</span>
-          {error === t.buyBox.serviceManualOnly && (
-            <a href="/contact" className="text-[#C9A84C] hover:underline w-fit">{t.buyBox.contactSellerCta}</a>
+          {error === t.buyBox.serviceManualOnly && sellerId && (
+            <button
+              onClick={handleContactSeller}
+              disabled={contactLoading}
+              className="text-[#C9A84C] hover:underline w-fit text-right disabled:opacity-50"
+            >
+              {contactLoading ? t.messages.startingConversation : t.messages.contactSeller}
+            </button>
           )}
         </div>
       )}
