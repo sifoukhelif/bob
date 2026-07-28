@@ -7,6 +7,7 @@ import { UserMenu } from '@/components/user-menu'
 import { Logo } from '@/components/logo'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { AdBanner, AdCard } from '@/components/ad-slot'
+import { ContactSellerButton } from '@/components/contact-seller-button'
 import { getServerLocale } from '@/lib/i18n/server'
 import { getDictionary } from '@/lib/i18n'
 import { safeDecodeSlug } from '@/lib/slug'
@@ -43,7 +44,7 @@ export default async function StorePage({ params }: { params: Params }) {
 
   const { data: store, error: storeError } = await supabase
     .from('stores')
-    .select('id,name,slug,bio,banner_url,logo_url,rating_avg,rating_count,sales_count,stripe_verified,badges,created_at')
+    .select('id,name,slug,bio,banner_url,logo_url,rating_avg,rating_count,sales_count,stripe_verified,badges,created_at,owner_id')
     .eq('slug', slug).maybeSingle()
 
   if (storeError) {
@@ -72,6 +73,8 @@ export default async function StorePage({ params }: { params: Params }) {
       .limit(20)
     storeReviews = data ?? []
   }
+
+  const canContactSeller = store.owner_id && store.owner_id !== user?.id
 
   return (
     <div className="min-h-screen bg-[#08080E] text-[#F0EDE6]">
@@ -119,6 +122,15 @@ export default async function StorePage({ params }: { params: Params }) {
               <span>{t.store.memberSince} {new Date(store.created_at).getFullYear()}</span>
             </div>
           </div>
+          {canContactSeller && (
+            <div className="shrink-0 self-start md:self-center">
+              <ContactSellerButton
+                sellerId={store.owner_id}
+                locale={locale}
+                redirectPath={`/store/${encodeURIComponent(slug)}`}
+              />
+            </div>
+          )}
         </div>
 
         {/* مساحة إعلانية — أعلى منتجات المتجر */}
