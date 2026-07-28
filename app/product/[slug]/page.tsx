@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     username = profile?.username ?? null
   }
   const { data: p, error: productError } = await supabase.from('listings')
-    .select('id,title,slug,description,base_price,compare_price,currency,thumbnail_url,gallery_urls,sales_count,rating_avg,rating_count,type,tags,delivery_days,category_id,store_id,stores(id,name,slug,logo_url,rating_avg,sales_count)')
+    .select('id,title,slug,description,base_price,compare_price,currency,thumbnail_url,gallery_urls,sales_count,rating_avg,rating_count,type,tags,delivery_days,category_id,store_id,stores(id,name,slug,logo_url,rating_avg,sales_count,owner_id)')
     .eq('slug', slug).eq('status', 'active').single()
 
   if (productError) {
@@ -199,7 +199,10 @@ export default async function ProductPage({ params }: { params: Params }) {
                 {t.product.deliveryPrefix} {p.delivery_days} {t.product.deliveryUnit}
               </div>
             )}
-            <BuyBox listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} locale={locale} />
+            <BuyBox
+              listingId={p.id} type={p.type} price={price} comparePrice={p.compare_price} locale={locale}
+              sellerId={store?.owner_id && store.owner_id !== user?.id ? store.owner_id : undefined}
+            />
 
             <WhatsappShare
               title={translated.title}
