@@ -8,7 +8,7 @@ export const fr = {
   shop: { title: 'Boutique', itemsUnit: 'produits et services', searchingFor: 'Résultats de recherche pour :', clearSearch: 'Effacer la recherche', filters: { all: 'Tout', services: 'Services', ui: 'Kits UI', ebooks: 'Livres numériques', code: 'Code' }, noResultsTitle: 'Aucun résultat', noResultsSubtitle: 'Essayez un autre terme de recherche', login: 'Connexion', sortLabel: 'Trier par', sortPopular: 'Meilleures ventes', sortNewest: 'Plus récents', sortPriceAsc: 'Prix : croissant', sortPriceDesc: 'Prix : décroissant', sortTopRated: 'Mieux notés', priceRangeLabel: 'Fourchette de prix', minPricePlaceholder: 'Min $', maxPricePlaceholder: 'Max $', applyFilters: 'Appliquer', clearFilters: 'Effacer les filtres' },
   product: { login: 'Connexion', notFoundTitle: 'Produit introuvable', freeLabel: 'Gratuit', save: 'Économisez', sales: 'ventes', reviews: 'avis', deliveryPrefix: 'Livraison sous', deliveryUnit: 'jours', shareWhatsapp: 'Partager sur WhatsApp', shareMessage: 'Découvrez ce produit sur DEGITALE' },
   buyBox: { freeLabel: 'Gratuit', loading: 'Redirection…', buyNow: 'Acheter maintenant', orderService: 'Commander le service', genericError: 'Une erreur est survenue, veuillez réessayer', checkoutError: "Impossible de démarrer le paiement", serviceManualOnly: "Les services se commandent actuellement en contactant directement le vendeur, pas via le paiement instantané.", contactSellerCta: 'Contacter le support pour demander ce service', features: { secureDownload: 'Lien de téléchargement sécurisé et chiffré', validity: 'Valable 48 heures après achat', refund: 'Garantie de remboursement de 14 jours', securePayment: 'Paiement sécurisé et chiffré' } },
-  login: { welcomeBack: 'Content de vous revoir', createAccount: 'Créez votre compte gratuit', loginTab: 'Connexion', signupTab: 'Inscription', emailLabel: 'Email', passwordLabel: 'Mot de passe', loadingText: 'Chargement…', loginButton: 'Connexion', signupButton: 'Créer le compte', checkEmailTitle: 'Vérifiez votre email', checkEmailBodyPrefix: 'Nous avons envoyé un lien de confirmation à', checkEmailBodySuffix: 'Cliquez sur le lien pour activer votre compte, puis connectez-vous.', backToLogin: 'Retour à la connexion', emailNotConfirmedError: "Vous n'avez pas encore confirmé votre email. Vérifiez votre boîte de réception (et vos spams) et cliquez sur le lien de confirmation.", genericError: 'Une erreur est survenue', forgotPasswordLink: 'Mot de passe oublié ?' },
+  login: { welcomeBack: 'Content de vous revoir', createAccount: 'Créez votre compte gratuit', loginTab: 'Connexion', signupTab: 'Inscription', emailLabel: 'Email', passwordLabel: 'Mot de passe', loadingText: 'Chargement…', loginButton: 'Connexion', signupButton: 'Créer le compte', checkEmailTitle: 'Vérifiez votre email', checkEmailBodyPrefix: 'Nous avons envoyé un lien de confirmation à', checkEmailBodySuffix: 'Cliquez sur le lien pour activer votre compte, puis connectez-vous.', backToLogin: 'Retour à la connexion', emailNotConfirmedError: "Vous n'avez pas encore confirmé votre email. Vérifiez votre boîte de réception (et vos spams) et cliquez sur le lien de confirmation.", genericError: 'Une erreur est survenue', forgotPasswordLink: 'Mot de passe oublié ?' },
   forgotPassword: {
     title: 'Réinitialiser le mot de passe', subtitle: "Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
     emailLabel: 'Email', sendButton: 'Envoyer le lien', sendingText: 'Envoi en cours…',
@@ -69,6 +69,17 @@ export const fr = {
     pageTitle: 'Support', homeLink: 'Accueil',
     title: 'Contactez le support',
     subtitle: "Une question ou un problème avec une commande ou un produit ? Écrivez-nous, nous répondrons sous 24 heures.",
+    form: {
+      nameLabel: 'Nom', emailLabel: 'Email', subjectLabel: 'Sujet (facultatif)',
+      messageLabel: 'Votre message', messagePlaceholder: 'Décrivez votre message en détail…',
+      sendButton: 'Envoyer le message', sendingText: 'Envoi en cours…',
+      successTitle: 'Votre message a été envoyé avec succès ✅',
+      successBody: "Nous répondrons à l'email fourni sous 24 heures.",
+      errorGeneric: "Impossible d'envoyer le message, veuillez réessayer",
+      errorNameTooShort: 'Entrez votre nom complet',
+      errorMessageTooShort: 'Le message est trop court, ajoutez plus de détails (10 caractères minimum)',
+      orEmailDirect: 'Ou écrivez-nous directement à',
+    },
   },
   account: {
     pageTitle: 'Paramètres du compte', homeLink: 'Accueil', title: 'Paramètres du compte',
