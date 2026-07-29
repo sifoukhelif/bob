@@ -111,3 +111,68 @@ export async function sendAdminNewListingNotification(params: {
     console.error('[notify] admin new-listing email failed:', err)
   }
 }
+
+export async function sendContactAdminNotification(params: {
+  name: string
+  email: string
+  subject: string | null
+  message: string
+}) {
+  const resend = getResendClient()
+  if (!resend) { console.log('[notify] Resend not configured, skipping contact admin notification'); return }
+  if (!ADMIN_EMAIL) { console.log('[notify] ADMIN_NOTIFICATION_EMAIL not set, skipping contact admin notification'); return }
+
+  try {
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: ADMIN_EMAIL,
+      replyTo: params.email,
+      subject: `📩 رسالة تواصل جديدة${params.subject ? `: ${params.subject}` : ''}`,
+      html: `
+        <div style="font-family: sans-serif; direction: rtl; text-align: right;">
+          <h2>رسالة جديدة من نموذج التواصل</h2>
+          <p><strong>الاسم:</strong> ${params.name}</p>
+          <p><strong>البريد:</strong> ${params.email}</p>
+          ${params.subject ? `<p><strong>الموضوع:</strong> ${params.subject}</p>` : ''}
+          <p><strong>الرسالة:</strong></p>
+          <p style="background:#f4f4f4;padding:12px;border-radius:8px;white-space:pre-wrap;">${params.message}</p>
+          <p style="color:#888; font-size:12px; margin-top:24px;">DEGITALE</p>
+        </div>
+      `,
+    })
+  } catch (err) {
+    console.error('[notify] contact admin email failed:', err)
+  }
+}
+
+export async function sendContactUserConfirmation(params: {
+  userEmail: string
+  name: string
+}) {
+  const resend = getResendClient()
+  if (!resend) { console.log('[notify] Resend not configured, skipping contact confirmation'); return }
+
+  try {
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: params.userEmail,
+      subject: `✅ استلمنا رسالتك — DEGITALE`,
+      html: `
+        <div style="font-family: sans-serif;">
+          <div dir="rtl" style="text-align:right; margin-bottom: 24px;">
+            <h2>مرحباً ${params.name} 👋</h2>
+            <p>استلمنا رسالتك بنجاح، وسيرد عليك فريق الدعم خلال 24 ساعة.</p>
+          </div>
+          <hr style="border:none;border-top:1px solid #333;margin:16px 0;">
+          <div dir="ltr" style="text-align:left;">
+            <h2>Hi ${params.name} 👋</h2>
+            <p>We received your message. Our support team will reply within 24 hours.</p>
+          </div>
+          <p style="color:#888; font-size:12px; margin-top:24px;">DEGITALE</p>
+        </div>
+      `,
+    })
+  } catch (err) {
+    console.error('[notify] contact user confirmation email failed:', err)
+  }
+}
