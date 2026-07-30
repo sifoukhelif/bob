@@ -6,6 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
 import { createNotification } from '@/lib/notify-inapp'
 import { createLemonSqueezyCheckout } from '@/lib/lemonsqueezy'
+import { generateLicenseKey } from '@/lib/license-key'
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     const { data: listing } = await supabase
       .from('listings')
-      .select('id,slug,title,base_price,currency,thumbnail_url,type,stores(id,owner_id,users:owner_id(email))')
+      .select('id,slug,title,base_price,currency,thumbnail_url,type,requires_license,stores(id,owner_id,users:owner_id(email))')
       .eq('id', listingId).eq('status', 'active').single()
 
     if (!listing) return NextResponse.json({ error: 'Listing not found' }, { status: 404 })
@@ -50,6 +51,13 @@ export async function POST(req: NextRequest) {
       await admin.from('order_items')
         .update({ net_amount: 0, payout_status: 'paid' })
         .eq('id', order_item_id)
+
+      // مفتاح ترخيص (لو فعّله البائع لهذا المنتج)
+      if (listing.requires_license) {
+        await admin.from('order_items')
+          .update({ license_key: generateLicenseKey() })
+          .eq('id', order_item_id)
+      }
 
       const { data: file } = await admin.from('listing_files')
         .select('storage_path').eq('listing_id', listing.id)
