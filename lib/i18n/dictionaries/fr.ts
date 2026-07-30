@@ -69,6 +69,16 @@ export const fr = {
     pageTitle: 'Support', homeLink: 'Accueil',
     title: 'Contactez le support',
     subtitle: "Une question ou un problème avec une commande ou un produit ? Écrivez-nous, nous répondrons sous 24 heures.",
+    form: {
+      nameLabel: 'Nom', emailLabel: 'Email', subjectLabel: 'Sujet (facultatif)',
+      messageLabel: 'Votre message', messagePlaceholder: 'Écrivez votre message en détail ici…',
+      errorNameTooShort: 'Le nom doit contenir au moins 2 caractères',
+      errorMessageTooShort: 'Le message doit contenir au moins 10 caractères',
+      errorGeneric: "Impossible d'envoyer votre message, veuillez réessayer",
+      successTitle: '✅ Votre message a été reçu', successBody: 'Nous répondrons par email sous 24 heures.',
+      sendingText: 'Envoi en cours…', sendButton: 'Envoyer le message',
+      orEmailDirect: 'Ou écrivez-nous directement à',
+    },
   },
   account: {
     pageTitle: 'Paramètres du compte', homeLink: 'Accueil', title: 'Paramètres du compte',
