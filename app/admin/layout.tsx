@@ -7,6 +7,7 @@ const NAV = [
   { href: '/admin',          emoji: '◼', label: 'لوحة التحكم' },
   { href: '/admin/users',    emoji: '👥', label: 'المستخدمون' },
   { href: '/admin/products', emoji: '📦', label: 'المنتجات'   },
+  { href: '/admin/blog',     emoji: '📝', label: 'المدونة'    },
   { href: '/admin/payouts',  emoji: '💰', label: 'المدفوعات'  },
   { href: '/admin/settings', emoji: '⚙️', label: 'الإعدادات'  },
 ]
