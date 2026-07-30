@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
 import { createNotification } from '@/lib/notify-inapp'
+import { generateLicenseKey } from '@/lib/license-key'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
 
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
   try {
     const { data: listingInfo } = await admin
       .from('listings')
-      .select('title, stores(owner_id, users:owner_id(email))')
+      .select('title, requires_license, stores(owner_id, users:owner_id(email))')
       .eq('id', listingId).maybeSingle()
     const sellerEmail = (listingInfo?.stores as any)?.users?.email
     const sellerOwnerId = (listingInfo?.stores as any)?.owner_id
@@ -82,6 +83,12 @@ export async function POST(req: NextRequest) {
         userId: sellerOwnerId, type: 'sale', title: 'عملية بيع جديدة 🎉',
         body: listingInfo?.title ?? '', link: '/dashboard/orders',
       })
+    }
+    // مفتاح ترخيص (لو فعّله البائع لهذا المنتج) — بنفس نطاق listingInfo لتفادي إعادة الاستعلام
+    if (listingInfo?.requires_license) {
+      await admin.from('order_items')
+        .update({ license_key: generateLicenseKey() })
+        .eq('id', order_item_id)
     }
   } catch (err) {
     console.error('[webhook] seller notification error:', err)
