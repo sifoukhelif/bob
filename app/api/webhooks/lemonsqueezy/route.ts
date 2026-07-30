@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSellerSaleNotification, sendBuyerOrderConfirmation } from '@/lib/email/notifications'
 import { createNotification } from '@/lib/notify-inapp'
 import { verifyLemonSqueezySignature } from '@/lib/lemonsqueezy'
+import { generateLicenseKey } from '@/lib/license-key'
 
 async function getPlatformFeePercent(admin: ReturnType<typeof createAdminClient>): Promise<number> {
   let feePercent = parseInt(process.env.PLATFORM_FEE_PERCENT ?? '20')
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
   try {
     const { data: listingInfo } = await admin
       .from('listings')
-      .select('title, stores(owner_id, users:owner_id(email))')
+      .select('title, requires_license, stores(owner_id, users:owner_id(email))')
       .eq('id', listingId).maybeSingle()
     const sellerEmail = (listingInfo?.stores as any)?.users?.email
     const sellerOwnerId = (listingInfo?.stores as any)?.owner_id
@@ -91,6 +92,11 @@ export async function POST(req: NextRequest) {
         body: listingInfo?.title ?? '',
         link: '/dashboard/orders',
       })
+    }
+    if (listingInfo?.requires_license) {
+      await admin.from('order_items')
+        .update({ license_key: generateLicenseKey() })
+        .eq('id', order_item_id)
     }
   } catch (err) {
     console.error('[ls-webhook] seller notification error:', err)
