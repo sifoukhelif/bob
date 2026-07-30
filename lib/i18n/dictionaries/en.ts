@@ -69,6 +69,16 @@ export const en = {
     pageTitle: 'Support', homeLink: 'Home',
     title: 'Contact Support',
     subtitle: "Have a question or an issue with an order or product? Message us and we'll reply within 24 hours.",
+    form: {
+      nameLabel: 'Name', emailLabel: 'Email', subjectLabel: 'Subject (optional)',
+      messageLabel: 'Your Message', messagePlaceholder: 'Write your message in detail here…',
+      errorNameTooShort: 'Name must be at least 2 characters',
+      errorMessageTooShort: 'Message must be at least 10 characters',
+      errorGeneric: 'Could not send your message, please try again',
+      successTitle: '✅ Your message was received', successBody: "We'll reply via your email within 24 hours.",
+      sendingText: 'Sending…', sendButton: 'Send Message',
+      orEmailDirect: 'Or email us directly at',
+    },
   },
   account: {
     pageTitle: 'Account Settings', homeLink: 'Home', title: 'Account Settings',
