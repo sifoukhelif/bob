@@ -24,7 +24,7 @@ export default async function EditListingPage({
   if (!store) redirect('/become-seller')
   const { data: listing } = await supabase
     .from('listings')
-    .select('id,store_id,type,title,description,category_id,base_price,status,thumbnail_url')
+    .select('id,store_id,type,title,description,category_id,base_price,status,thumbnail_url,requires_license')
     .eq('id', id)
     .eq('store_id', store.id)
     .maybeSingle()
@@ -66,6 +66,7 @@ export default async function EditListingPage({
             categoryId: listing.category_id ?? '',
             price: String(listing.base_price ?? ''),
             thumbnailUrl: listing.thumbnail_url ?? null,
+            requiresLicense: listing.requires_license ?? false,
           }}
           existingFileName={existingFile?.original_name ?? null}
           locale={locale}
