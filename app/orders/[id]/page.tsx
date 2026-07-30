@@ -25,7 +25,7 @@ export default async function OrderDetailPage({ params }: { params: Params }) {
     .from('orders')
     .select(`
       id,total_amount,currency,status,created_at,stripe_session_id,
-      order_items(id,listing_id,unit_price,download_token,token_expires_at,
+      order_items(id,listing_id,unit_price,download_token,token_expires_at,license_key,
         listings(title,slug,thumbnail_url,stores(name,slug)),
         reviews(id,rating,comment))
     `)
@@ -137,6 +137,15 @@ export default async function OrderDetailPage({ params }: { params: Params }) {
                     <span className="text-[10px] text-gray-600 whitespace-nowrap">{t.orders.linkExpired}</span>
                   )}
                 </div>
+
+                {item.license_key && (
+                  <div className="mt-3 bg-black/20 border border-white/5 rounded-xl p-3 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-[10px] text-gray-500 mb-1">{t.orders.licenseKeyLabel}</div>
+                      <code className="text-xs text-[#C9A84C] font-mono" dir="ltr">{item.license_key}</code>
+                    </div>
+                  </div>
+                )}
 
                 {isCompleted && item.id && item.listing_id && (
                   <ReviewForm
