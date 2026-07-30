@@ -40,7 +40,7 @@ export function EditListingForm({
   listingId: string
   storeId: string
   categories: Category[]
-  initial: { type: 'product' | 'service'; title: string; description: string; categoryId: string; price: string; thumbnailUrl: string | null }
+  initial: { type: 'product' | 'service'; title: string; description: string; categoryId: string; price: string; thumbnailUrl: string | null; requiresLicense?: boolean }
   existingFileName: string | null
   locale: Locale
 }) {
@@ -52,6 +52,7 @@ export function EditListingForm({
   const [categoryId, setCategoryId] = useState(initial.categoryId)
   const [price, setPrice] = useState(initial.price)
   const [file, setFile] = useState<File | null>(null)
+  const [requiresLicense, setRequiresLicense] = useState(initial.requiresLicense ?? false)
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(initial.thumbnailUrl)
   const [loading, setLoading] = useState(false)
@@ -106,6 +107,7 @@ export function EditListingForm({
         category_id: categoryId || null,
         base_price: priceNum,
         status: 'pending_review',
+        requires_license: requiresLicense,
       }
       if (thumbnailUrl) updatePayload.thumbnail_url = thumbnailUrl
 
@@ -220,6 +222,13 @@ export function EditListingForm({
           <input type="file" onChange={e => setFile(e.target.files?.[0] ?? null)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]/40 transition-colors file:mr-3 file:bg-[#C9A84C] file:text-[#08080E] file:border-0 file:rounded-lg file:px-3 file:py-1.5 file:text-xs file:font-bold file:cursor-pointer" />
           <p className="text-[10px] text-gray-600 mt-1.5">{t.editListing.keepFileHint}</p>
+
+          <label className="flex items-center gap-2 mt-4 cursor-pointer">
+            <input type="checkbox" checked={requiresLicense} onChange={e => setRequiresLicense(e.target.checked)}
+              className="w-4 h-4 accent-[#C9A84C]" />
+            <span className="text-xs text-gray-400">{t.newListing.requiresLicenseLabel}</span>
+          </label>
+          <p className="text-[10px] text-gray-600 mt-1">{t.newListing.requiresLicenseHint}</p>
         </div>
       )}
 
