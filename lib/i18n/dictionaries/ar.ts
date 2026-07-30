@@ -69,6 +69,16 @@ export const ar = {
     pageTitle: 'الدعم', homeLink: 'الرئيسية',
     title: 'تواصل مع الدعم',
     subtitle: 'لديك سؤال أو مشكلة في طلب أو منتج؟ راسلنا وسنرد عليك خلال 24 ساعة.',
+    form: {
+      nameLabel: 'الاسم', emailLabel: 'البريد الإلكتروني', subjectLabel: 'الموضوع (اختياري)',
+      messageLabel: 'رسالتك', messagePlaceholder: 'اكتب رسالتك بالتفصيل هنا…',
+      errorNameTooShort: 'الاسم يجب أن يكون حرفين على الأقل',
+      errorMessageTooShort: 'الرسالة يجب أن تكون 10 أحرف على الأقل',
+      errorGeneric: 'تعذّر إرسال رسالتك، حاول مرة أخرى',
+      successTitle: '✅ تم استلام رسالتك', successBody: 'سنرد عليك عبر بريدك الإلكتروني خلال 24 ساعة.',
+      sendingText: 'جارٍ الإرسال…', sendButton: 'إرسال الرسالة',
+      orEmailDirect: 'أو راسلنا مباشرة على',
+    },
   },
   account: {
     pageTitle: 'إعدادات الحساب', homeLink: 'الرئيسية', title: 'إعدادات الحساب',
