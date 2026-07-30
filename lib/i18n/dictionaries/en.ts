@@ -30,11 +30,11 @@ export const en = {
     viewDetails: 'Details →', backToOrders: 'Back to my orders →', detailTitle: 'Order Details',
     orderRef: 'Order Reference', orderDate: 'Order Date', paymentRef: 'Payment Reference', statusLabel: 'Status',
     itemsTitle: 'Items', sellerLabel: 'Seller', totalLabel: 'Total', notFound: 'Order not found',
-    downloadInvoice: 'Download Invoice (PDF)', licenseKeyLabel: 'License Key',
+    downloadInvoice: 'Download Invoice (PDF)',
     visitStore: 'Visit Store →', viewProduct: 'View Product →',
   },
   listingForm: { coverImageLabel: 'Cover Image', noImage: 'No image', titleLabel: 'Title', descriptionLabel: 'Description', categoryLabel: 'Category', categoryPlaceholder: 'Choose a category', priceLabel: 'Price (USD)', fileLabel: 'Product File', errorTitleTooShort: 'Title must be at least 3 characters', errorInvalidPrice: 'Enter a valid price', errorImageUploadPrefix: 'Could not upload image:', genericError: 'An unexpected error occurred' },
-  newListing: { backToDashboard: '← Dashboard', title: 'Add a new product', subtitle: 'Our team will review the product before publishing it to buyers (usually within 48 hours).', typeProduct: 'Digital Product', typeService: 'Service', coverImageHint: 'This image will be shown to buyers in the shop and homepage.', titlePlaceholder: 'e.g. Admin dashboard template for online stores', descriptionPlaceholder: 'Explain in detail what the buyer will receive', pricePlaceholder: '29.00', fileHint: 'This is the file the buyer will receive after payment.', errorFileRequired: 'You must upload the digital product file', errorCreateFailed: 'Could not create the product, please try again', errorFileUploadPrefix: 'Could not upload file:', submitButton: 'Submit for Review', submittingText: 'Submitting…', requiresLicenseLabel: 'This product requires a License Key', requiresLicenseHint: 'If enabled, a unique key is generated automatically for every purchase and shown to the buyer on their order page.' },
+  newListing: { backToDashboard: '← Dashboard', title: 'Add a new product', subtitle: 'Our team will review the product before publishing it to buyers (usually within 48 hours).', typeProduct: 'Digital Product', typeService: 'Service', coverImageHint: 'This image will be shown to buyers in the shop and homepage.', titlePlaceholder: 'e.g. Admin dashboard template for online stores', descriptionPlaceholder: 'Explain in detail what the buyer will receive', pricePlaceholder: '29.00', fileHint: 'This is the file the buyer will receive after payment.', errorFileRequired: 'You must upload the digital product file', errorCreateFailed: 'Could not create the product, please try again', errorFileUploadPrefix: 'Could not upload file:', submitButton: 'Submit for Review', submittingText: 'Submitting…' },
   editListing: { backToDashboard: '← Dashboard', title: 'Edit Product', subtitle: 'The product will be sent for review again after any change to the title, description, or file.', keepImageHint: "Leave this field empty if you don't want to change the current image.", currentFilePrefix: '📄 Current file:', keepFileHint: "Leave this field empty if you don't want to change the current file.", saveButton: 'Save Changes', savingText: 'Saving…', errorUpdateFailed: 'Could not update the product, please try again', errorFileUploadPartialPrefix: 'Product data was updated, but the new file could not be uploaded:' },
   deleteListing: { confirmText: 'Sure?', yesDelete: 'Yes, delete', cancel: 'Cancel', deleteLabel: 'Delete 🗑️' },
   payoutSettings: {
@@ -69,17 +69,6 @@ export const en = {
     pageTitle: 'Support', homeLink: 'Home',
     title: 'Contact Support',
     subtitle: "Have a question or an issue with an order or product? Message us and we'll reply within 24 hours.",
-    form: {
-      nameLabel: 'Name', emailLabel: 'Email', subjectLabel: 'Subject (optional)',
-      messageLabel: 'Your message', messagePlaceholder: 'Write your message in detail…',
-      sendButton: 'Send Message', sendingText: 'Sending…',
-      successTitle: 'Your message was sent successfully ✅',
-      successBody: "We'll reply to the email you provided within 24 hours.",
-      errorGeneric: 'Could not send the message, please try again',
-      errorNameTooShort: 'Enter your full name',
-      errorMessageTooShort: 'Message is too short, add more detail (at least 10 characters)',
-      orEmailDirect: 'Or email us directly at',
-    },
   },
   account: {
     pageTitle: 'Account Settings', homeLink: 'Home', title: 'Account Settings',
@@ -178,18 +167,6 @@ export const en = {
     {
       "title": "12. Governing Law",
       "body": "The governing law for these terms and the competent jurisdiction for disputes will be finalized once the official registration of the platform's owning legal entity is completed, and this clause will be updated accordingly before the official launch."
-    },
-    {
-      "title": "13. Amendments to These Terms",
-      "body": "The platform reserves the right to amend these terms at any time to reflect the evolution of the service or legal requirements. Any material change will be published on this page along with an updated \"last updated\" date below, and users are encouraged to review it periodically. Continued use of the platform after a change is published constitutes implicit acceptance of it."
-    },
-    {
-      "title": "14. Force Majeure",
-      "body": "The platform is not liable for any delay or disruption in service resulting from events beyond its reasonable control, such as outages of infrastructure providers (Supabase, Vercel, payment gateways), general internet disruptions, natural disasters, or any similar unforeseen circumstance."
-    },
-    {
-      "title": "15. Entire Agreement & Severability",
-      "body": "These terms, together with the Privacy Policy, constitute the entire agreement between you and the platform regarding its use. If any provision of these terms is found to be legally unenforceable, the remaining provisions shall remain in full force and effect."
     }
   ],
   "footer": "Last updated: July 2026. These terms are a template and require specialized legal review by a licensed attorney before official launch."
@@ -242,18 +219,6 @@ export const en = {
     {
       "title": "8. Children & Minors",
       "body": "The platform is not directed at individuals under 18 years of age, and we do not knowingly and intentionally collect data from users we know to be minors."
-    },
-    {
-      "title": "9. Links to Other Websites",
-      "body": "The platform may contain links to external websites or services (such as payment gateways or sellers' social storefronts). We are not responsible for the privacy practices or content of these external sites, and we recommend reviewing their own privacy policies."
-    },
-    {
-      "title": "10. Data Breach Notification",
-      "body": "In the event of a security breach materially affecting your personal data, we will make reasonable efforts to notify you via your registered email within a reasonable time of discovering the breach, describing the nature of the affected data and the steps taken."
-    },
-    {
-      "title": "11. Marketing & Promotional Communications",
-      "body": "We may occasionally send you messages about platform updates or relevant offers, based on your consent. You can unsubscribe at any time via the \"unsubscribe\" link at the bottom of every marketing message, without affecting necessary operational messages (such as order confirmations)."
     }
   ],
   "footer": "Last updated: July 2026. This policy is a template and requires specialized legal review by a licensed attorney before official launch, particularly regarding full compliance with data protection regulations (such as the European GDPR) if your audience includes users from the European Union."
@@ -305,8 +270,6 @@ export const en = {
     subtitle: 'DEGITALE is a unified marketplace for buying and selling digital products and services — templates, code, ebooks, and freelance services — safely and easily.',
     missionTitle: 'Our Mission',
     missionText: 'We believe digital creators deserve a professional platform that protects them and their customers, with fair commission and simple tools that let them focus on creating instead of technical complexity.',
-    storyTitle: 'Our Story & Vision',
-    storyText: 'DEGITALE started from a simple idea: digital creators deserve one trusted marketplace instead of scattering their efforts across disconnected platforms. We keep building new tools — from the review system to direct messaging between sellers and buyers — with the goal of creating a complete, transparent digital commerce experience for every user on the platform.',
     howItWorksTitle: 'How It Works',
     buyerStepTitle: 'For Buyers',
     buyerStepText: 'Browse thousands of products, pay securely via Stripe, and get an instant download link valid for 48 hours, with a 14-day refund guarantee.',
@@ -322,6 +285,13 @@ export const en = {
     ctaTitle: 'Ready to start?',
     ctaShop: 'Browse the Shop',
     ctaSell: 'Start Selling',
+  },
+  blog: {
+    badge: 'Blog', title: 'The DEGITALE Blog', subtitle: 'Articles and tips on digital commerce, selling, and productivity.',
+    homeLink: 'Home', backToBlog: '← Blog',
+    readMore: 'Read more →', publishedOn: 'Published on', byAuthor: 'By',
+    emptyTitle: 'No posts yet', emptyText: 'Stay tuned for our first posts soon.',
+    notFoundTitle: 'Post not found',
   },
   discover: {
     badge: 'Discover', title: 'Explore the Platform', subtitle: 'The best of it in one place — products, categories, and stores worth discovering.',
