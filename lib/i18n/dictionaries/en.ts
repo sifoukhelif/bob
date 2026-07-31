@@ -177,6 +177,18 @@ export const en = {
     {
       "title": "12. Governing Law",
       "body": "The governing law for these terms and the competent jurisdiction for disputes will be finalized once the official registration of the platform's owning legal entity is completed, and this clause will be updated accordingly before the official launch."
+    },
+    {
+      "title": "13. Amendments to These Terms",
+      "body": "The platform reserves the right to amend these terms at any time to reflect the evolution of the service or legal requirements. Any material change will be published on this page along with an updated \"last updated\" date below, and users are encouraged to review it periodically. Continued use of the platform after a change is published constitutes implicit acceptance of it."
+    },
+    {
+      "title": "14. Force Majeure",
+      "body": "The platform is not liable for any delay or disruption in service resulting from events beyond its reasonable control, such as outages of infrastructure providers (Supabase, Vercel, payment gateways), general internet disruptions, natural disasters, or any similar unforeseen circumstance."
+    },
+    {
+      "title": "15. Entire Agreement & Severability",
+      "body": "These terms, together with the Privacy Policy, constitute the entire agreement between you and the platform regarding its use. If any provision of these terms is found to be legally unenforceable, the remaining provisions shall remain in full force and effect."
     }
   ],
   "footer": "Last updated: July 2026. These terms are a template and require specialized legal review by a licensed attorney before official launch."
@@ -229,6 +241,18 @@ export const en = {
     {
       "title": "8. Children & Minors",
       "body": "The platform is not directed at individuals under 18 years of age, and we do not knowingly and intentionally collect data from users we know to be minors."
+    },
+    {
+      "title": "9. Links to Other Websites",
+      "body": "The platform may contain links to external websites or services (such as payment gateways or sellers' social storefronts). We are not responsible for the privacy practices or content of these external sites, and we recommend reviewing their own privacy policies."
+    },
+    {
+      "title": "10. Data Breach Notification",
+      "body": "In the event of a security breach materially affecting your personal data, we will make reasonable efforts to notify you via your registered email within a reasonable time of discovering the breach, describing the nature of the affected data and the steps taken."
+    },
+    {
+      "title": "11. Marketing & Promotional Communications",
+      "body": "We may occasionally send you messages about platform updates or relevant offers, based on your consent. You can unsubscribe at any time via the \"unsubscribe\" link at the bottom of every marketing message, without affecting necessary operational messages (such as order confirmations)."
     }
   ],
   "footer": "Last updated: July 2026. This policy is a template and requires specialized legal review by a licensed attorney before official launch, particularly regarding full compliance with data protection regulations (such as the European GDPR) if your audience includes users from the European Union."
@@ -280,6 +304,8 @@ export const en = {
     subtitle: 'DEGITALE is a unified marketplace for buying and selling digital products and services — templates, code, ebooks, and freelance services — safely and easily.',
     missionTitle: 'Our Mission',
     missionText: 'We believe digital creators deserve a professional platform that protects them and their customers, with fair commission and simple tools that let them focus on creating instead of technical complexity.',
+    storyTitle: 'Our Story & Vision',
+    storyText: 'DEGITALE started from a simple idea: digital creators deserve one trusted marketplace instead of scattering their efforts across disconnected platforms. We keep building new tools — from the review system to direct messaging between sellers and buyers — with the goal of creating a complete, transparent digital commerce experience for every user on the platform.',
     howItWorksTitle: 'How It Works',
     buyerStepTitle: 'For Buyers',
     buyerStepText: 'Browse thousands of products, pay securely via Stripe, and get an instant download link valid for 48 hours, with a 14-day refund guarantee.',
