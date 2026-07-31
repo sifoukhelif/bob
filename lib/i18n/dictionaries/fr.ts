@@ -8,7 +8,7 @@ export const fr = {
   shop: { title: 'Boutique', itemsUnit: 'produits et services', searchingFor: 'Résultats de recherche pour :', clearSearch: 'Effacer la recherche', filters: { all: 'Tout', services: 'Services', ui: 'Kits UI', ebooks: 'Livres numériques', code: 'Code' }, noResultsTitle: 'Aucun résultat', noResultsSubtitle: 'Essayez un autre terme de recherche', login: 'Connexion', sortLabel: 'Trier par', sortPopular: 'Meilleures ventes', sortNewest: 'Plus récents', sortPriceAsc: 'Prix : croissant', sortPriceDesc: 'Prix : décroissant', sortTopRated: 'Mieux notés', priceRangeLabel: 'Fourchette de prix', minPricePlaceholder: 'Min $', maxPricePlaceholder: 'Max $', applyFilters: 'Appliquer', clearFilters: 'Effacer les filtres' },
   product: { login: 'Connexion', notFoundTitle: 'Produit introuvable', freeLabel: 'Gratuit', save: 'Économisez', sales: 'ventes', reviews: 'avis', deliveryPrefix: 'Livraison sous', deliveryUnit: 'jours', shareWhatsapp: 'Partager sur WhatsApp', shareMessage: 'Découvrez ce produit sur DEGITALE' },
   buyBox: { freeLabel: 'Gratuit', loading: 'Redirection…', buyNow: 'Acheter maintenant', orderService: 'Commander le service', genericError: 'Une erreur est survenue, veuillez réessayer', checkoutError: "Impossible de démarrer le paiement", serviceManualOnly: "Les services se commandent actuellement en contactant directement le vendeur, pas via le paiement instantané.", contactSellerCta: 'Contacter le support pour demander ce service', features: { secureDownload: 'Lien de téléchargement sécurisé et chiffré', validity: 'Valable 48 heures après achat', refund: 'Garantie de remboursement de 14 jours', securePayment: 'Paiement sécurisé et chiffré' } },
-  login: { welcomeBack: 'Content de vous revoir', createAccount: 'Créez votre compte gratuit', loginTab: 'Connexion', signupTab: 'Inscription', emailLabel: 'Email', passwordLabel: 'Mot de passe', loadingText: 'Chargement…', loginButton: 'Connexion', signupButton: 'Créer le compte', checkEmailTitle: 'Vérifiez votre email', checkEmailBodyPrefix: 'Nous avons envoyé un lien de confirmation à', checkEmailBodySuffix: 'Cliquez sur le lien pour activer votre compte, puis connectez-vous.', backToLogin: 'Retour à la connexion', emailNotConfirmedError: "Vous n'avez pas encore confirmé votre email. Vérifiez votre boîte de réception (et vos spams) et cliquez sur le lien de confirmation.", genericError: 'Une erreur est survenue', forgotPasswordLink: 'Mot de passe oublié ?' },
+  login: { welcomeBack: 'Content de vous revoir', createAccount: 'Créez votre compte gratuit', loginTab: 'Connexion', signupTab: 'Inscription', emailLabel: 'Email', passwordLabel: 'Mot de passe', loadingText: 'Chargement…', loginButton: 'Connexion', signupButton: 'Créer le compte', checkEmailTitle: 'Vérifiez votre email', checkEmailBodyPrefix: 'Nous avons envoyé un lien de confirmation à', checkEmailBodySuffix: 'Cliquez sur le lien pour activer votre compte, puis connectez-vous.', backToLogin: 'Retour à la connexion', emailNotConfirmedError: "Vous n'avez pas encore confirmé votre email. Vérifiez votre boîte de réception (et vos spams) et cliquez sur le lien de confirmation.", genericError: 'Une erreur est survenue', forgotPasswordLink: 'Mot de passe oublié ?' },
   forgotPassword: {
     title: 'Réinitialiser le mot de passe', subtitle: "Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
     emailLabel: 'Email', sendButton: 'Envoyer le lien', sendingText: 'Envoi en cours…',
@@ -177,6 +177,18 @@ export const fr = {
     {
       "title": "12. Loi applicable",
       "body": "Le droit applicable à ces conditions et la juridiction compétente pour les litiges seront définitivement déterminés une fois l'enregistrement officiel de l'entité juridique propriétaire de la plateforme finalisé, et cette clause sera mise à jour en conséquence avant le lancement officiel."
+    },
+    {
+      "title": "13. Modification des présentes conditions",
+      "body": "La plateforme se réserve le droit de modifier ces conditions à tout moment pour refléter l'évolution du service ou des exigences légales. Toute modification substantielle sera publiée sur cette page avec une date de « dernière mise à jour » actualisée ci-dessous, et les utilisateurs sont encouragés à la consulter régulièrement. La poursuite de l'utilisation de la plateforme après la publication d'une modification vaut acceptation implicite de celle-ci."
+    },
+    {
+      "title": "14. Force majeure",
+      "body": "La plateforme n'est pas responsable de tout retard ou interruption de service résultant d'événements échappant à son contrôle raisonnable, tels que des pannes des prestataires d'infrastructure (Supabase, Vercel, passerelles de paiement), des perturbations générales d'internet, des catastrophes naturelles, ou toute circonstance imprévisible similaire."
+    },
+    {
+      "title": "15. Intégralité de l'accord et divisibilité",
+      "body": "Ces conditions, avec la politique de confidentialité, constituent l'intégralité de l'accord entre vous et la plateforme concernant son utilisation. Si une disposition de ces conditions s'avère juridiquement inapplicable, les autres dispositions restent pleinement valables et applicables."
     }
   ],
   "footer": "Dernière mise à jour : juillet 2026. Ces conditions sont un modèle et nécessitent une révision juridique spécialisée par un avocat agréé avant le lancement officiel."
@@ -229,6 +241,18 @@ export const fr = {
     {
       "title": "8. Enfants et mineurs",
       "body": "La plateforme ne s'adresse pas aux personnes de moins de 18 ans, et nous ne collectons pas intentionnellement de données d'utilisateurs que nous savons être mineurs."
+    },
+    {
+      "title": "9. Liens vers d'autres sites web",
+      "body": "La plateforme peut contenir des liens vers des sites web ou services externes (comme des passerelles de paiement ou les vitrines sociales des vendeurs). Nous ne sommes pas responsables des pratiques de confidentialité ou du contenu de ces sites externes, et nous recommandons de consulter leurs propres politiques de confidentialité."
+    },
+    {
+      "title": "10. Notification en cas de violation de données",
+      "body": "En cas de violation de sécurité affectant substantiellement vos données personnelles, nous ferons des efforts raisonnables pour vous en informer via votre email enregistré dans un délai raisonnable après la découverte de la violation, en précisant la nature des données concernées et les mesures prises."
+    },
+    {
+      "title": "11. Marketing et communications promotionnelles",
+      "body": "Nous pouvons occasionnellement vous envoyer des messages concernant les mises à jour de la plateforme ou des offres pertinentes, sur la base de votre consentement. Vous pouvez vous désabonner à tout moment via le lien « se désabonner » présent en bas de chaque message marketing, sans que cela n'affecte les messages opérationnels nécessaires (comme la confirmation des commandes)."
     }
   ],
   "footer": "Dernière mise à jour : juillet 2026. Cette politique est un modèle et nécessite une révision juridique spécialisée par un avocat agréé avant le lancement officiel, notamment en ce qui concerne la pleine conformité aux réglementations de protection des données (comme le RGPD européen) si votre audience inclut des utilisateurs de l'Union européenne."
@@ -280,6 +304,8 @@ export const fr = {
     subtitle: "DEGITALE est une marketplace unifiée pour acheter et vendre des produits et services numériques — modèles, code, ebooks et services freelance — en toute sécurité.",
     missionTitle: 'Notre mission',
     missionText: "Nous pensons que les créateurs numériques du monde arabe méritent une plateforme professionnelle qui les protège ainsi que leurs clients, avec une commission équitable et des outils simples leur permettant de se concentrer sur la création plutôt que sur la complexité technique.",
+    storyTitle: 'Notre histoire et notre vision',
+    storyText: "DEGITALE est née d'une idée simple : les créateurs numériques méritent une marketplace unique et fiable, plutôt que de disperser leurs efforts sur des plateformes déconnectées. Nous continuons à développer de nouveaux outils — du système d'avis à la messagerie directe entre vendeurs et acheteurs — dans le but de bâtir une expérience de commerce numérique complète et transparente pour chaque utilisateur de la plateforme.",
     howItWorksTitle: 'Comment ça marche',
     buyerStepTitle: 'Pour les acheteurs',
     buyerStepText: "Parcourez des milliers de produits, payez en toute sécurité via Stripe, et recevez un lien de téléchargement instantané valable 48 heures, avec une garantie de remboursement de 14 jours.",
