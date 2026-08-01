@@ -1,6 +1,7 @@
 // components/cookie-consent.tsx
 'use client'
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import type { Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n'
@@ -18,6 +19,7 @@ function setConsentCookie(value: 'accepted' | 'declined') {
 }
 
 export function CookieConsent({ locale }: { locale: Locale }) {
+  const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const t = getDictionary(locale).cookieConsent
 
@@ -29,6 +31,9 @@ export function CookieConsent({ locale }: { locale: Locale }) {
     setConsentCookie(choice)
     setVisible(false)
   }
+
+  // لوحة تحكم الأدمن: لا حاجة لبانر الكوكيز هنا، ويتراكب بصرياً فوق نماذج طويلة (مثل صفحة "مقال جديد")
+  if (pathname?.startsWith('/admin')) return null
 
   if (!visible) return null
 
