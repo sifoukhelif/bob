@@ -2,6 +2,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import { randomUUID } from 'node:crypto'
 
 export const metadata = { title: 'تعديل مقال | Admin' }
 
@@ -39,11 +40,15 @@ async function updatePost(formData: FormData) {
   }
 
   if (!keepExistingCover && coverFile && coverFile.size > 0) {
-    const path = `blog/${crypto.randomUUID()}-${coverFile.name.replace(/[^a-zA-Z0-9.]/g, '-')}`
-    const { error: uploadError } = await admin.storage.from('listing-images').upload(path, coverFile)
-    if (!uploadError) {
-      const { data: publicUrlData } = admin.storage.from('listing-images').getPublicUrl(path)
-      update.cover_image_url = publicUrlData.publicUrl
+    try {
+      const path = `blog/${randomUUID()}-${coverFile.name.replace(/[^a-zA-Z0-9.]/g, '-')}`
+      const { error: uploadError } = await admin.storage.from('listing-images').upload(path, coverFile)
+      if (!uploadError) {
+        const { data: publicUrlData } = admin.storage.from('listing-images').getPublicUrl(path)
+        update.cover_image_url = publicUrlData.publicUrl
+      }
+    } catch (err) {
+      console.error('[blog/edit] cover image upload failed:', err)
     }
   }
 
