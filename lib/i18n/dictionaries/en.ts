@@ -204,7 +204,7 @@ export const en = {
     },
     {
       "title": "2. Cookies",
-      "body": "We use only essential cookies to manage your login session and authentication. We do not currently use tracking or third-party advertising cookies."
+      "body": "We use essential cookies to manage your login session and authentication, which do not require your consent as they are necessary for the site to function. With your explicit consent via the cookie banner, we may also use Google Analytics to understand how visitors use the site and improve their experience — we do not currently use any third-party advertising cookies. You can change your choice or withdraw your consent at any time via your browser settings."
     },
     {
       "title": "3. How We Use Your Data",
