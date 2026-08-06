@@ -204,7 +204,7 @@ export const fr = {
     },
     {
       "title": "2. Cookies",
-      "body": "Nous utilisons uniquement des cookies essentiels pour gérer votre session de connexion et l'authentification. Nous n'utilisons actuellement aucun cookie de suivi ou de publicité tierce."
+      "body": "Nous utilisons des cookies essentiels pour gérer votre session de connexion et l'authentification, qui ne nécessitent pas votre consentement car ils sont indispensables au fonctionnement du site. Avec votre consentement explicite via la bannière de cookies, nous pouvons également utiliser Google Analytics pour comprendre comment les visiteurs utilisent le site et améliorer leur expérience — nous n'utilisons actuellement aucun cookie publicitaire tiers. Vous pouvez modifier votre choix ou retirer votre consentement à tout moment via les paramètres de votre navigateur."
     },
     {
       "title": "3. Comment nous utilisons vos données",
