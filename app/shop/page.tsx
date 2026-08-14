@@ -49,19 +49,31 @@ export default async function ShopPage({
     // بالفلترة المباشرة على عمود category_id بجدول listings.
     let categoryIds: string[] | null = null
     if (cat) {
-      const { data: catRow } = await supabase.from('categories').select('id').eq('slug', cat).maybeSingle()
+      const { data: catRow, error: catErr } = await supabase.from('categories').select('id').eq('slug', cat).maybeSingle()
+      if (catErr) {
+        console.error('[shop-page] category lookup error:', catErr.message, catErr.details, catErr.hint, catErr.code)
+      }
       if (catRow) {
         const collected = new Set<string>([catRow.id])
         let frontier = [catRow.id]
         // ندور طبقة بطبقة لين ما نلقى أطفال جدد (يغطي أي عمق هرمي بدون افتراض عدد مستويات ثابت)
         while (frontier.length > 0) {
-          const { data: children } = await supabase.from('categories').select('id').in('parent_id', frontier)
+          const { data: children, error: childErr } = await supabase.from('categories').select('id').in('parent_id', frontier)
+          if (childErr) {
+            console.error('[shop-page] category children error:', childErr.message, childErr.details, childErr.hint, childErr.code)
+            break
+          }
           const newIds = (children ?? []).map(c => c.id).filter(id => !collected.has(id))
           if (newIds.length === 0) break
           newIds.forEach(id => collected.add(id))
           frontier = newIds
         }
         categoryIds = Array.from(collected)
+      } else {
+        // slug مو موجود بجدول categories — بدون هذا التحذير كنا سنحصل على .in('category_id', [])
+        // بصمت، اللي يرجع صفر نتائج دايمًا بدون أي تفسير.
+        console.error('[shop-page] no category found for slug:', cat)
+        categoryIds = []
       }
     }
 
@@ -91,14 +103,28 @@ export default async function ShopPage({
     if (categoryIds) query = query.in('category_id', categoryIds)
     if (min)  query = query.gte('base_price', parseFloat(min))
     if (max)  query = query.lte('base_price', parseFloat(max))
-    const { data, count: c } = await query
+
+    // ⬇️ التعديل الحاسم: نستخرج error من الرد بدل تجاهله بالكامل.
+    // سابقاً: const { data, count: c } = await query — أي خطأ حقيقي (صلاحيات،
+    // schema cache قديم، علاقة غير موجودة...) كان يُتجاهل بصمت تام، فـ data
+    // ترجع null بهدوء بدون أي أثر لا بالـ catch ولا بأي مكان.
+    const { data, count: c, error } = await query
+    if (error) {
+      console.error('[shop-page] listings query error:', error.message, error.details, error.hint, error.code)
+    }
     products = data ?? []; count = c ?? 0
 
     if (user && products.length > 0) {
-      const { data: wl } = await supabase.from('wishlists').select('listing_id').eq('user_id', user.id).in('listing_id', products.map(p => p.id))
+      const { data: wl, error: wlErr } = await supabase.from('wishlists').select('listing_id').eq('user_id', user.id).in('listing_id', products.map(p => p.id))
+      if (wlErr) {
+        console.error('[shop-page] wishlist query error:', wlErr.message, wlErr.details, wlErr.hint, wlErr.code)
+      }
       wishlistedIds = new Set((wl ?? []).map((w: any) => w.listing_id))
     }
-  } catch {}
+  } catch (err: any) {
+    // أي استثناء غير متوقع (شبكة، كود خاطئ...) الآن يُسجَّل بدل الاختفاء بصمت
+    console.error('[shop-page] unexpected error:', err?.message ?? err, err?.stack)
+  }
 
   const totalPages = Math.ceil(count / perPage)
 
