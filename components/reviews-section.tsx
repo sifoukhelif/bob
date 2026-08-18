@@ -18,7 +18,7 @@ export type DisplayReview = {
   rating: number
   comment: string | null
   createdAt: string
-  reviewerName: string
+  reviewerName: string | null
 }
 
 type Props = {
@@ -30,6 +30,31 @@ type Props = {
   eligiblePurchases: EligiblePurchase[]
   t: ReturnType<typeof getDictionary>
   locale: Locale
+}
+
+// تسميات هذا القسم فقط، محلية داخل الملف — بدون اعتماد على مفاتيح جديدة
+// بـ lib/i18n/dictionaries (تفادياً لكسر البناء لو ما انضافت هناك بعد).
+// لو حبيت لاحقاً تربطها بنظام الترجمة الرسمي، انقلها لـ t.reviews بالقواميس
+// الثلاثة وبدّل الأسطر اللي تستخدم LABELS[locale] بـ t.reviews.المفتاح.
+const LABELS: Record<Locale, { ratingsCount: string; purchasedOn: string; showMore: string; writePrompt: string }> = {
+  ar: {
+    ratingsCount: 'تقييم',
+    purchasedOn: 'تاريخ الشراء:',
+    showMore: 'عرض المزيد',
+    writePrompt: 'قيّم مشترياتك',
+  },
+  en: {
+    ratingsCount: 'ratings',
+    purchasedOn: 'Purchased on:',
+    showMore: 'Show more',
+    writePrompt: 'Rate your purchases',
+  },
+  fr: {
+    ratingsCount: 'avis',
+    purchasedOn: 'Acheté le :',
+    showMore: 'Voir plus',
+    writePrompt: 'Évaluez vos achats',
+  },
 }
 
 function StaticStars({ rating }: { rating: number }) {
@@ -52,6 +77,7 @@ export function ReviewsSection({
   locale,
 }: Props) {
   const [visibleCount, setVisibleCount] = useState(6)
+  const labels = LABELS[locale] ?? LABELS.ar
 
   return (
     <section className="mt-14 pt-10 border-t border-white/5">
@@ -63,7 +89,7 @@ export function ReviewsSection({
           <div className="flex items-center gap-2 text-sm">
             <StaticStars rating={ratingAvg ?? 0} />
             <span className="text-gray-400">
-              {(ratingAvg ?? 0).toFixed(1)} · {ratingCount} {t.reviews.ratingsCountLabel}
+              {(ratingAvg ?? 0).toFixed(1)} · {ratingCount} {labels.ratingsCount}
             </span>
           </div>
         )}
@@ -72,11 +98,11 @@ export function ReviewsSection({
       {/* نماذج التقييم — وحدة منفصلة لكل عملية شراء غير مقيّمة أو مقيّمة سابقاً */}
       {userId && eligiblePurchases.length > 0 && (
         <div className="mb-10 space-y-5">
-          <div className="text-xs text-gray-500">{t.reviews.writePromptLabel}</div>
+          <div className="text-xs text-gray-500">{labels.writePrompt}</div>
           {eligiblePurchases.map((p) => (
             <div key={p.orderItemId}>
               <div className="text-[10px] text-gray-600 mb-1">
-                {t.reviews.purchasedOnLabel} {new Date(p.purchasedAt).toLocaleDateString(locale)}
+                {labels.purchasedOn} {new Date(p.purchasedAt).toLocaleDateString(locale)}
               </div>
               <ReviewForm
                 orderItemId={p.orderItemId}
@@ -113,7 +139,7 @@ export function ReviewsSection({
               onClick={() => setVisibleCount((c) => c + 10)}
               className="text-xs text-[#C9A84C] hover:underline"
             >
-              {t.reviews.showMoreLabel}
+              {labels.showMore}
             </button>
           )}
         </div>
