@@ -13,6 +13,7 @@ import { getTranslatedListing } from '@/lib/translate'
 import { AdBanner } from '@/components/ad-slot'
 import { WishlistButton } from '@/components/wishlist-button'
 import { WhatsappShare } from '@/components/whatsapp-share'
+import { ReviewsSection, type DisplayReview, type EligiblePurchase } from '@/components/reviews-section'
 
 export const dynamic = 'force-dynamic'
 
@@ -90,12 +91,76 @@ export default async function ProductPage({ params }: { params: Params }) {
   const price   = p.base_price ?? 0
   const savings = p.compare_price ? Math.round((1 - price / p.compare_price) * 100) : null
 
-  const { data: productReviews } = await supabase
+  // ── التقييمات المعروضة للجميع ──────────────────────────────────────────
+  // ⚠️ عمداً بدون embed على users(username): جدول users ماله RLS للقراءة
+  // العامة (بس auth.uid() = id)، فأي embed مباشر كان سيرجّع null لاسم أي
+  // مقيّم غير المستخدم الحالي نفسه بصمت تام (نفس فخ صفحة /shop). بدلاً من
+  // ذلك: استعلامان منفصلان + دمج بالـ JS، عبر public_profiles (view آمن).
+  const { data: reviewRows, error: reviewsError } = await supabase
     .from('reviews')
-    .select('id,rating,comment,created_at,users(username)')
+    .select('id,rating,comment,created_at,buyer_id')
     .eq('listing_id', p.id)
     .order('created_at', { ascending: false })
     .limit(20)
+  if (reviewsError) {
+    console.error('[product-page] reviews query error:', reviewsError.message, reviewsError.details, reviewsError.hint, reviewsError.code)
+  }
+
+  const buyerIds = Array.from(new Set((reviewRows ?? []).map(r => r.buyer_id)))
+  let profileNameById = new Map<string, string | null>()
+  if (buyerIds.length > 0) {
+    const { data: profiles, error: profilesError } = await supabase
+      .from('public_profiles')
+      .select('id,username')
+      .in('id', buyerIds)
+    if (profilesError) {
+      console.error('[product-page] public_profiles query error:', profilesError.message, profilesError.details, profilesError.hint, profilesError.code)
+    }
+    profileNameById = new Map((profiles ?? []).map(pr => [pr.id, pr.username]))
+  }
+
+  const reviews: DisplayReview[] = (reviewRows ?? []).map(r => ({
+    id: r.id,
+    rating: r.rating,
+    comment: r.comment,
+    createdAt: r.created_at,
+    reviewerName: profileNameById.get(r.buyer_id) ?? null,
+  }))
+
+  // ── عمليات الشراء المؤهّلة للتقييم (فقط للمستخدم المسجّل دخوله) ────────
+  // كل عملية شراء (order_item) بحالة paid/completed لهذا المنتج تحديداً،
+  // مع التقييم المرتبط بها إن وُجد (reviews.order_item_id فريد UNIQUE).
+  let eligiblePurchases: EligiblePurchase[] = []
+  if (user) {
+    const { data: itemRows, error: itemsError } = await supabase
+      .from('order_items')
+      .select('id,created_at,orders!inner(status,buyer_id)')
+      .eq('listing_id', p.id)
+      .eq('orders.buyer_id', user.id)
+      .in('orders.status', ['paid', 'completed'])
+    if (itemsError) {
+      console.error('[product-page] eligible order_items query error:', itemsError.message, itemsError.details, itemsError.hint, itemsError.code)
+    }
+
+    const itemIds = (itemRows ?? []).map((i: any) => i.id)
+    let reviewByItemId = new Map<string, { id: string; rating: number; comment: string | null }>()
+    if (itemIds.length > 0) {
+      const { data: existingReviews, error: existingError } = await supabase
+        .from('reviews')
+        .select('id,order_item_id,rating,comment')
+        .in('order_item_id', itemIds)
+      if (existingError) {
+        console.error('[product-page] existing reviews query error:', existingError.message, existingError.details, existingError.hint, existingError.code)
+      }
+      reviewByItemId = new Map((existingReviews ?? []).map((r: any) => [r.order_item_id, { id: r.id, rating: r.rating, comment: r.comment }]))
+    }
+
+    eligiblePurchases = (itemRows ?? []).map((i: any) => ({
+      orderItemId: i.id,
+      purchasedAt: i.created_at,
+      existingReview: reviewByItemId.get(i.id) ?? null,
+    }))
+  }
 
   let isWishlisted = false
   if (user) {
@@ -244,27 +309,18 @@ export default async function ProductPage({ params }: { params: Params }) {
           <AdBanner label={t.ads.banner} />
         </div>
 
-        {/* قسم التقييمات */}
+        {/* قسم التقييمات — عرض + نموذج إضافة/تعديل لكل عملية شراء مؤهّلة */}
         <div className="max-w-3xl">
-          <h2 className="text-2xl font-serif font-bold mb-6">{t.reviews.title} {p.rating_count ? `(${p.rating_count})` : ''}</h2>
-          {productReviews && productReviews.length > 0 ? (
-            <div className="flex flex-col gap-4">
-              {productReviews.map((r: any) => (
-                <div key={r.id} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold">{r.users?.username ?? t.reviews.anonymous}</span>
-                    <span className="text-[#C9A84C] text-xs">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
-                  </div>
-                  {r.comment && <p className="text-gray-400 text-sm leading-relaxed">{r.comment}</p>}
-                  <div className="text-[10px] text-gray-600 mt-2">{new Date(r.created_at).toLocaleDateString()}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 text-gray-600 text-sm bg-[#111118] border border-white/5 rounded-2xl">
-              {t.reviews.noReviewsYet}
-            </div>
-          )}
+          <ReviewsSection
+            listingId={p.id}
+            userId={user?.id ?? null}
+            ratingAvg={p.rating_avg}
+            ratingCount={p.rating_count ?? 0}
+            reviews={reviews}
+            eligiblePurchases={eligiblePurchases}
+            t={t}
+            locale={locale}
+          />
         </div>
       </main>
     </div>
